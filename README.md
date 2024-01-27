@@ -14,6 +14,8 @@ This application was generated using JHipster 7.9.4, you can find documentation 
 
 - Reuben B (rxb208@student.bham.ac.uk)
 
+- Frederick R (fxr233@student.bham.ac.uk)
+
 - (insert the list of team mates)
 
 ## changes for Teamproject
