@@ -1,0 +1,9 @@
+application {
+
+    config {
+    baseName appName
+    packageName appPackage
+    applicationType monolith
+    
+  }
+}
