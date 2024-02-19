@@ -1,9 +1,30 @@
-application {
+entity PlaylistData {
+    ID String required unique
+    imageURL String
+    avgValence Float
+    avgDanceability Float
+    avgEnergy Float
+    avgAcousticness Float
 
-    config {
-    baseName appName
-    packageName appPackage
-    applicationType monolith
-    
-  }
+    lastUpdated Instant required
+    }
+
+entity Song {
+    ID String required unique minlength(22)
+    name String required
+    imageURL String
+}
+
+entity Artist {
+    ID String required unique
+    name String required
+}
+
+
+relationship OneToMany {
+    PlaylistData{tracks} to Song
+}
+
+relationship ManyToMany {
+    Artist{song} to Song{artist}
 }
