@@ -1,13 +1,38 @@
+/**
+* In practice we'll extend the actual User class.
+* We could just use this as a placeholder for relationships?
+*/
+entity AppUser {
+
+}
+
+/**
+* Used to store calculated data for the Playlist Insights
+feature.
+* This feature should be usable when not logged in, but
+we probably don't want to store the data in that case.
+*/
 entity PlaylistData {
     ID String required unique
     imageURL String
+
     avgValence Float
     avgDanceability Float
     avgEnergy Float
     avgAcousticness Float
+    length Integer
 
     lastUpdated Instant required
-    }
+}
+
+/**
+* Used to cache top artists' percentages for Playlist Insights
+so it doesn't need to be re-calculated every time.
+* Not sure in practice how necessary this is
+*/
+entity PlaylistArtistProportion {
+    percentage Float
+}
 
 entity Song {
     ID String required unique minlength(22)
@@ -20,9 +45,21 @@ entity Artist {
     name String required
 }
 
+relationship OneToOne {
+    PlaylistArtistProportion{artist} to Artist
+    PlaylistArtistProportion{playlist} to PlaylistData{artistProportions}
+}
 
 relationship OneToMany {
     PlaylistData{tracks} to Song
+    AppUser{playlists} to PlaylistData{owner}
+}
+
+relationship ManyToOne {
+    PlaylistData{happiestSong} to Song
+    PlaylistData{fastestSong} to Song
+    PlaylistData{sumUpSong} to Song
+    PlaylistData{anomalySong} to Song
 }
 
 relationship ManyToMany {
