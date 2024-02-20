@@ -13,7 +13,7 @@ feature.
 we probably don't want to store the data in that case.
 */
 entity PlaylistData {
-    ID String required unique
+    spotifyID String required unique
     imageURL String
 
     avgValence Float
@@ -35,13 +35,13 @@ entity PlaylistArtistProportion {
 }
 
 entity Song {
-    ID String required unique minlength(22)
+    spotifyID String required unique minlength(22)
     name String required
     imageURL String
 }
 
 entity Artist {
-    ID String required unique
+    spotifyID String required unique
     name String required
 }
 
