@@ -38,6 +38,21 @@ entity Song {
     spotifyID String required unique minlength(22)
     name String required
     imageURL String
+    year String
+
+    acousticness Float
+    danceability Float
+    energy Float
+    instrumentalness Float
+    key Integer
+    liveness Float
+    loudness Float
+    mode Boolean
+    speechiness Float
+    tempo Float
+    timesignature Integer
+    valence Float
+
 }
 
 entity Artist {
