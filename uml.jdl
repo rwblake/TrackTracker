@@ -34,6 +34,13 @@ entity PlaylistArtistProportion {
     percentage Float
 }
 
+/**
+ * Instance of a song being played.
+ */
+entity Stream {
+    playedAt String required
+}
+
 entity Song {
     spotifyID String required unique minlength(22)
     name String required
@@ -52,7 +59,6 @@ entity Song {
     tempo Float
     timesignature Integer
     valence Float
-
 }
 
 entity Artist {
@@ -66,11 +72,15 @@ relationship OneToOne {
 }
 
 relationship OneToMany {
+    AppUser{streams} to Stream  // Each user will listen to many songs.
+
     PlaylistData{tracks} to Song
     AppUser{playlists} to PlaylistData{owner}
 }
 
 relationship ManyToOne {
+    Stream{playedSong required} to Song{streamEvent}  // Each stream is required to have one song.
+
     PlaylistData{happiestSong} to Song
     PlaylistData{fastestSong} to Song
     PlaylistData{sumUpSong} to Song
