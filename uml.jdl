@@ -95,6 +95,7 @@ relationship OneToMany {
 
     AppUser{friend} to Friendship
     AppUser{friendRecommendation} to FriendRecommendation
+    AppUser{blockedUser} to AppUser
 }
 
 relationship ManyToOne {
