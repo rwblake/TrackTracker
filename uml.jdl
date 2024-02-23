@@ -38,14 +38,15 @@ entity PlaylistArtistProportion {
  * Instance of a song being played.
  */
 entity Stream {
-    playedAt String required
+    playedAt LocalDate required
 }
 
 entity Song {
     spotifyID String required unique minlength(22)
     name String required
     imageURL String
-    year String
+    year LocalDate
+    duration Duration
 
     acousticness Float
     danceability Float
