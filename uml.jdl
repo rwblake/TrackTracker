@@ -67,9 +67,18 @@ entity Artist {
     name String required
 }
 
+/**
+ * One-way dated connection from user to another user.
+ */
+entity Friendship {
+    fromDate LocalDate
+}
+
 relationship OneToOne {
     PlaylistArtistProportion{artist} to Artist
     PlaylistArtistProportion{playlist} to PlaylistData{artistProportions}
+
+    Friendship{friend required} to AppUser
 }
 
 relationship OneToMany {
@@ -77,6 +86,8 @@ relationship OneToMany {
 
     PlaylistData{tracks} to Song
     AppUser{playlists} to PlaylistData{owner}
+
+    AppUser{friend} to Friendship
 }
 
 relationship ManyToOne {
