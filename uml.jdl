@@ -79,6 +79,19 @@ entity FriendRecommendation {
     lastUpdated LocalDate required
 }
 
+entity SharingDataCard{
+    CardID String required unique
+    colour String
+    layout String
+    name String
+    data String
+}
+
+entity CardSaveData{
+CardID String required unique
+SaveID String required unique
+}
+
 relationship OneToOne {
     PlaylistArtistProportion{artist} to Artist
     PlaylistArtistProportion{playlist} to PlaylistData{artistProportions}
