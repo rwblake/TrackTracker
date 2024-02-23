@@ -71,7 +71,12 @@ entity Artist {
  * One-way dated connection from user to another user.
  */
 entity Friendship {
-    fromDate LocalDate
+    fromDate LocalDate required
+}
+
+entity FriendRecommendation {
+    similarity Float min(0.0) max(1.0) required
+    lastUpdated LocalDate required
 }
 
 relationship OneToOne {
@@ -79,6 +84,7 @@ relationship OneToOne {
     PlaylistArtistProportion{playlist} to PlaylistData{artistProportions}
 
     Friendship{friend required} to AppUser
+    FriendRecommendation{user required} to AppUser
 }
 
 relationship OneToMany {
@@ -88,6 +94,7 @@ relationship OneToMany {
     AppUser{playlists} to PlaylistData{owner}
 
     AppUser{friend} to Friendship
+    AppUser{friendRecommendation} to FriendRecommendation
 }
 
 relationship ManyToOne {
