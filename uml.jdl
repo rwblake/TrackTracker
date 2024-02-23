@@ -109,6 +109,8 @@ relationship OneToMany {
     AppUser{friend} to Friendship
     AppUser{friendRecommendation} to FriendRecommendation
     AppUser{blockedUser} to AppUser
+    SharingDataCard{data} to AppUser
+
 }
 
 relationship ManyToOne {
@@ -118,8 +120,10 @@ relationship ManyToOne {
     PlaylistData{fastestSong} to Song
     PlaylistData{sumUpSong} to Song
     PlaylistData{anomalySong} to Song
+    CardSaveData{SaveID} to AppUser
 }
 
 relationship ManyToMany {
     Artist{song} to Song{artist}
+    AppUser{SpotifyID} to SharingDataCard
 }
