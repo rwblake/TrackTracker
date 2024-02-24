@@ -1,48 +1,46 @@
-# teamproject
+# Team Project
 
 This application was generated using JHipster 7.9.4, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.4](https://www.jhipster.tech/documentation-archive/v7.9.4).
 
-## This repository belongs to team 53
+### This repository belongs to Team 53
 
-- Robert B (rxb256@student.bham.ac.uk)
-
-- Matthew H (mxh1131@student.bham.ac.uk)
-
-- Joseph H (jfh245@student.bham.ac.uk)
-
-- Christopher W (cxw298@student.bham.ac.uk)
+Its members (in alphabetical order of surname):
 
 - Reuben B (rxb208@student.bham.ac.uk)
 
-- Frederick R (fxr233@student.bham.ac.uk)
+- Robert B (rxb256@student.bham.ac.uk)
+
+- Joseph H (jfh245@student.bham.ac.uk)
 
 - Shoaib H (sxh1499@student.bham.ac.uk)
 
-## Changes for Team Project
+- Matthew H (mxh1131@student.bham.ac.uk)
 
-Modified by Madasar Shah for Team Project
+- Frederick R (fxr233@student.bham.ac.uk)
 
-- `.yo-rc.json` contains the setting used to generate this app (see below)
+- Christopher W (cxw298@student.bham.ac.uk)
 
-- `pom.xml` line 87 changed to `<jib-maven-plugin.architecture>arm64</jib-maven-plugin.architecture>` this depends on the arch you will deploy the docker image to n.b. use `amd64` for Intel or AMD virtual machines
+### Contents of README.md
 
-- `src/main/webapp/app/layouts/footer/footer.component.html` modified to add the text `You are accessing an experimental web application developed by participants of the Team Project 2024 module.`
+- [Setting up the project for the first time](#installing-the-development-environment)
+- [Creating a new project to reflect this one](#creating-a-new-project)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Building](#building-for-production)
+- [Testing](#testing)
+- [Optional Extras](#optional-extras)
 
-- `.gitlab-ci.yml` generated using command `% jhipster ci-cd` , generate GitLab CI, and use docker to build.
+_For more in-depth details and breakdown of the project, see [project-documentation.md](project-documentation.md)._
 
-- `.gitlab-ci.yml` modified to remove unused test sections, `maven-package` section edited to fix bug with arm version of docker image used to build as chromium was missing :/
+## Setting up the project for development
 
-- `.gitlab-ci.yml` added `publish-docker:` stage using internal git.cs.bham.ac.uk docker image registry
+After cloning from GitLab, you need to do a few things before you can effectively edit and run your code.
 
-- `src/main/docker/` updated `app.yml`, added `Caddyfile` `caddy.yml` for web serving, added `prd.yml` for production deployment+database, added `install-app.sh` and `install-docker.sh` for app deployment over ssh
+### Installing the development environment
 
-- `.gitlab-ci.yml` added `deploy-dev:` to deploy app to cloud virtual machine using CI variables `$USER`@`IP` and `$RSA` set in the repo `Setting -> CI/CD -> variables` n.b. for non university VMs this requires DNS entries pointing to `$IP` for e.g. `dev.${CI_PROJECT_NAME}.bham.team` to work
+The app requires `Java JDK`, `maven`, `npm`, and `node`.
+The project was generated with the following versions in mind:
 
-- `.gitlab-ci.yml` added `deploy-prod:` to deploy production app to cloud virtual machine n.b. for non university VMs this requires DNS entries pointing to `$IP` e.g. `{CI_PROJECT_NAME}.bham.team` to work
-
-### Install development environment
-
-Requires Java JDK, npm, node
 `% java --version openjdk 11.0.17 2022-10-18`
 
 `% mvn -version Apache Maven 3.9.4`
@@ -51,10 +49,40 @@ Requires Java JDK, npm, node
 
 `% node --version v18.13.0`
 
-JHipster v7.9.4 maintenance is installed using NPM
+JHipster v7.9.4 maintenance is installed using NPM:
 `npm install -g jhipster/generator-jhipster#v7.x_maintenance`
 
-### Settings used:
+### Setting up the dev database in IntelliJ IDEA
+
+There are two databases used in the project: one for production (PostgreSQL), and one for development (H2).
+
+You can set up the H2 dev database in your IDE.
+The details required for creating a new data source in IntelliJ IDEA are given in `src/main/resources/config/application-dev.yml`.
+
+It is currently (since last checked):
+
+```yml
+datasource:
+type: com.zaxxer.hikari.HikariDataSource
+url: jdbc:h2:file:./target/h2db/db/teamproject;DB_CLOSE_DELAY=-1;MODE=LEGACY
+username: teamproject
+password:
+hikari:
+  poolName: Hikari
+  auto-commit: false
+```
+
+_The production database parameters often get picked up by the IDE, but they don't work if you set them up._
+
+## Creating a new project
+
+You can set up your own project using JHipster that will reflect this one.
+To do so, follow the below options and modifications.
+
+### JHipster Settings
+
+When running JHipster to generate a project for the first time, you will be asked a set of questions.
+Here are the settings used for this project:
 
 - `? Which *type* of application would you like to create? Monolithic application (recommended for simple projects) `
 - `? What is the base name of your application? teamproject `
@@ -76,6 +104,28 @@ JHipster v7.9.4 maintenance is installed using NPM
 - `? Please choose the native language of the application English `
 - `? Besides JUnit and Jest, which testing frameworks would you like to use? `
 - `? Would you like to install other generators from the JHipster Marketplace? No`
+
+### Further modifications required
+
+_Modified by Madasar Shah for the Team Project._
+
+- `.yo-rc.json` contains the setting used to generate this app (see below)
+
+- `pom.xml` line 87 changed to `<jib-maven-plugin.architecture>arm64</jib-maven-plugin.architecture>` this depends on the arch you will deploy the docker image to n.b. use `amd64` for Intel or AMD virtual machines
+
+- `src/main/webapp/app/layouts/footer/footer.component.html` modified to add the text `You are accessing an experimental web application developed by participants of the Team Project 2024 module.`
+
+- `.gitlab-ci.yml` generated using command `% jhipster ci-cd` , generate GitLab CI, and use docker to build.
+
+- `.gitlab-ci.yml` modified to remove unused test sections, `maven-package` section edited to fix bug with arm version of docker image used to build as chromium was missing :/
+
+- `.gitlab-ci.yml` added `publish-docker:` stage using internal git.cs.bham.ac.uk docker image registry
+
+- `src/main/docker/` updated `app.yml`, added `Caddyfile` `caddy.yml` for web serving, added `prd.yml` for production deployment+database, added `install-app.sh` and `install-docker.sh` for app deployment over ssh
+
+- `.gitlab-ci.yml` added `deploy-dev:` to deploy app to cloud virtual machine using CI variables `$USER`@`IP` and `$RSA` set in the repo `Setting -> CI/CD -> variables` n.b. for non university VMs this requires DNS entries pointing to `$IP` for e.g. `dev.${CI_PROJECT_NAME}.bham.team` to work
+
+- `.gitlab-ci.yml` added `deploy-prod:` to deploy production app to cloud virtual machine n.b. for non university VMs this requires DNS entries pointing to `$IP` e.g. `{CI_PROJECT_NAME}.bham.team` to work
 
 ## Project Structure
 
@@ -265,7 +315,11 @@ If you need to re-run the Sonar phase, please be sure to specify at least the `i
 
 For more information, refer to the [Code quality page][].
 
-## Using Docker to simplify development (optional)
+## Optional Extras
+
+You can enhance your development experience with the below modifications.
+
+### Using Docker to simplify development (optional)
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
@@ -281,7 +335,7 @@ To stop it and remove the container, run:
 docker-compose -f src/main/docker/postgresql.yml down
 ```
 
-You can also fully dockerize your application and all the services that it depends on.
+You can also fully dockerise your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
 
 ```
@@ -304,7 +358,7 @@ When running Docker Desktop on MacOS Big Sur or later, consider enabling experim
 
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
 
-## Continuous Integration (optional)
+### Continuous Integration (optional)
 
 To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
 
