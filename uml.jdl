@@ -160,5 +160,39 @@ relationship OneToOne {
 
 
 // Homefeed
+entity Card {
+    metric Metric
+    value Integer
+    time Instant
+}
+entity SharingPreference {
+    metric Metric
+    visibility VisibilityPreference
+}
+entity Feed {
+    metric Metric
+    value Integer
+}
+enum VisibilityPreference {
+    GLOBAL,
+    FRIENDS,
+    PRIVATE
+}
+enum Metric {
+    // Needs to be added here
+}
+
+relationship OneToOne {
+    AppUser{feed required} to Feed{appUser required}
+}
+relationship OneToMany {
+    AppUser{ownCard} to Card{ownAppUser}
+    AppUser{sharingPreference} to SharingPreference{appUser}
+}
+relationship ManyToMany {
+    AppUser{feedCard} to Card{feedAppUser}
+}
+
+
 
 
