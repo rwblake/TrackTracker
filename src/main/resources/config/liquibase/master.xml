@@ -17,40 +17,7 @@
     <property name="datetimeType" value="datetime" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230950_added_entity_Friendship.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230951_added_entity_FriendRequest.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230952_added_entity_FriendRecommendation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230953_added_entity_Stream.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230954_added_entity_Song.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230955_added_entity_Artist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230956_added_entity_Album.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230957_added_entity_Genre.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230958_added_entity_Playlist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230959_added_entity_PlaylistStats.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231000_added_entity_AppUser.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231001_added_entity_UserPreferences.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231002_added_entity_SpotifyToken.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231003_added_entity_Card.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231004_added_entity_Feed.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231005_added_entity_FeedCard.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231006_added_entity_SharingPreference.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231007_added_entity_CardTemplate.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231008_added_entity_CardMetric.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20240227230950_added_entity_constraints_Friendship.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230951_added_entity_constraints_FriendRequest.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230952_added_entity_constraints_FriendRecommendation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230953_added_entity_constraints_Stream.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230954_added_entity_constraints_Song.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230955_added_entity_constraints_Artist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230958_added_entity_constraints_Playlist.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227230959_added_entity_constraints_PlaylistStats.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231000_added_entity_constraints_AppUser.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231003_added_entity_constraints_Card.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231005_added_entity_constraints_FeedCard.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231006_added_entity_constraints_SharingPreference.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231007_added_entity_constraints_CardTemplate.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240227231008_added_entity_constraints_CardMetric.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>
