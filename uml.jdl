@@ -1,4 +1,4 @@
-entity AppUser
+
 
 
 
@@ -103,6 +103,7 @@ entity Playlist {
 }
 
 relationship OneToMany {
+    AppUser{playlist} to Playlist{appUser}
     AppUser{stream} to Stream{appUser}  // Each user will listen to many songs.
 }
 relationship ManyToOne {
@@ -118,5 +119,46 @@ relationship ManyToMany {
 
 
 
+
+
+// Profile Feature
+/** Profile information about a user, identifying them. */
+entity AppUser {
+    spotifyID String required
+    name String required
+    avatarURL String
+    bio TextBlob
+    spotifyUsername String required
+}
+entity UserPreferences {
+    profilePrivacy Privacy
+    dataPrivacy Privacy
+    visualMode Boolean
+    contrastMode Boolean
+}
+enum Privacy {
+    PUBLIC,
+    FRIENDS,
+    FRIENDS_OF_FRIENDS,
+    PRIVATE
+}
+entity SpotifyToken {
+    accessToken String required
+    tokenType String required
+    scope String required
+    expires Instant required  // Calculated from expiresIn given by API request
+    refreshToken String required
+}
+
+relationship OneToOne {
+    AppUser{userPreferences required} to UserPreferences{appUser required}
+    AppUser{spotifyToken required} to SpotifyToken{appUser required}
+}
+
+
+
+
+
+// Homefeed
 
 
