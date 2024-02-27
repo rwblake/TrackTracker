@@ -29,6 +29,7 @@ Its members (in alphabetical order of surname):
 - [Building](#building-for-production)
 - [Testing](#testing)
 - [Optional Extras](#optional-extras)
+- [Research Folder](#research-folder)
 
 _For more in-depth details and breakdown of the project, see [project-documentation.md](project-documentation.md)._
 
@@ -52,14 +53,17 @@ The project was generated with the following versions in mind:
 JHipster v7.9.4 maintenance is installed using NPM:
 `npm install -g jhipster/generator-jhipster#v7.x_maintenance`
 
-### Setting up the dev database in IntelliJ IDEA
+### Information about databases in project
 
 There are two databases used in the project: one for production (PostgreSQL), and one for development (H2).
 
-You can set up the H2 dev database in your IDE.
-The details required for creating a new data source in IntelliJ IDEA are given in `src/main/resources/config/application-dev.yml`.
+You could attempt to set up the H2 dev or PostgreSQL databases in your IDE,
+although this sometimes causes issues with running the code.
 
-It is currently (since last checked):
+If you do wish to (not suggested):
+
+- The details required for creating a new data source in IntelliJ IDEA are given in `src/main/resources/config/application-dev.yml`.
+- It is currently (since last checked):
 
 ```yml
 datasource:
@@ -378,3 +382,9 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [leaflet]: https://leafletjs.com/
 [definitelytyped]: https://definitelytyped.org/
 [angular cli]: https://cli.angular.io/
+
+## Research Folder
+
+For the Machine Learning tech report, there is a manual implementation of K-Means Clustering.
+
+See the source code here [`Research/KMeansClustering.java`](Research/KMeansClustering.java)
