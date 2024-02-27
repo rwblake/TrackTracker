@@ -210,3 +210,32 @@ relationship ManyToMany {
 
 
 
+
+// Share Stats
+entity CardTemplate {
+    color Color
+    layout Layout
+    name String
+    font Font
+}
+entity CardMetric {
+    metric Metric
+}
+enum Color {
+
+}
+enum Layout {
+
+}
+enum Font {
+
+}
+
+relationship OneToMany {
+    AppUser{cardTemplate} to CardTemplate{appUser required}
+    CardTemplate{metric} to CardMetric{cardTemplate required}
+}
+
+
+
+
