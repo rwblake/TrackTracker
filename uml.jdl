@@ -9,14 +9,14 @@
  * code when FriendRequests are accepted.
  */
 entity Friendship {
-    from Instant required
+    createdAt Instant required  // DANGER: from is a reserved keyword in SQL
 }
 /**
  * Each user can send a friend request, which is related to the user
  * initiating it, and who it is for.
  */
 entity FriendRequest {
-    timeStamp Instant required
+    createdAt Instant required
 }
 /**
  * The system creates friend recommendations based on how similar two
@@ -25,7 +25,7 @@ entity FriendRequest {
  */
 entity FriendRecommendation {
     similarity Float min(0.0) max(1.0) required
-    lastUpdated LocalDate required
+    createdAt LocalDate required
 }
 
 relationship OneToOne {
@@ -33,7 +33,7 @@ relationship OneToOne {
     FriendRecommendation{aboutAppUser required} to AppUser{aboutFriendRecommendation}
 
     /** Each FriendRequest is associated with a particular user, who initiated it. */
-    FriendRequest{initiatingAppUser requied} to AppUser{intitiatingFriendRequest}
+    FriendRequest{initiatingAppUser required} to AppUser{intitiatingFriendRequest}
 
     /** Friendships relate to two AppUsers: initiating, and accepting users */
     Friendship{friendInitiating required} to AppUser{friendshipInitiated}
@@ -159,7 +159,7 @@ enum Privacy {
 entity SpotifyToken {
     accessToken String required
     tokenType String required
-    scope String required
+    userScope String required  // DANGER: scope is a reserved keyword in SQL
     expires Instant required  // Calculated from expiresIn given by API request
     refreshToken String required
 }
@@ -176,8 +176,8 @@ relationship OneToOne {
 // Homefeed
 entity Card {
     metric Metric
-    value Integer
-    time Instant
+    metricValue Integer  // DANGER: value is a reserved keyword in SQL
+    lastUpdated Instant
 }
 entity SharingPreference {
     metric Metric
@@ -185,7 +185,7 @@ entity SharingPreference {
 }
 entity Feed {
     metric Metric
-    value Integer
+    metricValue Integer  // DANGER: value is a reserved keyword in SQL
 }
 enum VisibilityPreference {
     GLOBAL,
@@ -194,6 +194,7 @@ enum VisibilityPreference {
 }
 enum Metric {
     // Needs to be added here
+    OPTION1
 }
 
 relationship OneToOne {
@@ -222,13 +223,13 @@ entity CardMetric {
     metric Metric
 }
 enum Color {
-
+    OPTION1
 }
 enum Layout {
-
+    OPTION1
 }
 enum Font {
-
+    OPTION1
 }
 
 relationship OneToMany {
