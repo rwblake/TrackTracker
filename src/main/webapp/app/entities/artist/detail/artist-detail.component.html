@@ -1,0 +1,61 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="artist">
+      <h2 data-cy="artistDetailsHeading"><span>Artist</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ artist.id }}</span>
+        </dd>
+        <dt><span>Spotify ID</span></dt>
+        <dd>
+          <span>{{ artist.spotifyID }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ artist.name }}</span>
+        </dd>
+        <dt><span>Image URL</span></dt>
+        <dd>
+          <span>{{ artist.imageURL }}</span>
+        </dd>
+        <dt><span>Song</span></dt>
+        <dd>
+          <span *ngFor="let song of artist.songs; let last = last">
+            <a [routerLink]="['/song', song.id, 'view']">{{ song.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>Album</span></dt>
+        <dd>
+          <span *ngFor="let album of artist.albums; let last = last">
+            <a [routerLink]="['/album', album.id, 'view']">{{ album.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+        <dt><span>Genre</span></dt>
+        <dd>
+          <span *ngFor="let genre of artist.genres; let last = last">
+            <a [routerLink]="['/genre', genre.id, 'view']">{{ genre.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/artist', artist.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+<div>
+  <h2 id="page-heading" data-cy="PlaylistHeading">
+    <span>Playlists</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-playlist"
+        [routerLink]="['/playlist/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Playlist </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="playlists?.length === 0">
+    <span>No Playlists found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="playlists && playlists.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="spotifyID">
+            <div class="d-flex">
+              <span>Spotify ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span>Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="imageURL">
+            <div class="d-flex">
+              <span>Image URL</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="playlistStats.id">
+            <div class="d-flex">
+              <span>Playlist Stats</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="song.id">
+            <div class="d-flex">
+              <span>Song</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="appUser.id">
+            <div class="d-flex">
+              <span>App User</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let playlist of playlists; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/playlist', playlist.id, 'view']">{{ playlist.id }}</a>
+          </td>
+          <td>{{ playlist.spotifyID }}</td>
+          <td>{{ playlist.name }}</td>
+          <td>{{ playlist.imageURL }}</td>
+          <td>
+            <div *ngIf="playlist.playlistStats">
+              <a [routerLink]="['/playlist-stats', playlist.playlistStats.id, 'view']">{{ playlist.playlistStats.id }}</a>
+            </div>
+          </td>
+          <td>
+            <span *ngFor="let song of playlist.songs; let last = last">
+              <a class="form-control-static" [routerLink]="['/song', song.id, 'view']">{{ song.id }}</a
+              >{{ last ? '' : ', ' }}
+            </span>
+          </td>
+          <td>
+            <div *ngIf="playlist.appUser">
+              <a [routerLink]="['/app-user', playlist.appUser.id, 'view']">{{ playlist.appUser.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/playlist', playlist.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/playlist', playlist.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(playlist)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

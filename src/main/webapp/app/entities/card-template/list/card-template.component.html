@@ -1,0 +1,120 @@
+<div>
+  <h2 id="page-heading" data-cy="CardTemplateHeading">
+    <span>Card Templates</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-card-template"
+        [routerLink]="['/card-template/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Card Template </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="cardTemplates?.length === 0">
+    <span>No Card Templates found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="cardTemplates && cardTemplates.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="color">
+            <div class="d-flex">
+              <span>Color</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="layout">
+            <div class="d-flex">
+              <span>Layout</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span>Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="font">
+            <div class="d-flex">
+              <span>Font</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="appUser.id">
+            <div class="d-flex">
+              <span>App User</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cardTemplate of cardTemplates; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/card-template', cardTemplate.id, 'view']">{{ cardTemplate.id }}</a>
+          </td>
+          <td>{{ cardTemplate.color }}</td>
+          <td>{{ cardTemplate.layout }}</td>
+          <td>{{ cardTemplate.name }}</td>
+          <td>{{ cardTemplate.font }}</td>
+          <td>
+            <div *ngIf="cardTemplate.appUser">
+              <a [routerLink]="['/app-user', cardTemplate.appUser.id, 'view']">{{ cardTemplate.appUser.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/card-template', cardTemplate.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/card-template', cardTemplate.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(cardTemplate)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

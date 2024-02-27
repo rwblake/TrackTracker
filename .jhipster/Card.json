@@ -1,0 +1,52 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227231003",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "card",
+  "fields": [
+    {
+      "fieldName": "metric",
+      "fieldType": "CardType",
+      "fieldTypeJavadoc": "Represents the different types of data that can be analysed and shared with others",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LISTENING_DURATION,GENRE,NO_OF_FRIENDS,NO_OF_SONGS_LISTENED,TOP_ARTIST,TOP_SONG,FRIEND_REQUEST"
+    },
+    {
+      "fieldName": "timeFrame",
+      "fieldType": "Duration"
+    },
+    {
+      "fieldName": "metricValue",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "timeGenerated",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "Contains each user's cards (updates from yours and your friend's listening habits as well as general updates).\\nThese will be accessed when generating user feeds. Each row is a Card, respective to the user on which it's based.",
+  "jpaMetamodelFiltering": false,
+  "name": "Card",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "feedCard",
+      "otherEntityRelationshipName": "card",
+      "relationshipName": "usage",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "card",
+      "relationshipName": "appUser",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}

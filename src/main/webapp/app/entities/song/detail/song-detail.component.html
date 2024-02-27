@@ -1,0 +1,102 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="song">
+      <h2 data-cy="songDetailsHeading"><span>Song</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ song.id }}</span>
+        </dd>
+        <dt><span>Spotify ID</span></dt>
+        <dd>
+          <span>{{ song.spotifyID }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ song.name }}</span>
+        </dd>
+        <dt><span>Image URL</span></dt>
+        <dd>
+          <span>{{ song.imageURL }}</span>
+        </dd>
+        <dt><span>Release Date</span></dt>
+        <dd>
+          <span>{{ song.releaseDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Duration</span></dt>
+        <dd>
+          <span>{{ song.duration | duration }} ({{ song.duration }})</span>
+        </dd>
+        <dt><span>Acousticness</span></dt>
+        <dd>
+          <span>{{ song.acousticness }}</span>
+        </dd>
+        <dt><span>Danceability</span></dt>
+        <dd>
+          <span>{{ song.danceability }}</span>
+        </dd>
+        <dt><span>Energy</span></dt>
+        <dd>
+          <span>{{ song.energy }}</span>
+        </dd>
+        <dt><span>Instrumentalness</span></dt>
+        <dd>
+          <span>{{ song.instrumentalness }}</span>
+        </dd>
+        <dt><span>Musical Key</span></dt>
+        <dd>
+          <span>{{ song.musicalKey }}</span>
+        </dd>
+        <dt><span>Liveness</span></dt>
+        <dd>
+          <span>{{ song.liveness }}</span>
+        </dd>
+        <dt><span>Loudness</span></dt>
+        <dd>
+          <span>{{ song.loudness }}</span>
+        </dd>
+        <dt><span>Mode</span></dt>
+        <dd>
+          <span>{{ song.mode }}</span>
+        </dd>
+        <dt><span>Speechiness</span></dt>
+        <dd>
+          <span>{{ song.speechiness }}</span>
+        </dd>
+        <dt><span>Tempo</span></dt>
+        <dd>
+          <span>{{ song.tempo }}</span>
+        </dd>
+        <dt><span>Time Signature</span></dt>
+        <dd>
+          <span>{{ song.timeSignature }}</span>
+        </dd>
+        <dt><span>Valence</span></dt>
+        <dd>
+          <span>{{ song.valence }}</span>
+        </dd>
+        <dt><span>Album</span></dt>
+        <dd>
+          <div *ngIf="song.album">
+            <a [routerLink]="['/album', song.album.id, 'view']">{{ song.album.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/song', song.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227230950",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "friendship",
+  "fields": [
+    {
+      "fieldName": "createdAt",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "Each Friendship is related to two users. Friendships are setup by backend\\ncode when FriendRequests are accepted.",
+  "jpaMetamodelFiltering": false,
+  "name": "Friendship",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "javadoc": "Friendships relate to two AppUsers: initiating, and accepting users",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "friendshipInitiated",
+      "ownerSide": true,
+      "relationshipName": "friendInitiating",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "javadoc": "Friendships relate to two AppUsers: initiating, and accepting users",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "friendshipAccepted",
+      "ownerSide": true,
+      "relationshipName": "friendAccepting",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "friend",
+      "relationshipName": "appUser",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

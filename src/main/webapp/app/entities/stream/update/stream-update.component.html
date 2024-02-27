@@ -1,0 +1,79 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-stream-heading" data-cy="StreamCreateUpdateHeading">Create or edit a Stream</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_playedAt">Played At</label>
+          <div class="d-flex">
+            <input
+              id="field_playedAt"
+              data-cy="playedAt"
+              type="datetime-local"
+              class="form-control"
+              name="playedAt"
+              formControlName="playedAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('playedAt')!.invalid && (editForm.get('playedAt')!.dirty || editForm.get('playedAt')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('playedAt')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('playedAt')?.errors?.datetimelocal">
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_song">Song</label>
+          <select class="form-control" id="field_song" data-cy="song" name="song" formControlName="song" [compareWith]="compareSong">
+            <option *ngIf="editForm.get(['song'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="songOption" *ngFor="let songOption of songsSharedCollection">{{ songOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['song'])!.invalid && (editForm.get(['song'])!.dirty || editForm.get(['song'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['song'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareAppUser"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

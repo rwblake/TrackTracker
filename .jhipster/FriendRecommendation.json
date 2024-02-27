@@ -1,0 +1,45 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227230952",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "friend_recommendation",
+  "fields": [
+    {
+      "fieldName": "similarity",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max", "required"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "createdAt",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "The system creates friend recommendations based on how similar two\\nAppUsers' listening statistics are. The timestamp allows them to be\\nrecalculated when statistics are recalculated.",
+  "jpaMetamodelFiltering": false,
+  "name": "FriendRecommendation",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "javadoc": "Each FriendRecommendation relates to the AppUser recommended.",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "aboutFriendRecommendation",
+      "ownerSide": true,
+      "relationshipName": "aboutAppUser",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "forFriendRecommendation",
+      "relationshipName": "forAppUser",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

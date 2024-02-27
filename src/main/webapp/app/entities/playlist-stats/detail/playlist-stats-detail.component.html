@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="playlistStats">
+      <h2 data-cy="playlistStatsDetailsHeading"><span>Playlist Stats</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ playlistStats.id }}</span>
+        </dd>
+        <dt><span>Playlist Length</span></dt>
+        <dd>
+          <span>{{ playlistStats.playlistLength }}</span>
+        </dd>
+        <dt><span>Last Updated</span></dt>
+        <dd>
+          <span>{{ playlistStats.lastUpdated | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Happiest Song</span></dt>
+        <dd>
+          <div *ngIf="playlistStats.happiestSong">
+            <a [routerLink]="['/song', playlistStats.happiestSong.id, 'view']">{{ playlistStats.happiestSong.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Fastest Song</span></dt>
+        <dd>
+          <div *ngIf="playlistStats.fastestSong">
+            <a [routerLink]="['/song', playlistStats.fastestSong.id, 'view']">{{ playlistStats.fastestSong.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Sums Up Song</span></dt>
+        <dd>
+          <div *ngIf="playlistStats.sumsUpSong">
+            <a [routerLink]="['/song', playlistStats.sumsUpSong.id, 'view']">{{ playlistStats.sumsUpSong.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Anonmalous Song</span></dt>
+        <dd>
+          <div *ngIf="playlistStats.anonmalousSong">
+            <a [routerLink]="['/song', playlistStats.anonmalousSong.id, 'view']">{{ playlistStats.anonmalousSong.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/playlist-stats', playlistStats.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

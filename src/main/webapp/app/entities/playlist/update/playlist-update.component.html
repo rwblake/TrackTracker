@@ -1,0 +1,107 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-playlist-heading" data-cy="PlaylistCreateUpdateHeading">Create or edit a Playlist</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_spotifyID">Spotify ID</label>
+          <input type="text" class="form-control" name="spotifyID" id="field_spotifyID" data-cy="spotifyID" formControlName="spotifyID" />
+          <div *ngIf="editForm.get('spotifyID')!.invalid && (editForm.get('spotifyID')!.dirty || editForm.get('spotifyID')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('spotifyID')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_imageURL">Image URL</label>
+          <input type="text" class="form-control" name="imageURL" id="field_imageURL" data-cy="imageURL" formControlName="imageURL" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_playlistStats">Playlist Stats</label>
+          <select
+            class="form-control"
+            id="field_playlistStats"
+            data-cy="playlistStats"
+            name="playlistStats"
+            formControlName="playlistStats"
+            [compareWith]="comparePlaylistStats"
+          >
+            <option *ngIf="editForm.get(['playlistStats'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="playlistStatsOption" *ngFor="let playlistStatsOption of playlistStatsCollection">
+              {{ playlistStatsOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['playlistStats'])!.invalid && (editForm.get(['playlistStats'])!.dirty || editForm.get(['playlistStats'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['playlistStats'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label for="field_songs">Song</label>
+          <select
+            class="form-control"
+            id="field_songs"
+            data-cy="song"
+            multiple
+            name="songs"
+            formControlName="songs"
+            [compareWith]="compareSong"
+          >
+            <option [ngValue]="songOption" *ngFor="let songOption of songsSharedCollection">{{ songOption.id }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareAppUser"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

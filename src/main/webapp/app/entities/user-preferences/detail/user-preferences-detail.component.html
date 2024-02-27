@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="userPreferences">
+      <h2 data-cy="userPreferencesDetailsHeading"><span>User Preferences</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ userPreferences.id }}</span>
+        </dd>
+        <dt><span>Visibility</span></dt>
+        <dd>
+          <span>{{ userPreferences.visibility }}</span>
+        </dd>
+        <dt><span>Is Dark Mode</span></dt>
+        <dd>
+          <span>{{ userPreferences.isDarkMode }}</span>
+        </dd>
+        <dt><span>Is High Contrast</span></dt>
+        <dd>
+          <span>{{ userPreferences.isHighContrast }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/user-preferences', userPreferences.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,139 @@
+<div>
+  <h2 id="page-heading" data-cy="PlaylistStatsHeading">
+    <span>Playlist Stats</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-playlist-stats"
+        [routerLink]="['/playlist-stats/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new Playlist Stats </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="playlistStats?.length === 0">
+    <span>No Playlist Stats found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="playlistStats && playlistStats.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="playlistLength">
+            <div class="d-flex">
+              <span>Playlist Length</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastUpdated">
+            <div class="d-flex">
+              <span>Last Updated</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="happiestSong.id">
+            <div class="d-flex">
+              <span>Happiest Song</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="fastestSong.id">
+            <div class="d-flex">
+              <span>Fastest Song</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="sumsUpSong.id">
+            <div class="d-flex">
+              <span>Sums Up Song</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="anonmalousSong.id">
+            <div class="d-flex">
+              <span>Anonmalous Song</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let playlistStats of playlistStats; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/playlist-stats', playlistStats.id, 'view']">{{ playlistStats.id }}</a>
+          </td>
+          <td>{{ playlistStats.playlistLength }}</td>
+          <td>{{ playlistStats.lastUpdated | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="playlistStats.happiestSong">
+              <a [routerLink]="['/song', playlistStats.happiestSong.id, 'view']">{{ playlistStats.happiestSong.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="playlistStats.fastestSong">
+              <a [routerLink]="['/song', playlistStats.fastestSong.id, 'view']">{{ playlistStats.fastestSong.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="playlistStats.sumsUpSong">
+              <a [routerLink]="['/song', playlistStats.sumsUpSong.id, 'view']">{{ playlistStats.sumsUpSong.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="playlistStats.anonmalousSong">
+              <a [routerLink]="['/song', playlistStats.anonmalousSong.id, 'view']">{{ playlistStats.anonmalousSong.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/playlist-stats', playlistStats.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/playlist-stats', playlistStats.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(playlistStats)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227231007",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "card_template",
+  "fields": [
+    {
+      "fieldName": "color",
+      "fieldType": "Color",
+      "fieldValues": "OPTION1"
+    },
+    {
+      "fieldName": "layout",
+      "fieldType": "Layout",
+      "fieldValues": "OPTION1"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "font",
+      "fieldType": "Font",
+      "fieldValues": "OPTION1"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "CardTemplate",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "cardMetric",
+      "otherEntityRelationshipName": "cardTemplate",
+      "relationshipName": "metric",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "cardTemplate",
+      "relationshipName": "appUser",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}

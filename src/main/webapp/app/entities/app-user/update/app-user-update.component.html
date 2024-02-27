@@ -1,0 +1,153 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-app-user-heading" data-cy="AppUserCreateUpdateHeading">Create or edit a App User</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_spotifyID">Spotify ID</label>
+          <input type="text" class="form-control" name="spotifyID" id="field_spotifyID" data-cy="spotifyID" formControlName="spotifyID" />
+          <div *ngIf="editForm.get('spotifyID')!.invalid && (editForm.get('spotifyID')!.dirty || editForm.get('spotifyID')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('spotifyID')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_avatarURL">Avatar URL</label>
+          <input type="text" class="form-control" name="avatarURL" id="field_avatarURL" data-cy="avatarURL" formControlName="avatarURL" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_bio">Bio</label>
+          <textarea class="form-control" name="bio" id="field_bio" data-cy="bio" formControlName="bio"></textarea>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_spotifyUsername">Spotify Username</label>
+          <input
+            type="text"
+            class="form-control"
+            name="spotifyUsername"
+            id="field_spotifyUsername"
+            data-cy="spotifyUsername"
+            formControlName="spotifyUsername"
+          />
+          <div
+            *ngIf="
+              editForm.get('spotifyUsername')!.invalid &&
+              (editForm.get('spotifyUsername')!.dirty || editForm.get('spotifyUsername')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('spotifyUsername')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_userPreferences">User Preferences</label>
+          <select
+            class="form-control"
+            id="field_userPreferences"
+            data-cy="userPreferences"
+            name="userPreferences"
+            formControlName="userPreferences"
+            [compareWith]="compareUserPreferences"
+          >
+            <option *ngIf="editForm.get(['userPreferences'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="userPreferencesOption" *ngFor="let userPreferencesOption of userPreferencesCollection">
+              {{ userPreferencesOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['userPreferences'])!.invalid &&
+            (editForm.get(['userPreferences'])!.dirty || editForm.get(['userPreferences'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['userPreferences'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_spotifyToken">Spotify Token</label>
+          <select
+            class="form-control"
+            id="field_spotifyToken"
+            data-cy="spotifyToken"
+            name="spotifyToken"
+            formControlName="spotifyToken"
+            [compareWith]="compareSpotifyToken"
+          >
+            <option *ngIf="editForm.get(['spotifyToken'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="spotifyTokenOption" *ngFor="let spotifyTokenOption of spotifyTokensCollection">
+              {{ spotifyTokenOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['spotifyToken'])!.invalid && (editForm.get(['spotifyToken'])!.dirty || editForm.get(['spotifyToken'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['spotifyToken'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_feed">Feed</label>
+          <select class="form-control" id="field_feed" data-cy="feed" name="feed" formControlName="feed" [compareWith]="compareFeed">
+            <option *ngIf="editForm.get(['feed'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="feedOption" *ngFor="let feedOption of feedsCollection">{{ feedOption.id }}</option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['feed'])!.invalid && (editForm.get(['feed'])!.dirty || editForm.get(['feed'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['feed'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_blockedByUser">Blocked By User</label>
+          <select
+            class="form-control"
+            id="field_blockedByUser"
+            data-cy="blockedByUser"
+            name="blockedByUser"
+            formControlName="blockedByUser"
+            [compareWith]="compareAppUser"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

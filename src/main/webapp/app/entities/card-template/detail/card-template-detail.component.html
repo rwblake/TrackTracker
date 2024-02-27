@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cardTemplate">
+      <h2 data-cy="cardTemplateDetailsHeading"><span>Card Template</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cardTemplate.id }}</span>
+        </dd>
+        <dt><span>Color</span></dt>
+        <dd>
+          <span>{{ cardTemplate.color }}</span>
+        </dd>
+        <dt><span>Layout</span></dt>
+        <dd>
+          <span>{{ cardTemplate.layout }}</span>
+        </dd>
+        <dt><span>Name</span></dt>
+        <dd>
+          <span>{{ cardTemplate.name }}</span>
+        </dd>
+        <dt><span>Font</span></dt>
+        <dd>
+          <span>{{ cardTemplate.font }}</span>
+        </dd>
+        <dt><span>App User</span></dt>
+        <dd>
+          <div *ngIf="cardTemplate.appUser">
+            <a [routerLink]="['/app-user', cardTemplate.appUser.id, 'view']">{{ cardTemplate.appUser.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/card-template', cardTemplate.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

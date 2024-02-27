@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="friendship">
+      <h2 data-cy="friendshipDetailsHeading"><span>Friendship</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ friendship.id }}</span>
+        </dd>
+        <dt><span>Created At</span></dt>
+        <dd>
+          <span>{{ friendship.createdAt | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>Friend Initiating</span></dt>
+        <dd>
+          <div *ngIf="friendship.friendInitiating">
+            <a [routerLink]="['/app-user', friendship.friendInitiating.id, 'view']">{{ friendship.friendInitiating.id }}</a>
+          </div>
+        </dd>
+        <dt><span>Friend Accepting</span></dt>
+        <dd>
+          <div *ngIf="friendship.friendAccepting">
+            <a [routerLink]="['/app-user', friendship.friendAccepting.id, 'view']">{{ friendship.friendAccepting.id }}</a>
+          </div>
+        </dd>
+        <dt><span>App User</span></dt>
+        <dd>
+          <div *ngIf="friendship.appUser">
+            <a [routerLink]="['/app-user', friendship.appUser.id, 'view']">{{ friendship.appUser.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/friendship', friendship.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -174,7 +174,7 @@ relationship OneToOne {
  * These will be accessed when generating user feeds. Each row is a Card, respective to the user on which it's based.
  */
 entity Card {
-    metric CardMetric required
+    metric CardType required
     timeFrame Duration
     metricValue Integer required // DANGER: value is a reserved keyword in SQL
     timeGenerated Instant required
@@ -198,7 +198,7 @@ entity FeedCard {
 
 /**Stores each user's changes to their sharing preferences.*/
 entity SharingPreference {
-    metric CardMetric
+    metric CardType
     visibility VisibilityPreference
 }
 
@@ -211,7 +211,7 @@ enum VisibilityPreference {
 }
 
 /**Represents the different types of data that can be analysed and shared with others*/
-enum CardMetric {
+enum CardType {
     // (These are examples and need to be agreed on as we develop the app)
     LISTENING_DURATION,
     GENRE,
@@ -244,7 +244,7 @@ entity CardTemplate {
     font Font
 }
 entity CardMetric {
-    metric CardMetric required
+    metric CardType required
 }
 enum Color {
     OPTION1
