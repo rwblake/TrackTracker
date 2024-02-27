@@ -1,6 +1,4 @@
-/** Profile information about a user, identifying them. */
 entity AppUser
-
 
 
 
@@ -49,6 +47,75 @@ relationship OneToMany {
     /** Blocked users are related to the user who blocked them. */
     AppUser{blockedUser} to AppUser{blockedByUser}
 }
+
+
+
+
+
+// Personal Insights
+entity Stream {
+    playedAt Instant required
+}
+entity Song {
+    spotifyID String required unique
+    name String required
+    imageURL String
+    releaseDate Instant
+    duration Duration required
+    // audio features
+    acousticness Float min(0.0) max(1.0)
+    danceability Float min(0.0) max(1.0)
+    energy Float min(0.0) max(1.0)
+    instrumentalness Float min(0.0) max(1.0)
+    musicalKey Integer  // DANGER: key is a reserved keyword in sql (obviously)
+    liveness Float min(0.0) max(1.0)
+    loudness Float min(0.0) max(1.0)
+    mode Boolean
+    speechiness Float min(0.0) max(1.0)
+    tempo Float
+    timeSignature Integer
+    valence Float min(0.0) max(1.0)
+}
+entity Artist {
+    spotifyID String required unique
+    name String required
+    imageURL String
+}
+entity Album {
+    spotifyID String required unique
+    name String required
+    imageURL String
+    releaseDate Instant
+    albumType AlbumType
+}
+enum AlbumType {
+    ALBUM,
+    SINGLE,
+    COMPILATION
+}
+entity Genre {
+    name String
+}
+entity Playlist {
+    spotifyID String required unique
+    name String required
+    imageURL String
+}
+
+relationship OneToMany {
+    AppUser{stream} to Stream{appUser}  // Each user will listen to many songs.
+}
+relationship ManyToOne {
+    Stream{song required} to Song{stream}  // Each stream is required to have one song.
+    Song{album} to Album
+}
+relationship ManyToMany {
+    Playlist{song} to Song{playlist}
+    Artist{song} to Song{artist}
+    Artist{album} to Album{artist}
+    Artist{genre} to Genre{artist}
+}
+
 
 
 
