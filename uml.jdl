@@ -145,17 +145,11 @@ entity AppUser {
     spotifyUsername String required
 }
 entity UserPreferences {
-    profilePrivacy Privacy
-    dataPrivacy Privacy
-    visualMode Boolean
-    contrastMode Boolean
+    visibility VisibilityPreference
+    isDarkMode Boolean
+    isHighContrast Boolean
 }
-enum Privacy {
-    PUBLIC,
-    FRIENDS,
-    FRIENDS_OF_FRIENDS,
-    PRIVATE
-}
+
 entity SpotifyToken {
     accessToken String required
     tokenType String required
@@ -173,42 +167,72 @@ relationship OneToOne {
 
 
 
-// Homefeed
+// Home Feed feature
+
+/**
+ * Contains each user's cards (updates from yours and your friend's listening habits as well as general updates).
+ * These will be accessed when generating user feeds. Each row is a Card, respective to the user on which it's based.
+ */
 entity Card {
-    metric Metric
-    metricValue Integer  // DANGER: value is a reserved keyword in SQL
-    lastUpdated Instant
+    metric CardMetric required
+    timeFrame Duration
+    metricValue Integer required // DANGER: value is a reserved keyword in SQL
+    timeGenerated Instant required
 }
+
+/**
+ * Contains each user's feed, which is comprised of cards from different users.
+ * Each row is a feed, respective to the user who will see it.
+ */
+entity Feed {
+    lastUpdated Instant required
+}
+
+/**
+ * Contains each feed's cards.
+ * Each row is a card, respective to the user who will see the feed that the card belongs to.
+ */
+entity FeedCard {
+    liked Boolean required
+}
+
+/**Stores each user's changes to their sharing preferences.*/
 entity SharingPreference {
-    metric Metric
+    metric CardMetric
     visibility VisibilityPreference
 }
-entity Feed {
-    metric Metric
-    metricValue Integer  // DANGER: value is a reserved keyword in SQL
-}
+
+/**Represents the different levels of privacy that a user can retain on a given value.*/
 enum VisibilityPreference {
     GLOBAL,
+    FRIENDS_OF_FRIENDS,
     FRIENDS,
     PRIVATE
 }
-enum Metric {
-    // Needs to be added here
-    OPTION1
+
+/**Represents the different types of data that can be analysed and shared with others*/
+enum CardMetric {
+    // (These are examples and need to be agreed on as we develop the app)
+    LISTENING_DURATION,
+    GENRE,
+    NO_OF_FRIENDS,
+    NO_OF_SONGS_LISTENED,
+    TOP_ARTIST,
+    TOP_SONG,
+
+    // Specifically for notification cards - will always be private
+    FRIEND_REQUEST
 }
 
 relationship OneToOne {
     AppUser{feed required} to Feed{appUser required}
 }
 relationship OneToMany {
-    AppUser{ownCard} to Card{ownAppUser}
-    AppUser{sharingPreference} to SharingPreference{appUser}
+    AppUser{card} to Card{appUser required}
+    Feed{card} to FeedCard{feed required}
+    Card{usage} to FeedCard{card required}
+    UserPreferences{sharingPreference} to SharingPreference{appUser required}
 }
-relationship ManyToMany {
-    AppUser{feedCard} to Card{feedAppUser}
-}
-
-
 
 
 
@@ -220,7 +244,7 @@ entity CardTemplate {
     font Font
 }
 entity CardMetric {
-    metric Metric
+    metric CardMetric required
 }
 enum Color {
     OPTION1
