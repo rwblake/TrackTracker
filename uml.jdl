@@ -101,7 +101,16 @@ entity Playlist {
     name String required
     imageURL String
 }
+entity PlaylistStats {
+    playlistLength Integer
+    lastUpdated Instant
+}
+// AllAccountStats doesn't seem relevant enough to include here.
+// The stats involved can be derived from SQL statements instead.
 
+relationship OneToOne {
+    Playlist{playlistStats required} to PlaylistStats{playlist required}
+}
 relationship OneToMany {
     AppUser{playlist} to Playlist{appUser}
     AppUser{stream} to Stream{appUser}  // Each user will listen to many songs.
@@ -109,6 +118,11 @@ relationship OneToMany {
 relationship ManyToOne {
     Stream{song required} to Song{stream}  // Each stream is required to have one song.
     Song{album} to Album
+
+    PlaylistStats{happiestSong}   to Song{happiestPlaylistStats}
+    PlaylistStats{fastestSong}    to Song{fastestPlaylistStats}
+    PlaylistStats{sumsUpSong}     to Song{sumsUpPlaylistStats}
+    PlaylistStats{anonmalousSong} to Song{anomalousPlaylistStats}
 }
 relationship ManyToMany {
     Playlist{song} to Song{playlist}
