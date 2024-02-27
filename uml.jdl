@@ -1,129 +1,55 @@
+/** Profile information about a user, identifying them. */
+entity AppUser
+
+
+
+
+
+// Friends feature
 /**
-* In practice we'll extend the actual User class.
-* We could just use this as a placeholder for relationships?
-*/
-entity AppUser {
-
-}
-
-/**
-* Used to store calculated data for the Playlist Insights
-feature.
-* This feature should be usable when not logged in, but
-we probably don't want to store the data in that case.
-*/
-entity PlaylistData {
-    spotifyID String required unique
-    imageURL String
-
-    avgValence Float
-    avgDanceability Float
-    avgEnergy Float
-    avgAcousticness Float
-    length Integer
-
-    lastUpdated Instant required
-}
-
-/**
-* Used to cache top artists' percentages for Playlist Insights
-so it doesn't need to be re-calculated every time.
-* Not sure in practice how necessary this is
-*/
-entity PlaylistArtistProportion {
-    percentage Float
-}
-
-/**
- * Instance of a song being played.
- */
-entity Stream {
-    playedAt LocalDate required
-}
-
-entity Song {
-    spotifyID String required unique minlength(22)
-    name String required
-    imageURL String
-    year LocalDate
-    duration Duration
-
-    acousticness Float
-    danceability Float
-    energy Float
-    instrumentalness Float
-    key Integer
-    liveness Float
-    loudness Float
-    mode Boolean
-    speechiness Float
-    tempo Float
-    timesignature Integer
-    valence Float
-}
-
-entity Artist {
-    spotifyID String required unique
-    name String required
-}
-
-/**
- * One-way dated connection from user to another user.
+ * Each Friendship is related to two users. Friendships are setup by backend
+ * code when FriendRequests are accepted.
  */
 entity Friendship {
-    fromDate LocalDate required
+    from Instant required
 }
-
+/**
+ * Each user can send a friend request, which is related to the user
+ * initiating it, and who it is for.
+ */
+entity FriendRequest {
+    timeStamp Instant required
+}
+/**
+ * The system creates friend recommendations based on how similar two
+ * AppUsers' listening statistics are. The timestamp allows them to be
+ * recalculated when statistics are recalculated.
+ */
 entity FriendRecommendation {
     similarity Float min(0.0) max(1.0) required
     lastUpdated LocalDate required
 }
 
-entity SharingDataCard{
-    CardID String required unique
-    colour String
-    layout String
-    name String
-    data String
-}
-
-entity CardSaveData{
-CardID String required unique
-SaveID String required unique
-}
-
 relationship OneToOne {
-    PlaylistArtistProportion{artist} to Artist
-    PlaylistArtistProportion{playlist} to PlaylistData{artistProportions}
+    /** Each FriendRecommendation relates to the AppUser recommended. */
+    FriendRecommendation{aboutAppUser required} to AppUser{aboutFriendRecommendation}
 
-    Friendship{friend required} to AppUser
-    FriendRecommendation{user required} to AppUser
+    /** Each FriendRequest is associated with a particular user, who initiated it. */
+    FriendRequest{initiatingAppUser requied} to AppUser{intitiatingFriendRequest}
+
+    /** Friendships relate to two AppUsers: initiating, and accepting users */
+    Friendship{friendInitiating required} to AppUser{friendshipInitiated}
+    /** Friendships relate to two AppUsers: initiating, and accepting users */
+    Friendship{friendAccepting  required} to AppUser{friendshipAccepted}
 }
-
 relationship OneToMany {
-    AppUser{streams} to Stream  // Each user will listen to many songs.
-
-    PlaylistData{tracks} to Song
-    AppUser{playlists} to PlaylistData{owner}
-
     AppUser{friend} to Friendship
-    AppUser{friendRecommendation} to FriendRecommendation
-    AppUser{blockedUser} to AppUser
-    SharingDataCard{data} to AppUser
-
+    AppUser{toFriendRequest} to FriendRequest{toAppUser}
+    AppUser{forFriendRecommendation} to FriendRecommendation{forAppUser}
+    /** Blocked users are related to the user who blocked them. */
+    AppUser{blockedUser} to AppUser{blockedByUser}
 }
 
-relationship ManyToOne {
-    Stream{playedSong required} to Song{streamEvent}  // Each stream is required to have one song.
 
-    PlaylistData{happiestSong} to Song
-    PlaylistData{fastestSong} to Song
-    PlaylistData{sumUpSong} to Song
-    PlaylistData{anomalySong} to Song
-    CardSaveData{SaveID} to AppUser
-}
 
-relationship ManyToMany {
-    Artist{song} to Song{artist}
-    AppUser{SpotifyID} to SharingDataCard
-}
+
