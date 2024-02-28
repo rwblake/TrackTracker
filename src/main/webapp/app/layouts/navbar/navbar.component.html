@@ -27,6 +27,46 @@
             </span>
           </a>
         </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/friends" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="user-group"></fa-icon>
+              <span>Friends</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/insights" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="chart-simple"></fa-icon>
+              <span>Insights</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/insights/friends" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="chart-pie"></fa-icon>
+              <span>Friend Insights</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/insights/playlist" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="record-vinyl"></fa-icon>
+              <span>Playlist Insights</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/share" (click)="collapseNavbar()">
+            <span>
+              <fa-icon icon="share"></fa-icon>
+              <span>Share</span>
+            </span>
+          </a>
+        </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         <li
           *ngSwitchCase="true"
@@ -123,6 +163,19 @@
             </span>
           </a>
           <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
+            <li *ngSwitchCase="true">
+              <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
+              <a
+                class="dropdown-item"
+                [routerLink]="['/profile', account?.firstName]"
+                routerLinkActive="active"
+                (click)="collapseNavbar()"
+                data-cy="profile"
+              >
+                <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
+                <span>Profile</span>
+              </a>
+            </li>
             <li *ngSwitchCase="true">
               <a
                 class="dropdown-item"
