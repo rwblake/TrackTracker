@@ -37,6 +37,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           loadChildren: () => import('./profile/user-preferences/user-preferences.module').then(m => m.UserPreferencesModule),
         },
         { path: 'profile/:spotifyUsername', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
+        { path: 'friends', loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule) },
         {
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
