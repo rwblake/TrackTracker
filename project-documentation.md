@@ -139,9 +139,11 @@ _Note: because we've declared the `Book -> Author` relationship to be `required`
 
 ### Spring Boot (Back End Server)
 
-> **Spring Boot is configured in `src/main/resources/config/`**
+> **Spring Boot's configuration for it's build, test and deployment stages is located in `src/main/resources/config/`**
 
 > **The Spring Boot application is launched from the entrypoint located in `src/main/java/team/bham/TeamprojectApp.java`**
+
+> **The Spring Boot masterclass can be found here: https://canvas.bham.ac.uk/courses/72989/files/16275125?module_item_id=3582179**
 
 Spring Boot provides an easy way to create extendable and modular back-end Java applications, and allows for the easy integration of databases in full-stack applications.
 
@@ -189,6 +191,7 @@ Spring Boot provides a number of classes to implement a **REST API** using the `
 Spring Boot also implements **authentication** and **authorisation** (**access-control**). Authentication is predominantly handled for you, but authentication is handled in `src/main/java/team/bham/security/SecurityUtils.java`
 
 - > The application's **Security Protocols** are located in `src/main/java/team/bham/security/`
+- > To modify the security constraints on API endpoints directly, edit `src/main/java/team/bham/config/SecurityConfiguration.java`
 - Read more about spring security: https://spring.io/guides/topicals/spring-security-architecture
 
 <br>
