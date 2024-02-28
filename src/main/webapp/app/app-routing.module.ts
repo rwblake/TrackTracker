@@ -51,6 +51,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           path: 'insights/friends',
           loadChildren: () => import('./friends-insights/friends-insights.module').then(m => m.FriendsInsightsModule),
         },
+        { path: 'share', loadChildren: () => import('./share/share.module').then(m => m.ShareModule) },
         {
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
