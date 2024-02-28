@@ -243,7 +243,7 @@ entity CardTemplate {
     name String
     font Font
 }
-entity CardMetric {
+entity CardMetricEntity {
     metric CardMetric required
 }
 enum Color {
@@ -258,7 +258,7 @@ enum Font {
 
 relationship OneToMany {
     AppUser{cardTemplate} to CardTemplate{appUser required}
-    CardTemplate{metric} to CardMetric{cardTemplate required}
+    CardTemplate{metric} to CardMetricEntity{cardTemplate required}
 }
 
 
