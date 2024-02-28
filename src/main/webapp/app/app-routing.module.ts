@@ -29,6 +29,15 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
         },
         {
+          path: 'profile/edit-profile',
+          loadChildren: () => import('./profile/edit-profile/edit-profile.module').then(m => m.EditProfileModule),
+        },
+        {
+          path: 'profile/user-preferences',
+          loadChildren: () => import('./profile/user-preferences/user-preferences.module').then(m => m.UserPreferencesModule),
+        },
+        { path: 'profile/:spotifyUsername', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
+        {
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
         },
