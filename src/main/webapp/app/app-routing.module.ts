@@ -40,6 +40,14 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
         { path: 'friends', loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule) },
         { path: 'insights', loadChildren: () => import('./insights/insights.module').then(m => m.InsightsModule) },
         {
+          path: 'insights/playlist',
+          loadChildren: () => import('./playlist-insights/playlist-insights.module').then(m => m.PlaylistInsightsModule),
+        },
+        {
+          path: 'insights/playlist/:playlistId',
+          loadChildren: () => import('./playlist-insights/playlist/playlist.module').then(m => m.PlaylistModule),
+        },
+        {
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
         },
