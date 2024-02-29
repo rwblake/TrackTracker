@@ -160,6 +160,7 @@ entity SpotifyToken {
 }
 
 relationship OneToOne {
+    AppUser{internalUser required} to User
     AppUser{userPreferences required} to UserPreferences{appUser required}
     AppUser{spotifyToken required} to SpotifyToken{appUser required}
 }
