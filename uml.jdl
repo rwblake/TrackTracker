@@ -148,6 +148,8 @@ entity UserPreferences {
     visibility VisibilityPreference
     isDarkMode Boolean
     isHighContrast Boolean
+    fontSize Integer
+    playlistPrivacy VisibilityPreference
 }
 
 entity SpotifyToken {
