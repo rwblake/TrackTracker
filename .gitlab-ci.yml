@@ -21,6 +21,14 @@ nohttp:
   script:
     - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
 
+# add the spotify (and any other secure files) credentials secretly
+insert-secure-files:
+  stage: build
+  variables:
+    SECURE_FILES_DOWNLOAD_PATH: '.'
+  script:
+    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+
 maven-compile:
   stage: build
   script:
