@@ -120,7 +120,7 @@ relationship ManyToOne {
     Song{album} to Album
 
     PlaylistStats{happiestSong}   to Song{happiestPlaylistStats}
-    PlaylistStats{fastestSong}    to Song{fastestPlaylistStats}
+    PlaylistStats{energeticSong}    to Song{energeticPlaylistStats}
     PlaylistStats{sumsUpSong}     to Song{sumsUpPlaylistStats}
     PlaylistStats{anonmalousSong} to Song{anomalousPlaylistStats}
 }
