@@ -1,22 +1,59 @@
 @import 'bootstrap-variables';
 @import '~bootstrap/scss/functions';
-@import '~bootswatch/dist/darkly/variables';
 @import '~bootstrap/scss/bootstrap';
-@import '~bootswatch/dist/darkly/bootswatch';
 
-/* ==============================================================
-Bootstrap tweaks
-===============================================================*/
+//@import '~bootswatch/dist/darkly/variables';
+//@import '~bootswatch/dist/darkly/bootswatch';
 
-body,
-h1,
+/* ==========================================================================
+Globals for standard layout and formatting
+========================================================================== */
+
 h2,
 h3,
-h4 {
-  font-weight: 300;
+h4,
+.lead {
+  font-weight: 700;
+  text-align: center;
 }
 
-a:hover {
+h1 {
+  font-size: 2.2em;
+  font-weight: 400;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+// The top level div of each page
+.root {
+  position: relative;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  // The content div - different to div so that you can use bootstrap to resize dynamically
+  .column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// The highest root element, needed to ensure proper scrolling
+// and flex layout (ensures full height layout when below 100vh height)
+jhi-main {
+  background: $body-bg-dark;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
   /* make sure browsers use the pointer cursor for anchors, even with no href */
   cursor: pointer;
 }
@@ -69,9 +106,9 @@ Generic styles
   word-break: break-all;
 }
 
-.form-control {
-  background-color: #fff;
-}
+//.form-control {
+//  background-color: #fff;
+//}
 
 .readonly {
   background-color: #eee;
@@ -184,7 +221,7 @@ ui bootstrap tweaks
 }
 
 .dropdown-menu {
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 /* ==========================================================================

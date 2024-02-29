@@ -1,14 +1,17 @@
 @import '~bootstrap/scss/functions';
-@import '~bootswatch/dist/flatly/variables';
 @import '~bootstrap/scss/variables';
 
 /* ==========================================================================
 Navbar
 ========================================================================== */
 
+$ghost-white: rgb(255, 255, 255, 0.5);
+$white: rgb(255, 255, 255);
+$foreground: rgb(200, 200, 200);
+
 .navbar-version {
   font-size: 0.65em;
-  color: $navbar-dark-color;
+  color: $ghost-white;
 }
 
 .profile-image {
@@ -17,20 +20,148 @@ Navbar
 }
 
 .navbar {
+  position: relative;
+  z-index: 100;
   padding: 0.2rem 1rem;
+  width: 100%;
+  //overflow-x: hidden;
+  //overflow-y: visible;
+
   .dropdown-item.active,
   .dropdown-item.active:focus,
   .dropdown-item.active:hover {
     background-color: $dark;
   }
 
-  a.nav-link {
-    font-weight: 400;
+  .container-fluid {
+    width: 100%;
+    //overflow-x: hidden;
+    //overflow-y: visible;
+
+    .navbar-collapse {
+      width: 100%;
+      //overflow-x: hidden;
+      //overflow-y: visible;
+    }
+  }
+
+  .navbar-nav {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    //overflow-x: scroll;
+    //overflow-y: visible;
+
+    padding: 12px 0;
+    justify-content: flex-end;
+
+    li {
+      margin: 0;
+    }
   }
 
   .navbar-toggler {
+    color: $foreground;
+    transition: color 100ms ease;
     &:hover {
-      color: $navbar-dark-hover-color;
+      color: $white;
+    }
+
+    &:active {
+      color: $ghost-white;
+    }
+  }
+}
+
+.nav-item {
+  // The current page
+  &.active {
+    .nav-link {
+      color: $white;
+      font-weight: 600;
+      text-shadow: 0 0 12px rgb($ghost-white, 0.8);
+
+      &::before {
+        transform: scaleX(0.8);
+        @media (max-width: 767px) {
+          transform: none;
+          width: 50%;
+        }
+      }
+    }
+  }
+
+  .nav-link {
+    transition: color 100ms ease, font-weight 100ms ease;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    position: relative;
+
+    font-weight: 400;
+    color: $foreground;
+
+    & .link-icon {
+      font-size: 16px;
+      color: $foreground;
+    }
+
+    span {
+      display: inline-flex;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 70%;
+      margin-left: 15%;
+      margin-right: 15%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+
+      @media (max-width: 767px) {
+        margin: 0;
+        transform: none;
+        transition: width 0.2s ease;
+        width: 0;
+      }
+    }
+
+    &:hover {
+      color: $white;
+      text-shadow: 0 0 16px rgb($ghost-white, 0.6);
+
+      &::before {
+        transform: scaleX(1);
+        @media (max-width: 767px) {
+          transform: none;
+          width: 100%;
+        }
+      }
+
+      .link-icon {
+        color: $white;
+      }
+    }
+
+    &:active {
+      color: $ghost-white;
+
+      &::before {
+        background-color: $ghost-white;
+      }
+
+      .link-icon {
+        color: $white;
+      }
     }
   }
 }
@@ -38,6 +169,7 @@ Navbar
 /* ==========================================================================
 Logo styles
 ========================================================================== */
+
 .logo-img {
   height: 45px;
   width: 45px;
@@ -45,4 +177,5 @@ Logo styles
   vertical-align: middle;
   background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
   background-size: contain;
+  filter: drop-shadow(0 0 16px $blue-400);
 }

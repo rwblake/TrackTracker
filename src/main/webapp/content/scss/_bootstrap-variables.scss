@@ -4,6 +4,27 @@
  * https://github.com/twbs/bootstrap/blob/v5.3.2/scss/_variables.scss can be overwritten here
  * Make sure not to add !default to values here
  */
+@import '~bootstrap/scss/bootstrap';
+
+// Body formatting
+
+$body-color-dark: $gray-300;
+$body-bg-dark: $black;
+$body-secondary-color-dark: rgba($body-color-dark, 0.75);
+$body-secondary-bg-dark: $gray-800;
+$body-tertiary-color-dark: rgba($body-color-dark, 0.5);
+$body-tertiary-bg-dark: mix($gray-800, $gray-900, 50%);
+$body-emphasis-color-dark: $white;
+$border-color-dark: $gray-700;
+$border-color-translucent-dark: rgba($white, 0.15);
+$headings-color-dark: inherit;
+$link-color-dark: tint-color($primary, 40%);
+$link-hover-color-dark: shift-color($link-color-dark, -$link-shade-percentage);
+$code-color-dark: tint-color($code-color, 40%);
+$mark-color-dark: $body-color-dark;
+$mark-bg-dark: $yellow-800;
+
+$white: rgb(255, 255, 255);
 
 $purple-lm: #882bb4;
 $purple-dm: #cc5fff;
@@ -11,3 +32,15 @@ $purple-dm: #cc5fff;
 // Copied from bootswatch theme's _variables.scss
 $primary: $purple-dm;
 $info: $purple-lm;
+
+// Navbar colour variables:
+
+$navbar-dark-color: rgba($white, 0.55);
+$navbar-dark-hover-color: rgba($white, 1);
+$navbar-dark-active-color: $white;
+$navbar-dark-disabled-color: rgba($white, 0.25);
+$navbar-dark-icon-color: $navbar-dark-color;
+$navbar-dark-toggler-icon-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-dark-icon-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-dark-toggler-border-color: rgba($white, 0.1);
+$navbar-dark-brand-color: $navbar-dark-active-color;
+$navbar-dark-brand-hover-color: $navbar-dark-active-color;

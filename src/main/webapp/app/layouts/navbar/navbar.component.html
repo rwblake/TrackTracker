@@ -1,4 +1,4 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
+<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md">
   <div class="container-fluid">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
       <span class="logo-img"></span>
@@ -15,7 +15,7 @@
       aria-label="Toggle navigation"
       (click)="toggleNavbar()"
     >
-      <fa-icon icon="bars"></fa-icon>
+      <fa-icon icon="bars" [fixedWidth]="true"></fa-icon>
     </a>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
       <ul class="navbar-nav ms-auto">
@@ -30,7 +30,7 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/friends" (click)="collapseNavbar()">
             <span>
-              <fa-icon icon="user-group"></fa-icon>
+              <fa-icon icon="user-group" [fixedWidth]="true"></fa-icon>
               <span>Friends</span>
             </span>
           </a>
@@ -38,15 +38,15 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights" (click)="collapseNavbar()">
             <span>
-              <fa-icon icon="chart-simple"></fa-icon>
-              <span>Insights</span>
+              <fa-icon icon="chart-simple" [fixedWidth]="true"></fa-icon>
+              <span>My Insights</span>
             </span>
           </a>
         </li>
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights/friends" (click)="collapseNavbar()">
             <span>
-              <fa-icon icon="chart-pie"></fa-icon>
+              <fa-icon icon="chart-pie" [fixedWidth]="true"></fa-icon>
               <span>Friend Insights</span>
             </span>
           </a>
@@ -54,7 +54,7 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights/playlist" (click)="collapseNavbar()">
             <span>
-              <fa-icon icon="record-vinyl"></fa-icon>
+              <fa-icon icon="record-vinyl" [fixedWidth]="true"></fa-icon>
               <span>Playlist Insights</span>
             </span>
           </a>
@@ -62,7 +62,7 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/share" (click)="collapseNavbar()">
             <span>
-              <fa-icon icon="share"></fa-icon>
+              <fa-icon icon="share" [fixedWidth]="true"></fa-icon>
               <span>Share</span>
             </span>
           </a>
@@ -78,7 +78,7 @@
         >
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu" data-cy="entity">
             <span>
-              <fa-icon icon="th-list"></fa-icon>
+              <fa-icon icon="th-list" [fixedWidth]="true"></fa-icon>
               <span>Entities</span>
             </span>
           </a>
@@ -96,7 +96,7 @@
         >
           <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu" data-cy="adminMenu">
             <span>
-              <fa-icon icon="users-cog"></fa-icon>
+              <fa-icon icon="users-cog" [fixedWidth]="true"></fa-icon>
               <span>Administration</span>
             </span>
           </a>
