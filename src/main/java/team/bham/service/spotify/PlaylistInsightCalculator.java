@@ -24,8 +24,8 @@ import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralT
 public class PlaylistInsightCalculator {
 
     // Parameters for Spotify Web API access
-    private static final String clientId = "";
-    private static final String clientSecret = "";
+    private static final String clientId = "2ad8ecbf28804f93ba3f6794bec4e45f";
+    private static final String clientSecret = "dd752c39adb34ccbbbaf34e41b9f5ed3";
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -213,7 +213,7 @@ public class PlaylistInsightCalculator {
             spotifyApi.setRefreshToken("");
         }
 
-        pullPlaylist("3gjDYT8za2lcL5ECuXzFbl");
+        pullPlaylist("0PAeljtQdOiHAMqL8ly2fm");
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
