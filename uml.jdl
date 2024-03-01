@@ -70,7 +70,7 @@ entity Song {
     musicalKey Integer  // DANGER: key is a reserved keyword in sql (obviously)
     liveness Float min(0.0) max(1.0)
     loudness Float min(0.0) max(1.0)
-    mode Boolean
+    mode Boolean // true for major, false for minor
     speechiness Float min(0.0) max(1.0)
     tempo Float
     timeSignature Integer
