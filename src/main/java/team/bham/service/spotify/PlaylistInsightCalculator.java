@@ -24,8 +24,8 @@ import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralT
 public class PlaylistInsightCalculator {
 
     // Parameters for Spotify Web API access
-    private static final String clientId = "2ad8ecbf28804f93ba3f6794bec4e45f";
-    private static final String clientSecret = "dd752c39adb34ccbbbaf34e41b9f5ed3";
+    private static final String clientId = ""; // Paste Client ID here
+    private static final String clientSecret = ""; // Paste Client Secret here
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
 
     private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
@@ -122,28 +122,47 @@ public class PlaylistInsightCalculator {
         return IDs;
     }
 
-    /** Returns the indices of the tracks closest and furthest from the mean, in terms of their audio features, given a list. */
-    private static int[] selectFromMean(ArrayList<AudioFeatures> featuresList) {
+    /** Calculates and returns the indices of a playlist's happiest, most energetic, most and least anomalous songs (in this order)  */
+    private static int[] selectHighlightedSongs(ArrayList<AudioFeatures> featuresList) {
         AudioFeaturesMean mean = new AudioFeaturesMean(featuresList);
-        int[] closestAndFurthestIndices = { -1, -1 };
-        double minDist = 999;
-        double maxDist = -1;
-        double currentDist = 0;
+        int[] songIndices = { -1, -1, -1, -1 };
+
+        AudioFeatures current;
+        double maxValence = -1; // Tracks highest recorded valence of a song.
+        double maxEnergy = -1; // Tracks highest recorded energy of a song.
+        double minDist = 999; // Tracks mininum recorded distance from the mean of all songs.
+        double maxDist = -1; // Tracks maximum recorded distance from the mean of all songs.
+
+        double currentDist = 0; // Tracks current song's distance from the mean of all songs.
+        double currentValence = 0; // Tracks current song's valence.
+        double currentEnergy = 0; // Tracks current song's energy.
 
         for (int i = 0; i < featuresList.size(); i++) {
-            currentDist = mean.distanceFromMean(featuresList.get(i));
+            current = featuresList.get(i);
 
-            if (currentDist > maxDist) {
-                maxDist = currentDist;
-                closestAndFurthestIndices[0] = i;
+            currentValence = current.getValence();
+            if (currentValence > maxValence) {
+                maxValence = currentValence;
+                songIndices[0] = i;
             }
+            currentEnergy = current.getEnergy();
+            if (currentEnergy > maxEnergy) {
+                maxEnergy = currentEnergy;
+                songIndices[1] = i;
+            }
+
+            currentDist = mean.distanceFromMean(current);
             if (currentDist < minDist) {
                 minDist = currentDist;
-                closestAndFurthestIndices[1] = i;
+                songIndices[2] = i;
+            }
+            if (currentDist > maxDist) {
+                maxDist = currentDist;
+                songIndices[3] = i;
             }
         }
 
-        return closestAndFurthestIndices;
+        return songIndices;
     }
 
     /** Prints the tracks closest and furthest from the mean of a playlist, given an ID */
@@ -151,10 +170,12 @@ public class PlaylistInsightCalculator {
         ArrayList<Track> tracks = getPlaylistTracks(playlistId);
         ArrayList<AudioFeatures> audioFeaturesList = getAudioFeatures(tracks);
 
-        int[] closestAndFurthestIndices = selectFromMean(audioFeaturesList);
+        int[] closestAndFurthestIndices = selectHighlightedSongs(audioFeaturesList);
 
-        System.out.println(tracks.get(closestAndFurthestIndices[0]).getName());
-        System.out.println(tracks.get(closestAndFurthestIndices[1]).getName());
+        System.out.println("Highest Valence: " + tracks.get(closestAndFurthestIndices[0]).getName());
+        System.out.println("Highest Energy: " + tracks.get(closestAndFurthestIndices[1]).getName());
+        System.out.println("Sums Up Playlist: " + tracks.get(closestAndFurthestIndices[2]).getName());
+        System.out.println("Most Anomalous: " + tracks.get(closestAndFurthestIndices[3]).getName());
     }
 
     // EVERYTHING BELOW THIS POINT IS TERRIBLE PLACEHOLDER AUTHORISATION CODE
@@ -166,9 +187,11 @@ public class PlaylistInsightCalculator {
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
-            spotifyApi.setAccessToken(authorizationCodeCredentials.getAccessToken());
+
+            System.out.println("Tokens obtained. Paste these into their respective fields in main(), and set codeNeeded to True");
+            spotifyApi.setAccessToken("ACCESS TOKEN: " + authorizationCodeCredentials.getAccessToken());
             System.out.println(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorizationCodeCredentials.getRefreshToken());
+            spotifyApi.setRefreshToken("REFRESH TOKEN: " + authorizationCodeCredentials.getRefreshToken());
             System.out.println(authorizationCodeCredentials.getRefreshToken());
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
@@ -192,7 +215,7 @@ public class PlaylistInsightCalculator {
     /** Terrible, terrible placeholder code for testing until Chris finishes his end, and the frontend is developed*/
     public static void main(String[] args) {
         // Set this to True if you don't have any tokens
-        boolean codeNeeded = true;
+        boolean codeNeeded = false;
 
         if (codeNeeded) {
             authorizationCodeUri_Sync();
@@ -213,7 +236,7 @@ public class PlaylistInsightCalculator {
             spotifyApi.setRefreshToken("");
         }
 
-        pullPlaylist("0PAeljtQdOiHAMqL8ly2fm");
+        pullPlaylist(""); // Paste your playlist ID here
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
