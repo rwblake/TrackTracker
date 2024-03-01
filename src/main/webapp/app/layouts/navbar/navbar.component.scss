@@ -78,7 +78,6 @@ $foreground: rgb(200, 200, 200);
   &.active {
     .nav-link {
       color: $white;
-      font-weight: 600;
       text-shadow: 0 0 12px rgb($ghost-white, 0.8);
 
       &::before {
@@ -98,7 +97,7 @@ $foreground: rgb(200, 200, 200);
     align-items: center;
     position: relative;
 
-    font-weight: 400;
+    font-weight: 600;
     color: $foreground;
 
     & .link-icon {

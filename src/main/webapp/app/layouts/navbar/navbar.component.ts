@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { VERSION } from 'app/app.constants';
+import { APP_NAME, VERSION } from 'app/app.constants';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
@@ -20,7 +20,6 @@ export class NavbarComponent implements OnInit {
   version = '';
   account: Account | null = null;
   entitiesNavbarItems: any[] = [];
-  app_name = 'Spotify Analyser';
 
   constructor(
     private loginService: LoginService,
@@ -62,4 +61,6 @@ export class NavbarComponent implements OnInit {
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
+
+  protected readonly APP_NAME = APP_NAME;
 }

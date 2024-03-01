@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { APP_NAME } from '../app.constants';
 
 @Component({
   selector: 'jhi-share',
@@ -6,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./share.component.scss'],
 })
 export class ShareComponent implements OnInit {
-  constructor() {}
+  constructor(private titleService: Title) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.titleService.setTitle(APP_NAME + ' - Share');
+  }
 }

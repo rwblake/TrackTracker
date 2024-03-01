@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 
 import { LoginService } from 'app/login/login.service';
 import { AccountService } from 'app/core/auth/account.service';
+import { APP_NAME } from '../app.constants';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'jhi-login',
@@ -21,7 +23,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
     rememberMe: new FormControl(false, { nonNullable: true, validators: [Validators.required] }),
   });
 
-  constructor(private accountService: AccountService, private loginService: LoginService, private router: Router) {}
+  constructor(
+    private accountService: AccountService,
+    private loginService: LoginService,
+    private router: Router,
+    private titleService: Title
+  ) {}
 
   ngOnInit(): void {
     // if already authenticated then navigate to home page
@@ -30,6 +37,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.router.navigate(['']);
       }
     });
+    this.titleService.setTitle(APP_NAME + ' - Login');
   }
 
   ngAfterViewInit(): void {
