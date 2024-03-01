@@ -301,14 +301,13 @@
             <artifactId>spotify-web-api-java</artifactId>
             <version>8.3.6</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
+        <!-- Needed to fix issue with Java Wrapper for Spotify API -->
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
             <version>5.2.1</version>
         </dependency>
-
     </dependencies>
 
     <build>
