@@ -170,12 +170,23 @@ $foreground: rgb(200, 200, 200);
 Logo styles
 ========================================================================== */
 
-.logo-img {
-  height: 45px;
-  width: 45px;
-  display: inline-block;
-  vertical-align: middle;
-  background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
-  background-size: contain;
-  filter: drop-shadow(0 0 16px $blue-400);
+.navbar-brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+
+  .logo-img {
+    height: 45px;
+    width: 45px;
+    display: inline-block;
+    vertical-align: middle;
+    background: url('../../../content/images/app-logo.png') no-repeat center center;
+    background-size: contain;
+    filter: drop-shadow(0 0 16px rgb(164, 66, 210));
+  }
+
+  .navbar-title {
+    text-shadow: 0 0 16px rgb(164, 66, 210);
+  }
 }

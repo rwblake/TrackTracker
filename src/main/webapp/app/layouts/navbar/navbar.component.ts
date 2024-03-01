@@ -20,6 +20,7 @@ export class NavbarComponent implements OnInit {
   version = '';
   account: Account | null = null;
   entitiesNavbarItems: any[] = [];
+  app_name = 'Spotify Analyser';
 
   constructor(
     private loginService: LoginService,
