@@ -3,9 +3,7 @@ package team.bham.service.spotify;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 import org.apache.hc.core5.http.ParseException;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -25,8 +23,8 @@ import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralT
 public class PlaylistInsightCalculator {
 
     // Parameters for Spotify Web API access
-    private static String clientId = ""; // Paste Client ID here
-    private static String clientSecret = ""; // Paste Client Secret here
+    private static String clientId = "";
+    private static String clientSecret = "";
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
 
     private static SpotifyApi spotifyApi = null;
@@ -158,8 +156,58 @@ public class PlaylistInsightCalculator {
                 songIndices[3] = i;
             }
         }
-
         return songIndices;
+    }
+
+    /** Returns a mapping of artist IDs mapped to the proportion of tracks they're on*/
+    private static Map<String, Integer> calculateYears(ArrayList<Track> tracks) {
+        // Dictionary map to store years with the corresponding number of song occurrences
+        Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
+
+        for (Track track : tracks) {
+            String year = track.getAlbum().getReleaseDate().substring(0, 4);
+            if (yearsAndCounts.containsKey(year)) {
+                yearsAndCounts.replace(year, yearsAndCounts.get(year) + 1);
+            } else {
+                yearsAndCounts.put(year, 1);
+            }
+        }
+
+        return yearsAndCounts;
+    }
+
+    /** Returns a mapping of artist IDs mapped to the proportion of tracks they're on*/
+    private static Map<ArtistSimplified, Float> calculateArtistProportions(ArrayList<Track> tracks) {
+        // Dictionary map to store years with the corresponding number of song occurrences
+        Map<ArtistSimplified, Integer> artistsAndCounts = new HashMap<ArtistSimplified, Integer>();
+        ArtistSimplified current;
+        int totalArtistInstances = 0;
+
+        for (Track track : tracks) {
+            // Each track has multiple artists
+            ArtistSimplified[] artists = track.getAlbum().getArtists();
+
+            // Iterate through all artists and update their dictionary entries accordingly
+            for (ArtistSimplified artist : artists) {
+                current = artist;
+                if (artistsAndCounts.containsKey(current)) {
+                    artistsAndCounts.replace(artist, artistsAndCounts.get(current) + 1);
+                } else {
+                    artistsAndCounts.put(current, 1);
+                }
+
+                // There will likely be more artist instances than there are songs.
+                // To calculate their proportions, we need to divide by total artist instances.
+                totalArtistInstances++;
+            }
+        }
+
+        Map<ArtistSimplified, Float> artistProportions = new HashMap<ArtistSimplified, Float>();
+        for (Map.Entry<ArtistSimplified, Integer> entry : artistsAndCounts.entrySet()) {
+            artistProportions.put(entry.getKey(), entry.getValue() / (float) totalArtistInstances);
+        }
+
+        return artistProportions;
     }
 
     /** Prints the tracks closest and furthest from the mean of a playlist, given an ID */
@@ -167,12 +215,17 @@ public class PlaylistInsightCalculator {
         ArrayList<Track> tracks = getPlaylistTracks(playlistId);
         ArrayList<AudioFeatures> audioFeaturesList = getAudioFeatures(tracks);
 
-        int[] closestAndFurthestIndices = selectHighlightedSongs(audioFeaturesList);
+        int[] highlightedIndices = selectHighlightedSongs(audioFeaturesList);
+        System.out.println("Highest Valence: " + tracks.get(highlightedIndices[0]).getName());
+        System.out.println("Highest Energy: " + tracks.get(highlightedIndices[1]).getName());
+        System.out.println("Sums Up Playlist: " + tracks.get(highlightedIndices[2]).getName());
+        System.out.println("Most Anomalous: " + tracks.get(highlightedIndices[3]).getName());
 
-        System.out.println("Highest Valence: " + tracks.get(closestAndFurthestIndices[0]).getName());
-        System.out.println("Highest Energy: " + tracks.get(closestAndFurthestIndices[1]).getName());
-        System.out.println("Sums Up Playlist: " + tracks.get(closestAndFurthestIndices[2]).getName());
-        System.out.println("Most Anomalous: " + tracks.get(closestAndFurthestIndices[3]).getName());
+        Map<String, Integer> yearsAndCounts = calculateYears(tracks);
+        System.out.println("Year-Song Counts: " + yearsAndCounts.toString());
+
+        Map<ArtistSimplified, Float> artistProportions = calculateArtistProportions(tracks);
+        System.out.println("Year-Song Counts: " + artistProportions.toString());
     }
 
     // EVERYTHING BELOW THIS POINT IS TERRIBLE PLACEHOLDER AUTHORISATION CODE
@@ -214,7 +267,7 @@ public class PlaylistInsightCalculator {
     /** Terrible, terrible placeholder code for testing until Chris finishes his end, and the frontend is developed*/
     public static void main(String[] args) {
         // Set this to True if you don't have any tokens
-        boolean codeNeeded = true;
+        boolean codeNeeded = false;
 
         String[] credentials = CredentialsParser.parseCredentials();
         clientId = credentials[0];
@@ -239,7 +292,7 @@ public class PlaylistInsightCalculator {
             spotifyApi.setRefreshToken("");
         }
 
-        pullPlaylist("7bpGp7ceGVljvDzhB2YZNF"); // Paste your playlist ID here
+        pullPlaylist(""); // Paste your playlist ID here
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
