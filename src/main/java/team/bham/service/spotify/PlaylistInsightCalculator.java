@@ -1,5 +1,6 @@
 package team.bham.service.spotify;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -24,15 +25,11 @@ import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralT
 public class PlaylistInsightCalculator {
 
     // Parameters for Spotify Web API access
-    private static final String clientId = ""; // Paste Client ID here
-    private static final String clientSecret = ""; // Paste Client Secret here
+    private static String clientId = ""; // Paste Client ID here
+    private static String clientSecret = ""; // Paste Client Secret here
     private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
 
-    private static final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-        .setClientId(clientId)
-        .setClientSecret(clientSecret)
-        .setRedirectUri(redirectUri)
-        .build();
+    private static SpotifyApi spotifyApi = null;
 
     /** Given a playlist ID, builds an ArrayList of Track objects through multiple API requests and returns it*/
     private static ArrayList<Track> getPlaylistTracks(String playlistId) {
@@ -180,10 +177,9 @@ public class PlaylistInsightCalculator {
 
     // EVERYTHING BELOW THIS POINT IS TERRIBLE PLACEHOLDER AUTHORISATION CODE
 
-    private static AuthorizationCodeRequest authorizationCodeRequest;
-
-    public static void authorizationCode_Sync() {
+    public static void authorizationCode_Sync(String code) {
         try {
+            AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
             final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
@@ -198,24 +194,32 @@ public class PlaylistInsightCalculator {
         }
     }
 
-    private static final AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
-        .authorizationCodeUri()
-        .scope(
-            "playlist-read-private,user-follow-read,user-read-playback-position,user-top-read," +
-            "user-read-recently-played,user-library-read,user-read-email"
-        )
-        .show_dialog(true)
-        .build();
-
     private static void authorizationCodeUri_Sync() {
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
+            .authorizationCodeUri()
+            .scope(
+                "playlist-read-private,user-follow-read,user-read-playback-position,user-top-read," +
+                "user-read-recently-played,user-library-read,user-read-email"
+            )
+            .show_dialog(true)
+            .build();
         final URI uri = authorizationCodeUriRequest.execute();
         System.out.println(uri.toString());
+    }
+
+    private static void buildAPIObject() {
+        spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRedirectUri(redirectUri).build();
     }
 
     /** Terrible, terrible placeholder code for testing until Chris finishes his end, and the frontend is developed*/
     public static void main(String[] args) {
         // Set this to True if you don't have any tokens
-        boolean codeNeeded = false;
+        boolean codeNeeded = true;
+
+        String[] credentials = CredentialsParser.parseCredentials();
+        clientId = credentials[0];
+        clientSecret = credentials[1];
+        buildAPIObject();
 
         if (codeNeeded) {
             authorizationCodeUri_Sync();
@@ -226,9 +230,8 @@ public class PlaylistInsightCalculator {
 
             // Extract the authorisation code from the URL, and use it to make a request for tokens
             String code = fullLink.substring(fullLink.lastIndexOf("code=") + 5);
-            authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
 
-            authorizationCode_Sync();
+            authorizationCode_Sync(code);
         }
         // After tokens have been acquired, paste their values in the appropriate places for future runs
         else {
@@ -236,7 +239,7 @@ public class PlaylistInsightCalculator {
             spotifyApi.setRefreshToken("");
         }
 
-        pullPlaylist(""); // Paste your playlist ID here
+        pullPlaylist("7bpGp7ceGVljvDzhB2YZNF"); // Paste your playlist ID here
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
