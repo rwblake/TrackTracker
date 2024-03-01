@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-card-metric-heading" data-cy="CardMetricCreateUpdateHeading">Create or edit a Card Metric</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_metric">Metric</label>
+          <select class="form-control" name="metric" formControlName="metric" id="field_metric" data-cy="metric">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let cardType of cardTypeValues" [value]="cardType">cardType</option>
+          </select>
+          <div *ngIf="editForm.get('metric')!.invalid && (editForm.get('metric')!.dirty || editForm.get('metric')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('metric')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_cardTemplate">Card Template</label>
+          <select
+            class="form-control"
+            id="field_cardTemplate"
+            data-cy="cardTemplate"
+            name="cardTemplate"
+            formControlName="cardTemplate"
+            [compareWith]="compareCardTemplate"
+          >
+            <option *ngIf="editForm.get(['cardTemplate'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="cardTemplateOption" *ngFor="let cardTemplateOption of cardTemplatesSharedCollection">
+              {{ cardTemplateOption.id }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['cardTemplate'])!.invalid && (editForm.get(['cardTemplate'])!.dirty || editForm.get(['cardTemplate'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['cardTemplate'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

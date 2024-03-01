@@ -1,0 +1,57 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153924",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "playlist_stats",
+  "fields": [
+    {
+      "fieldName": "playlistLength",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "lastUpdated",
+      "fieldType": "Instant"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "PlaylistStats",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "happiestPlaylistStats",
+      "relationshipName": "happiestSong",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "energeticPlaylistStats",
+      "relationshipName": "energeticSong",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "sumsUpPlaylistStats",
+      "relationshipName": "sumsUpSong",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "anomalousPlaylistStats",
+      "relationshipName": "anonmalousSong",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "playlist",
+      "otherEntityRelationshipName": "playlistStats",
+      "ownerSide": false,
+      "relationshipName": "playlist",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}

@@ -1,0 +1,28 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153922",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "genre",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Genre",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "artist",
+      "otherEntityRelationshipName": "genre",
+      "ownerSide": false,
+      "relationshipName": "artist",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

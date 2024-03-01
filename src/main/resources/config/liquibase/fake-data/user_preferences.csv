@@ -1,0 +1,11 @@
+id;visibility;is_dark_mode;is_high_contrast;playlist_privacy
+1;PRIVATE;true;true;PRIVATE
+2;FRIENDS_OF_FRIENDS;false;false;PRIVATE
+3;FRIENDS_OF_FRIENDS;false;false;FRIENDS_OF_FRIENDS
+4;GLOBAL;false;false;PRIVATE
+5;FRIENDS;true;false;GLOBAL
+6;FRIENDS;true;true;GLOBAL
+7;GLOBAL;true;false;GLOBAL
+8;FRIENDS;false;false;FRIENDS
+9;FRIENDS;false;true;PRIVATE
+10;GLOBAL;false;false;PRIVATE

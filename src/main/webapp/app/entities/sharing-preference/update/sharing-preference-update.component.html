@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-sharing-preference-heading" data-cy="SharingPreferenceCreateUpdateHeading">Create or edit a Sharing Preference</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_metric">Metric</label>
+          <select class="form-control" name="metric" formControlName="metric" id="field_metric" data-cy="metric">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let cardType of cardTypeValues" [value]="cardType">cardType</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_visibility">Visibility</label>
+          <select class="form-control" name="visibility" formControlName="visibility" id="field_visibility" data-cy="visibility">
+            <option [ngValue]="null"></option>
+            <option *ngFor="let visibilityPreference of visibilityPreferenceValues" [value]="visibilityPreference">
+              visibilityPreference
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareUserPreferences"
+          >
+            <option *ngIf="editForm.get(['appUser'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="userPreferencesOption" *ngFor="let userPreferencesOption of userPreferencesSharedCollection">
+              {{ userPreferencesOption.id }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['appUser'])!.invalid && (editForm.get(['appUser'])!.dirty || editForm.get(['appUser'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['appUser'])?.errors?.required"> This field is required. </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

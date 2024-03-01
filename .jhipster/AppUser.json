@@ -1,0 +1,156 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153925",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "app_user",
+  "fields": [
+    {
+      "fieldName": "spotifyID",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "avatarURL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "bio",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "spotifyUsername",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "Profile information about a user, identifying them.",
+  "jpaMetamodelFiltering": false,
+  "name": "AppUser",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "ownerSide": true,
+      "relationshipName": "internalUser",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "userPreferences",
+      "otherEntityRelationshipName": "appUser",
+      "ownerSide": true,
+      "relationshipName": "userPreferences",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "spotifyToken",
+      "otherEntityRelationshipName": "appUser",
+      "ownerSide": true,
+      "relationshipName": "spotifyToken",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "feed",
+      "otherEntityRelationshipName": "appUser",
+      "ownerSide": true,
+      "relationshipName": "feed",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "friendship",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "friend",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "friendRequest",
+      "otherEntityRelationshipName": "toAppUser",
+      "relationshipName": "toFriendRequest",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "friendRecommendation",
+      "otherEntityRelationshipName": "forAppUser",
+      "relationshipName": "forFriendRecommendation",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "javadoc": "Blocked users are related to the user who blocked them.",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "blockedByUser",
+      "relationshipName": "blockedUser",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlist",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "playlist",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "stream",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "stream",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "card",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "card",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "cardTemplate",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "cardTemplate",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "friendRecommendation",
+      "otherEntityRelationshipName": "aboutAppUser",
+      "ownerSide": false,
+      "relationshipName": "aboutFriendRecommendation",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "friendRequest",
+      "otherEntityRelationshipName": "initiatingAppUser",
+      "ownerSide": false,
+      "relationshipName": "intitiatingFriendRequest",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "friendship",
+      "otherEntityRelationshipName": "friendInitiating",
+      "ownerSide": false,
+      "relationshipName": "friendshipInitiated",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "friendship",
+      "otherEntityRelationshipName": "friendAccepting",
+      "ownerSide": false,
+      "relationshipName": "friendshipAccepted",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "blockedUser",
+      "relationshipName": "blockedByUser",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

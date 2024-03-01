@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="cardMetric">
+      <h2 data-cy="cardMetricDetailsHeading"><span>Card Metric</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ cardMetric.id }}</span>
+        </dd>
+        <dt><span>Metric</span></dt>
+        <dd>
+          <span>{{ cardMetric.metric }}</span>
+        </dd>
+        <dt><span>Card Template</span></dt>
+        <dd>
+          <div *ngIf="cardMetric.cardTemplate">
+            <a [routerLink]="['/card-template', cardMetric.cardTemplate.id, 'view']">{{ cardMetric.cardTemplate.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/card-metric', cardMetric.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

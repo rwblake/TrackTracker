@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity FeedCard.
+    -->
+    <changeSet id="20240228165900-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="feed_id"
+                                 baseTableName="feed_card"
+                                 constraintName="fk_feed_card__feed_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="feed"/>
+
+        <addForeignKeyConstraint baseColumnNames="card_id"
+                                 baseTableName="feed_card"
+                                 constraintName="fk_feed_card__card_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="card"/>
+    </changeSet>
+</databaseChangeLog>

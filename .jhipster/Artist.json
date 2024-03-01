@@ -1,0 +1,52 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153920",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "artist",
+  "fields": [
+    {
+      "fieldName": "spotifyID",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "imageURL",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Artist",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "artist",
+      "ownerSide": true,
+      "relationshipName": "song",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "album",
+      "otherEntityRelationshipName": "artist",
+      "ownerSide": true,
+      "relationshipName": "album",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "genre",
+      "otherEntityRelationshipName": "artist",
+      "ownerSide": true,
+      "relationshipName": "genre",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

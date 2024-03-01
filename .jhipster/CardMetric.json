@@ -1,0 +1,31 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153932",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "card_metric",
+  "fields": [
+    {
+      "fieldName": "metric",
+      "fieldType": "CardType",
+      "fieldTypeJavadoc": "Represents the different types of data that can be analysed and shared with others",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "LISTENING_DURATION,GENRE,NO_OF_FRIENDS,NO_OF_SONGS_LISTENED,TOP_ARTIST,TOP_SONG,FRIEND_REQUEST"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "CardMetric",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "cardTemplate",
+      "otherEntityRelationshipName": "metric",
+      "relationshipName": "cardTemplate",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}

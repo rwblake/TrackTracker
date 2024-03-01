@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity PlaylistStats.
+    -->
+    <changeSet id="20240227153924-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="happiest_song_id"
+                                 baseTableName="playlist_stats"
+                                 constraintName="fk_playlist_stats__happiest_song_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="song"/>
+
+        <addForeignKeyConstraint baseColumnNames="energetic_song_id"
+                                 baseTableName="playlist_stats"
+                                 constraintName="fk_playlist_stats__energetic_song_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="song"/>
+
+        <addForeignKeyConstraint baseColumnNames="sums_up_song_id"
+                                 baseTableName="playlist_stats"
+                                 constraintName="fk_playlist_stats__sums_up_song_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="song"/>
+
+        <addForeignKeyConstraint baseColumnNames="anonmalous_song_id"
+                                 baseTableName="playlist_stats"
+                                 constraintName="fk_playlist_stats__anonmalous_song_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="song"/>
+    </changeSet>
+</databaseChangeLog>

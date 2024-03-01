@@ -1,0 +1,161 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153919",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "song",
+  "fields": [
+    {
+      "fieldName": "spotifyID",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "imageURL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "releaseDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "duration",
+      "fieldType": "Duration",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "acousticness",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "danceability",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "energy",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "instrumentalness",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "musicalKey",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "liveness",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "loudness",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "mode",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "speechiness",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    },
+    {
+      "fieldName": "tempo",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "timeSignature",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "valence",
+      "fieldType": "Float",
+      "fieldValidateRules": ["min", "max"],
+      "fieldValidateRulesMax": "1.0",
+      "fieldValidateRulesMin": "0.0"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Song",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "album",
+      "relationshipName": "album",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "stream",
+      "otherEntityRelationshipName": "song",
+      "relationshipName": "stream",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlistStats",
+      "otherEntityRelationshipName": "happiestSong",
+      "relationshipName": "happiestPlaylistStats",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlistStats",
+      "otherEntityRelationshipName": "energeticSong",
+      "relationshipName": "energeticPlaylistStats",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlistStats",
+      "otherEntityRelationshipName": "sumsUpSong",
+      "relationshipName": "sumsUpPlaylistStats",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlistStats",
+      "otherEntityRelationshipName": "anonmalousSong",
+      "relationshipName": "anomalousPlaylistStats",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "playlist",
+      "otherEntityRelationshipName": "song",
+      "ownerSide": false,
+      "relationshipName": "playlist",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "artist",
+      "otherEntityRelationshipName": "song",
+      "ownerSide": false,
+      "relationshipName": "artist",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "service": "no"
+}

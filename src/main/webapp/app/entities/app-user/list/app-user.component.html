@@ -1,0 +1,169 @@
+<div>
+  <h2 id="page-heading" data-cy="AppUserHeading">
+    <span>App Users</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span>Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-app-user"
+        [routerLink]="['/app-user/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span> Create a new App User </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="appUsers?.length === 0">
+    <span>No App Users found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="appUsers && appUsers.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span>ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="spotifyID">
+            <div class="d-flex">
+              <span>Spotify ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span>Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="avatarURL">
+            <div class="d-flex">
+              <span>Avatar URL</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="bio">
+            <div class="d-flex">
+              <span>Bio</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="spotifyUsername">
+            <div class="d-flex">
+              <span>Spotify Username</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="internalUser.id">
+            <div class="d-flex">
+              <span>Internal User</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="userPreferences.id">
+            <div class="d-flex">
+              <span>User Preferences</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="spotifyToken.id">
+            <div class="d-flex">
+              <span>Spotify Token</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="feed.id">
+            <div class="d-flex">
+              <span>Feed</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="blockedByUser.id">
+            <div class="d-flex">
+              <span>Blocked By User</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appUser of appUsers; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/app-user', appUser.id, 'view']">{{ appUser.id }}</a>
+          </td>
+          <td>{{ appUser.spotifyID }}</td>
+          <td>{{ appUser.name }}</td>
+          <td>{{ appUser.avatarURL }}</td>
+          <td>{{ appUser.bio }}</td>
+          <td>{{ appUser.spotifyUsername }}</td>
+          <td>
+            {{ appUser.internalUser?.id }}
+          </td>
+          <td>
+            <div *ngIf="appUser.userPreferences">
+              <a [routerLink]="['/user-preferences', appUser.userPreferences.id, 'view']">{{ appUser.userPreferences.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="appUser.spotifyToken">
+              <a [routerLink]="['/spotify-token', appUser.spotifyToken.id, 'view']">{{ appUser.spotifyToken.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="appUser.feed">
+              <a [routerLink]="['/feed', appUser.feed.id, 'view']">{{ appUser.feed.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="appUser.blockedByUser">
+              <a [routerLink]="['/app-user', appUser.blockedByUser.id, 'view']">{{ appUser.blockedByUser.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/app-user', appUser.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/app-user', appUser.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(appUser)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="card">
+      <h2 data-cy="cardDetailsHeading"><span>Card</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span>ID</span></dt>
+        <dd>
+          <span>{{ card.id }}</span>
+        </dd>
+        <dt><span>Metric</span></dt>
+        <dd>
+          <span>{{ card.metric }}</span>
+        </dd>
+        <dt><span>Time Frame</span></dt>
+        <dd>
+          <span>{{ card.timeFrame | duration }} ({{ card.timeFrame }})</span>
+        </dd>
+        <dt><span>Metric Value</span></dt>
+        <dd>
+          <span>{{ card.metricValue }}</span>
+        </dd>
+        <dt><span>Time Generated</span></dt>
+        <dd>
+          <span>{{ card.timeGenerated | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span>App User</span></dt>
+        <dd>
+          <div *ngIf="card.appUser">
+            <a [routerLink]="['/app-user', card.appUser.id, 'view']">{{ card.appUser.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/card', card.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153930",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "feed",
+  "fields": [
+    {
+      "fieldName": "lastUpdated",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "Contains each user's feed, which is comprised of cards from different users.\\nEach row is a feed, respective to the user who will see it.",
+  "jpaMetamodelFiltering": false,
+  "name": "Feed",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "feedCard",
+      "otherEntityRelationshipName": "feed",
+      "relationshipName": "card",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "feed",
+      "ownerSide": false,
+      "relationshipName": "appUser",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}

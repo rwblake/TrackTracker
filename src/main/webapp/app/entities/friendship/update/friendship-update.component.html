@@ -1,0 +1,116 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-friendship-heading" data-cy="FriendshipCreateUpdateHeading">Create or edit a Friendship</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_createdAt">Created At</label>
+          <div class="d-flex">
+            <input
+              id="field_createdAt"
+              data-cy="createdAt"
+              type="datetime-local"
+              class="form-control"
+              name="createdAt"
+              formControlName="createdAt"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('createdAt')!.invalid && (editForm.get('createdAt')!.dirty || editForm.get('createdAt')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('createdAt')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('createdAt')?.errors?.datetimelocal">
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_friendInitiating">Friend Initiating</label>
+          <select
+            class="form-control"
+            id="field_friendInitiating"
+            data-cy="friendInitiating"
+            name="friendInitiating"
+            formControlName="friendInitiating"
+            [compareWith]="compareAppUser"
+          >
+            <option *ngIf="editForm.get(['friendInitiating'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of friendInitiatingsCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['friendInitiating'])!.invalid &&
+            (editForm.get(['friendInitiating'])!.dirty || editForm.get(['friendInitiating'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['friendInitiating'])?.errors?.required">
+            This field is required.
+          </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_friendAccepting">Friend Accepting</label>
+          <select
+            class="form-control"
+            id="field_friendAccepting"
+            data-cy="friendAccepting"
+            name="friendAccepting"
+            formControlName="friendAccepting"
+            [compareWith]="compareAppUser"
+          >
+            <option *ngIf="editForm.get(['friendAccepting'])!.value == null" [ngValue]="null" selected></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of friendAcceptingsCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['friendAccepting'])!.invalid &&
+            (editForm.get(['friendAccepting'])!.dirty || editForm.get(['friendAccepting'])!.touched)
+          "
+        >
+          <small class="form-text text-danger" *ngIf="editForm.get(['friendAccepting'])?.errors?.required"> This field is required. </small>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareAppUser"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

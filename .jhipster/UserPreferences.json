@@ -1,0 +1,51 @@
+{
+  "applications": "*",
+  "changelogDate": "20240227153926",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "user_preferences",
+  "fields": [
+    {
+      "fieldName": "visibility",
+      "fieldType": "VisibilityPreference",
+      "fieldTypeJavadoc": "Represents the different levels of privacy that a user can retain on a given value.",
+      "fieldValues": "GLOBAL,FRIENDS_OF_FRIENDS,FRIENDS,PRIVATE"
+    },
+    {
+      "fieldName": "isDarkMode",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "isHighContrast",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "playlistPrivacy",
+      "fieldType": "VisibilityPreference",
+      "fieldTypeJavadoc": "Represents the different levels of privacy that a user can retain on a given value.",
+      "fieldValues": "GLOBAL,FRIENDS_OF_FRIENDS,FRIENDS,PRIVATE"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "UserPreferences",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "sharingPreference",
+      "otherEntityRelationshipName": "appUser",
+      "relationshipName": "sharingPreference",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "userPreferences",
+      "ownerSide": false,
+      "relationshipName": "appUser",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "service": "no"
+}
