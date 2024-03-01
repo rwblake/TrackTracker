@@ -5,7 +5,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Scanner;
 import org.apache.hc.core5.http.ParseException;
-import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
@@ -13,6 +13,7 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 
 /** Handles authorising a spotify account, getting tokens and refreshing tokens. */
+@Service
 public class SpotifyAuthorisationService {
 
     // Static - can be shared between authentication requests
@@ -104,7 +105,7 @@ public class SpotifyAuthorisationService {
     }
 
     /** Generate a random alphanumeric string of length n */
-    private static @NotNull String generateAlphaNumericString(int n) {
+    private static String generateAlphaNumericString(int n) {
         // choose a Character randomly from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
 
