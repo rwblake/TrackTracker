@@ -2,6 +2,8 @@ package team.bham.service;
 
 import java.time.Duration;
 import java.time.Instant;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.michaelthelin.spotify.enums.Modality;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
@@ -17,6 +19,8 @@ import team.bham.repository.ArtistRepository;
 //import team.bham.repository.GenreRepository;
 import team.bham.repository.SongRepository;
 
+@Service
+@Transactional
 public class SongService {
 
     private final SongRepository songRepository;
