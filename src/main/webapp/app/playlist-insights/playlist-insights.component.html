@@ -1,7 +1,10 @@
 <h1>Playlist Insights</h1>
 
-<form>
+<form (ngSubmit)="sendLink()" [formGroup]="urlForm">
   <label>Paste the link to your playlist here:</label>
   <input type="text" name="name" formControlName="name" />
-  <button type="button" (click)="sendLink()">Go!</button>
+  <div *ngIf="urlForm.get('name')!.invalid && (urlForm.get('name')!.dirty || urlForm.get('name')!.touched)">
+    <small class="form-text text-danger" *ngIf="urlForm.get('name')?.errors?.required"> This field is required.</small>
+  </div>
+  <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">Go!</button>
 </form>

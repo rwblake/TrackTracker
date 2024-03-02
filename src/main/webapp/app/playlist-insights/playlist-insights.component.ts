@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
+import { PlaylistInsightsService } from './playlist-insights.service';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -9,11 +10,16 @@ import { APP_NAME } from '../app.constants';
   styleUrls: ['./playlist-insights.component.scss'],
 })
 export class PlaylistInsightsComponent implements OnInit {
-  constructor(private titleService: Title) {}
+  urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
+  constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
 
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
   }
 
-  sendLink() {}
+  sendLink() {
+    // @ts-ignore
+    const url: String = this.urlForm.get('name').value;
+    this.playlistInsightsService.sendURL(url);
+  }
 }
