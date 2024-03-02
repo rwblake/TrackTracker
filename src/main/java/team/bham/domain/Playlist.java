@@ -43,7 +43,7 @@ public class Playlist implements Serializable {
     @JoinColumn(unique = true)
     private PlaylistStats playlistStats;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "rel_playlist__song",
         joinColumns = @JoinColumn(name = "playlist_id"),

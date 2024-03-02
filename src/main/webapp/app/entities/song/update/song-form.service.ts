@@ -97,9 +97,7 @@ export class SongFormService {
       liveness: new FormControl(songRawValue.liveness, {
         validators: [Validators.min(0.0), Validators.max(1.0)],
       }),
-      loudness: new FormControl(songRawValue.loudness, {
-        validators: [Validators.min(0.0), Validators.max(1.0)],
-      }),
+      loudness: new FormControl(songRawValue.loudness),
       mode: new FormControl(songRawValue.mode),
       speechiness: new FormControl(songRawValue.speechiness, {
         validators: [Validators.min(0.0), Validators.max(1.0)],

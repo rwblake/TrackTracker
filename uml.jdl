@@ -69,7 +69,7 @@ entity Song {
     instrumentalness Float min(0.0) max(1.0)
     musicalKey Integer  // DANGER: key is a reserved keyword in sql (obviously)
     liveness Float min(0.0) max(1.0)
-    loudness Float min(0.0) max(1.0)
+    loudness Float  // Loudness can be any value (attmpted to update manually in files)
     mode Boolean // true for major, false for minor
     speechiness Float min(0.0) max(1.0)
     tempo Float
@@ -117,7 +117,7 @@ relationship OneToMany {
 }
 relationship ManyToOne {
     Stream{song required} to Song{stream}  // Each stream is required to have one song.
-    Song{album} to Album
+    Song{album} to Album{song}  // need to update manually in files
 
     PlaylistStats{happiestSong}   to Song{happiestPlaylistStats}
     PlaylistStats{energeticSong}    to Song{energeticPlaylistStats}

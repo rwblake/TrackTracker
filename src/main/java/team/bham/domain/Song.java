@@ -74,8 +74,6 @@ public class Song implements Serializable {
     @Column(name = "liveness")
     private Float liveness;
 
-    @DecimalMin(value = "0.0")
-    @DecimalMax(value = "1.0")
     @Column(name = "loudness")
     private Float loudness;
 
@@ -98,7 +96,7 @@ public class Song implements Serializable {
     @Column(name = "valence")
     private Float valence;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(value = { "artists" }, allowSetters = true)
     private Album album;
 
@@ -132,7 +130,7 @@ public class Song implements Serializable {
     @JsonIgnoreProperties(value = { "playlistStats", "songs", "appUser" }, allowSetters = true)
     private Set<Playlist> playlists = new HashSet<>();
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();

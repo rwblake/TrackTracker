@@ -174,8 +174,6 @@
           <label class="form-label" for="field_loudness">Loudness</label>
           <input type="number" class="form-control" name="loudness" id="field_loudness" data-cy="loudness" formControlName="loudness" />
           <div *ngIf="editForm.get('loudness')!.invalid && (editForm.get('loudness')!.dirty || editForm.get('loudness')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('loudness')?.errors?.min"> This field should be at least 0.0. </small>
-            <small class="form-text text-danger" *ngIf="editForm.get('loudness')?.errors?.max"> This field cannot be more than 1.0. </small>
             <small class="form-text text-danger" [hidden]="!editForm.get('loudness')?.errors?.number">
               This field should be a number.
             </small>
