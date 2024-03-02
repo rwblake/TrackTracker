@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.michaelthelin.spotify.enums.Modality;
+import se.michaelthelin.spotify.enums.ReleaseDatePrecision;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
@@ -20,7 +21,6 @@ import team.bham.repository.ArtistRepository;
 import team.bham.repository.SongRepository;
 
 @Service
-@Transactional
 public class SongService {
 
     private final SongRepository songRepository;
@@ -49,7 +49,19 @@ public class SongService {
         myAlbum.setSpotifyID(album.getId());
         myAlbum.setName(album.getName());
         myAlbum.setImageURL(album.getImages()[0].getUrl());
-        myAlbum.setReleaseDate(Instant.parse(album.getReleaseDate()));
+        // Convert into required ISO-8601 format
+        ReleaseDatePrecision precision = album.getReleaseDatePrecision();
+        String releaseDate = album.getReleaseDate();
+        switch (precision) {
+            case YEAR:
+                releaseDate = releaseDate + "-01";
+            case MONTH:
+                releaseDate = releaseDate + "-01";
+            case DAY:
+                releaseDate = releaseDate + "T00:00:00Z";
+        }
+        myAlbum.setReleaseDate(Instant.parse(releaseDate));
+
         AlbumType myAlbumType;
         switch (album.getAlbumType()) {
             case ALBUM:
@@ -100,7 +112,19 @@ public class SongService {
         song.setSpotifyID(track.getId());
         song.setName(track.getName());
         song.setImageURL(track.getAlbum().getImages()[0].getUrl());
-        song.setReleaseDate(Instant.parse(track.getAlbum().getReleaseDate()));
+        // Convert into required ISO-8601 format
+        ReleaseDatePrecision precision = track.getAlbum().getReleaseDatePrecision();
+        String releaseDate = track.getAlbum().getReleaseDate();
+        switch (precision) {
+            case YEAR:
+                releaseDate = releaseDate + "-01";
+            case MONTH:
+                releaseDate = releaseDate + "-01";
+            case DAY:
+                releaseDate = releaseDate + "T00:00:00Z";
+        }
+        song.setReleaseDate(Instant.parse(releaseDate));
+
         song.setDuration(Duration.ofMillis(track.getDurationMs()));
         // set audio feature fields
         song.setAcousticness(audioFeatures.getAcousticness());
@@ -117,18 +141,20 @@ public class SongService {
         song.setValence(audioFeatures.getValence());
         // create album
         Album album = createAlbum(track.getAlbum());
-
+        this.albumRepository.save(album);
+        song.setAlbum(album);
+        this.songRepository.save(song);
         // create genres
         // CAN'T GET GENRES WITH SIMPLIFIED ARTIST OBJECTS
         // create artists
         Artist tmpArtist;
         for (ArtistSimplified artist : track.getArtists()) {
             tmpArtist = createArtist(artist);
-            tmpArtist.addSong(song);
+            artistRepository.save(tmpArtist);
+            //tmpArtist.addSong(song);
             song.addArtist(tmpArtist);
-            tmpArtist.addAlbum(album);
+            //tmpArtist.addAlbum(album);
             album.addArtist(tmpArtist);
-            this.artistRepository.save(tmpArtist);
         }
         // save objects to database
         this.albumRepository.save(album);

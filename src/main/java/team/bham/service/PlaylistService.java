@@ -11,7 +11,6 @@ import team.bham.repository.PlaylistRepository;
 import team.bham.repository.SongRepository;
 
 @Service
-@Transactional
 public class PlaylistService {
 
     private final PlaylistRepository playlistRepository;
@@ -52,12 +51,12 @@ public class PlaylistService {
             // create song
             tmpSong = songService.createSong(tracks.get(i), audioFeaturesList.get(i));
             // link to playlist
-            tmpSong.addPlaylist(myPlaylist);
+            //tmpSong.addPlaylist(myPlaylist);
             myPlaylist.addSong(tmpSong);
-            songRepository.save(tmpSong);
+            //songRepository.save(tmpSong);
         }
         // save playlist
-        playlistRepository.save(myPlaylist);
+        //playlistRepository.save(myPlaylist);
 
         return myPlaylist;
     }
