@@ -2,6 +2,8 @@ package team.bham.service;
 
 import java.time.Instant;
 import org.hibernate.boot.model.relational.AuxiliaryDatabaseObject;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
 import se.michaelthelin.spotify.model_objects.specification.Track;
 import team.bham.domain.Playlist;
@@ -11,6 +13,8 @@ import team.bham.repository.PlaylistRepository;
 import team.bham.repository.PlaylistStatsRepository;
 import team.bham.repository.SongRepository;
 
+@Service
+@Transactional
 public class PlaylistStatsService {
 
     private final PlaylistStatsRepository playlistStatsRepository;
