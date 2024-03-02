@@ -31,15 +31,15 @@ import tech.jhipster.security.RandomUtil;
 @Transactional
 public class UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    protected final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    protected final UserRepository userRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    protected final PasswordEncoder passwordEncoder;
 
-    private final AuthorityRepository authorityRepository;
+    protected final AuthorityRepository authorityRepository;
 
-    private final CacheManager cacheManager;
+    protected final CacheManager cacheManager;
 
     public UserService(
         UserRepository userRepository,
@@ -135,7 +135,7 @@ public class UserService {
         return newUser;
     }
 
-    private boolean removeNonActivatedUser(User existingUser) {
+    protected boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.isActivated()) {
             return false;
         }
@@ -316,7 +316,7 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
-    private void clearUserCaches(User user) {
+    protected void clearUserCaches(User user) {
         Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
         if (user.getEmail() != null) {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());

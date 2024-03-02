@@ -1,5 +1,6 @@
 package team.bham.web.rest;
 
+import java.net.URI;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -8,15 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import team.bham.domain.AppUser;
+import team.bham.domain.SpotifyToken;
 import team.bham.domain.User;
 import team.bham.repository.UserRepository;
 import team.bham.security.SecurityUtils;
+import team.bham.service.DeclinedSpotifyAccessException;
 import team.bham.service.MailService;
 import team.bham.service.UserService;
+import team.bham.service.account.AppUserService;
 import team.bham.service.dto.AdminUserDTO;
 import team.bham.service.dto.PasswordChangeDTO;
+import team.bham.service.spotify.SpotifyAuthorisationService;
 import team.bham.web.rest.errors.*;
 import team.bham.web.rest.vm.KeyAndPasswordVM;
+import team.bham.web.rest.vm.ManagedAppUserVM;
 import team.bham.web.rest.vm.ManagedUserVM;
 
 /**
@@ -37,32 +45,54 @@ public class AccountResource {
 
     private final UserRepository userRepository;
 
+    private final AppUserService appUserService;
+
     private final UserService userService;
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final SpotifyAuthorisationService spotifyAuthorisationService;
+
+    public AccountResource(
+        UserRepository userRepository,
+        UserService userService,
+        AppUserService appUserService,
+        MailService mailService,
+        SpotifyAuthorisationService spotifyAuthorisationService
+    ) {
         this.userRepository = userRepository;
         this.userService = userService;
+        this.appUserService = appUserService;
         this.mailService = mailService;
+        this.spotifyAuthorisationService = spotifyAuthorisationService;
     }
 
     /**
      * {@code POST  /register} : register the user.
      *
-     * @param managedUserVM the managed user View Model.
+     * @param managedAppUserVM the managed user View Model.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
-        if (isPasswordLengthInvalid(managedUserVM.getPassword())) {
+    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM) {
+        if (isPasswordLengthInvalid(managedAppUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        mailService.sendActivationEmail(user);
+        //        // before creating user, link spotify account
+        //        URI uri = spotifyAuthorisationService.getAuthorisationCodeUri();
+        //        URI returned = URI.create("example url here");
+        //        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(returned);
+        //        if (credentials == null) {
+        //            throw new DeclinedSpotifyAccessException();
+        //        }
+        //
+        //        System.out.println("Successfully generated credentials: " + credentials);
+
+        AppUser appUser = appUserService.registerAppUser(managedAppUserVM, managedAppUserVM.getPassword());
+        mailService.sendActivationEmail(appUser.getInternalUser());
     }
 
     /**
@@ -122,7 +152,7 @@ public class AccountResource {
             throw new EmailAlreadyUsedException();
         }
         Optional<User> user = userRepository.findOneByLogin(userLogin);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("User could not be found");
         }
         userService.updateUser(

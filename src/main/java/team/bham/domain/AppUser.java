@@ -178,6 +178,16 @@ public class AppUser implements Serializable {
     )
     private AppUser blockedByUser;
 
+    /** @deprecated Prefer the new constructor which initialises required fields of the entity */
+    @Deprecated
+    public AppUser() {}
+
+    /** Used to establish initial required variables */
+    public AppUser(String spotifyID, SpotifyToken spotifyToken) {
+        this.spotifyID = spotifyID;
+        this.spotifyToken = spotifyToken;
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
