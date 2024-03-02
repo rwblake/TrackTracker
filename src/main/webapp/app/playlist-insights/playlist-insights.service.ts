@@ -12,7 +12,7 @@ export class PlaylistInsightsService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  sendURL(url: String): Observable<EntityResponseType> {
-    return this.http.post<String>(this.resourceUrl, url, { observe: 'response' });
+  sendURL(url: String): Observable<String> {
+    return this.http.post<String>(this.resourceUrl, url);
   }
 }

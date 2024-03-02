@@ -20,6 +20,6 @@ export class PlaylistInsightsComponent implements OnInit {
   sendLink() {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
-    this.playlistInsightsService.sendURL(url);
+    this.playlistInsightsService.sendURL(url).subscribe(value => console.log(value));
   }
 }
