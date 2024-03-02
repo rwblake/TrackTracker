@@ -29,12 +29,6 @@ public class PlaylistInsightCalculator {
 
     private static SpotifyApi spotifyApi = null;
 
-    /** Given a playlist URL, return the respective Spotify ID for that playlist*/
-    public static String parsePlaylistIDfromURL(String url) {
-        int startIndex = url.indexOf("playlist/") + 9;
-        return url.substring(startIndex, startIndex + 22);
-    }
-
     /** Given a playlist ID, builds an ArrayList of Track objects through multiple API requests and returns it*/
     private static ArrayList<Track> getPlaylistTracks(String playlistId) {
         ArrayList<Track> tracks = new ArrayList<Track>();
