@@ -29,6 +29,12 @@ public class PlaylistInsightCalculator {
 
     private static SpotifyApi spotifyApi = null;
 
+    /** Given a playlist URL, return the respective Spotify ID for that playlist*/
+    public static String parsePlaylistIDfromURL(String url) {
+        int startIndex = url.indexOf("playlist/") + 9;
+        return url.substring(startIndex, startIndex + 22);
+    }
+
     /** Given a playlist ID, builds an ArrayList of Track objects through multiple API requests and returns it*/
     private static ArrayList<Track> getPlaylistTracks(String playlistId) {
         ArrayList<Track> tracks = new ArrayList<Track>();
@@ -267,7 +273,7 @@ public class PlaylistInsightCalculator {
     /** Terrible, terrible placeholder code for testing until Chris finishes his end, and the frontend is developed*/
     public static void main(String[] args) {
         // Set this to True if you don't have any tokens
-        boolean codeNeeded = false;
+        boolean codeNeeded = true;
 
         String[] credentials = CredentialsParser.parseCredentials();
         clientId = credentials[0];
@@ -283,7 +289,6 @@ public class PlaylistInsightCalculator {
 
             // Extract the authorisation code from the URL, and use it to make a request for tokens
             String code = fullLink.substring(fullLink.lastIndexOf("code=") + 5);
-
             authorizationCode_Sync(code);
         }
         // After tokens have been acquired, paste their values in the appropriate places for future runs
@@ -292,7 +297,7 @@ public class PlaylistInsightCalculator {
             spotifyApi.setRefreshToken("");
         }
 
-        pullPlaylist(""); // Paste your playlist ID here
+        pullPlaylist("0PAeljtQdOiHAMqL8ly2fm"); // Paste your playlist ID here
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
