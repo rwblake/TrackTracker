@@ -117,16 +117,16 @@ public class PlaylistInsightCalculator {
         return IDs;
     }
 
-    /** Calculates and returns the indices of a playlist's happiest, most energetic, most and least anomalous songs (in this order)  */
-    private static int[] selectHighlightedSongs(ArrayList<AudioFeatures> featuresList) {
+    /** Calculates and returns the an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
+    private static Track[] selectHighlightedSongs(ArrayList<Track> trackList, ArrayList<AudioFeatures> featuresList) {
         AudioFeaturesMean mean = new AudioFeaturesMean(featuresList);
-        int[] songIndices = { -1, -1, -1, -1 };
+        Track[] selectedSongs = { null, null, null, null };
 
         AudioFeatures current;
-        double maxValence = -1; // Tracks highest recorded valence of a song.
-        double maxEnergy = -1; // Tracks highest recorded energy of a song.
-        double minDist = 999; // Tracks mininum recorded distance from the mean of all songs.
-        double maxDist = -1; // Tracks maximum recorded distance from the mean of all songs.
+        double maxValence = -1; // Highest recorded valence of a song.
+        double maxEnergy = -1; // Highest recorded energy of a song.
+        double minDist = 999; // Mininum recorded distance from the mean of all songs.
+        double maxDist = -1; // Maximum recorded distance from the mean of all songs.
 
         double currentDist = 0; // Tracks current song's distance from the mean of all songs.
         double currentValence = 0; // Tracks current song's valence.
@@ -138,25 +138,26 @@ public class PlaylistInsightCalculator {
             currentValence = current.getValence();
             if (currentValence > maxValence) {
                 maxValence = currentValence;
-                songIndices[0] = i;
+                selectedSongs[0] = trackList.get(i);
             }
             currentEnergy = current.getEnergy();
             if (currentEnergy > maxEnergy) {
                 maxEnergy = currentEnergy;
-                songIndices[1] = i;
+                selectedSongs[1] = trackList.get(i);
             }
 
             currentDist = mean.distanceFromMean(current);
             if (currentDist < minDist) {
                 minDist = currentDist;
-                songIndices[2] = i;
+                selectedSongs[2] = trackList.get(i);
             }
             if (currentDist > maxDist) {
                 maxDist = currentDist;
-                songIndices[3] = i;
+                selectedSongs[3] = trackList.get(i);
             }
         }
-        return songIndices;
+
+        return selectedSongs;
     }
 
     /** Returns a mapping of artist IDs mapped to the proportion of tracks they're on*/
@@ -215,12 +216,6 @@ public class PlaylistInsightCalculator {
         ArrayList<Track> tracks = getPlaylistTracks(playlistId);
         ArrayList<AudioFeatures> audioFeaturesList = getAudioFeatures(tracks);
 
-        int[] highlightedIndices = selectHighlightedSongs(audioFeaturesList);
-        System.out.println("Highest Valence: " + tracks.get(highlightedIndices[0]).getName());
-        System.out.println("Highest Energy: " + tracks.get(highlightedIndices[1]).getName());
-        System.out.println("Sums Up Playlist: " + tracks.get(highlightedIndices[2]).getName());
-        System.out.println("Most Anomalous: " + tracks.get(highlightedIndices[3]).getName());
-
         Map<String, Integer> yearsAndCounts = calculateYears(tracks);
         System.out.println("Year-Song Counts: " + yearsAndCounts.toString());
 
@@ -228,70 +223,8 @@ public class PlaylistInsightCalculator {
         System.out.println("Year-Song Counts: " + artistProportions.toString());
     }
 
-    // EVERYTHING BELOW THIS POINT IS TERRIBLE PLACEHOLDER AUTHORISATION CODE
-
-    public static void authorizationCode_Sync(String code) {
-        try {
-            AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code).build();
-            final AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
-
-            // Set access and refresh token for further "spotifyApi" object usage
-
-            System.out.println("Tokens obtained. Paste these into their respective fields in main(), and set codeNeeded to True");
-            spotifyApi.setAccessToken("ACCESS TOKEN: " + authorizationCodeCredentials.getAccessToken());
-            System.out.println(authorizationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken("REFRESH TOKEN: " + authorizationCodeCredentials.getRefreshToken());
-            System.out.println(authorizationCodeCredentials.getRefreshToken());
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    private static void authorizationCodeUri_Sync() {
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
-            .authorizationCodeUri()
-            .scope(
-                "playlist-read-private,user-follow-read,user-read-playback-position,user-top-read," +
-                "user-read-recently-played,user-library-read,user-read-email"
-            )
-            .show_dialog(true)
-            .build();
-        final URI uri = authorizationCodeUriRequest.execute();
-        System.out.println(uri.toString());
-    }
-
-    private static void buildAPIObject() {
-        spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).setRedirectUri(redirectUri).build();
-    }
-
-    /** Terrible, terrible placeholder code for testing until Chris finishes his end, and the frontend is developed*/
-    public static void main(String[] args) {
-        // Set this to True if you don't have any tokens
-        boolean codeNeeded = true;
-
-        String[] credentials = CredentialsParser.parseCredentials();
-        clientId = credentials[0];
-        clientSecret = credentials[1];
-        buildAPIObject();
-
-        if (codeNeeded) {
-            authorizationCodeUri_Sync();
-
-            Scanner inp = new Scanner(System.in);
-            System.out.println("Enter the URL redirected to:");
-            String fullLink = inp.nextLine();
-
-            // Extract the authorisation code from the URL, and use it to make a request for tokens
-            String code = fullLink.substring(fullLink.lastIndexOf("code=") + 5);
-            authorizationCode_Sync(code);
-        }
-        // After tokens have been acquired, paste their values in the appropriate places for future runs
-        else {
-            spotifyApi.setAccessToken("");
-            spotifyApi.setRefreshToken("");
-        }
-
-        pullPlaylist("0PAeljtQdOiHAMqL8ly2fm"); // Paste your playlist ID here
+    public static void getInsights(ArrayList<Track> tracks, ArrayList<AudioFeatures> audioFeaturesList) {
+        Track[] highlightedSongs = selectHighlightedSongs(tracks, audioFeaturesList);
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
