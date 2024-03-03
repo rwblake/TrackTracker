@@ -1,20 +1,7 @@
 package team.bham.service.spotify;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
 import java.util.*;
-import org.apache.hc.core5.http.ParseException;
-import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.SpotifyHttpManager;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.specification.*;
-import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
-import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
-import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import se.michaelthelin.spotify.requests.data.playlists.GetPlaylistsItemsRequest;
-import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralTracksRequest;
 
 /** WARNING: This is unfinished, uncommented, badly organised code that I still need to work on further.
  * I'm committing it so that other people can play around with it, but it does not integrate with the rest of the app
@@ -22,107 +9,14 @@ import se.michaelthelin.spotify.requests.data.tracks.GetAudioFeaturesForSeveralT
  */
 public class PlaylistInsightCalculator {
 
-    // Parameters for Spotify Web API access
-    private static String clientId = "";
-    private static String clientSecret = "";
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
+    /** Calculates and returns an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
+    private static String[] selectHighlightedSongs(
+        ArrayList<Track> trackList,
+        ArrayList<AudioFeatures> featuresList,
+        AllFeaturesStats mean
+    ) {
+        String[] selectedSongs = { null, null, null, null };
 
-    private static SpotifyApi spotifyApi = null;
-
-    /** Given a playlist ID, builds an ArrayList of Track objects through multiple API requests and returns it*/
-    private static ArrayList<Track> getPlaylistTracks(String playlistId) {
-        ArrayList<Track> tracks = new ArrayList<Track>();
-
-        final int limit = 50; // maximum playlist items in one request
-
-        int offset = 0;
-        int remaining = 0;
-        boolean gotCount = false;
-        boolean gotAllTracks = false;
-        int pagingSize = limit;
-
-        while (!gotAllTracks) {
-            GetPlaylistsItemsRequest getRequest = spotifyApi.getPlaylistsItems(playlistId).limit(limit).offset(offset).build();
-            try {
-                Paging<PlaylistTrack> playlistTrackPaging = getRequest.execute();
-
-                if (!gotCount) {
-                    remaining = playlistTrackPaging.getTotal();
-                    gotCount = true;
-                }
-
-                offset += limit; // pull the next batch of tracks
-
-                if (remaining < limit) {
-                    pagingSize = remaining;
-                }
-
-                for (int i = 0; i < pagingSize; i++) {
-                    tracks.add((Track) playlistTrackPaging.getItems()[i].getTrack());
-                }
-
-                remaining -= limit;
-                if (remaining < 0) {
-                    gotAllTracks = true;
-                }
-            } catch (IOException | SpotifyWebApiException | ParseException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-
-        return tracks;
-    }
-
-    /** Given an ArrayList of Tracks, returns an ArrayList of their corresponding AudioFeatures */
-    public static ArrayList<AudioFeatures> getAudioFeatures(ArrayList<Track> tracks) {
-        ArrayList<AudioFeatures> features = new ArrayList<AudioFeatures>();
-
-        final int limit = 100; // maximum audio features in one request
-        int offset = 0;
-        boolean gotAllFeatures = false;
-
-        while (!gotAllFeatures) {
-            String[] requestIDs = trackListToIDArray(tracks, offset, limit);
-
-            GetAudioFeaturesForSeveralTracksRequest getRequest = spotifyApi.getAudioFeaturesForSeveralTracks(requestIDs).build();
-
-            try {
-                AudioFeatures[] requestedFeatures = getRequest.execute();
-                Collections.addAll(features, requestedFeatures);
-                offset += limit;
-
-                if (offset > tracks.size()) {
-                    gotAllFeatures = true;
-                }
-            } catch (IOException | SpotifyWebApiException | ParseException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-        return features;
-    }
-
-    /** Converts a portion of an ArrayList of Track objects to an array of IDs, to be passed into API requests. */
-    public static String[] trackListToIDArray(ArrayList<Track> tracks, int offset, int count) {
-        int remaining = tracks.size() - offset;
-        if (remaining < count) {
-            count = remaining;
-        }
-
-        String[] IDs = new String[count];
-
-        for (int i = 0; i < count; i++) {
-            IDs[i] = tracks.get(i + offset).getId();
-        }
-
-        return IDs;
-    }
-
-    /** Calculates and returns the an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
-    private static Track[] selectHighlightedSongs(ArrayList<Track> trackList, ArrayList<AudioFeatures> featuresList) {
-        AudioFeaturesMean mean = new AudioFeaturesMean(featuresList);
-        Track[] selectedSongs = { null, null, null, null };
-
-        AudioFeatures current;
         double maxValence = -1; // Highest recorded valence of a song.
         double maxEnergy = -1; // Highest recorded energy of a song.
         double minDist = 999; // Mininum recorded distance from the mean of all songs.
@@ -132,36 +26,34 @@ public class PlaylistInsightCalculator {
         double currentValence = 0; // Tracks current song's valence.
         double currentEnergy = 0; // Tracks current song's energy.
 
-        for (int i = 0; i < featuresList.size(); i++) {
-            current = featuresList.get(i);
-
-            currentValence = current.getValence();
+        for (AudioFeatures audioFeatures : featuresList) {
+            currentValence = audioFeatures.getValence();
             if (currentValence > maxValence) {
                 maxValence = currentValence;
-                selectedSongs[0] = trackList.get(i);
+                selectedSongs[0] = audioFeatures.getId();
             }
-            currentEnergy = current.getEnergy();
+            currentEnergy = audioFeatures.getEnergy();
             if (currentEnergy > maxEnergy) {
                 maxEnergy = currentEnergy;
-                selectedSongs[1] = trackList.get(i);
+                selectedSongs[1] = audioFeatures.getId();
             }
 
-            currentDist = mean.distanceFromMean(current);
+            currentDist = mean.distanceFromMean(audioFeatures);
             if (currentDist < minDist) {
                 minDist = currentDist;
-                selectedSongs[2] = trackList.get(i);
+                selectedSongs[2] = audioFeatures.getId();
             }
             if (currentDist > maxDist) {
                 maxDist = currentDist;
-                selectedSongs[3] = trackList.get(i);
+                selectedSongs[3] = audioFeatures.getId();
             }
         }
 
         return selectedSongs;
     }
 
-    /** Returns a mapping of artist IDs mapped to the proportion of tracks they're on*/
-    private static Map<String, Integer> calculateYears(ArrayList<Track> tracks) {
+    /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
+    private static YearSongCountMap[] calculateYears(ArrayList<Track> tracks) {
         // Dictionary map to store years with the corresponding number of song occurrences
         Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
 
@@ -174,13 +66,21 @@ public class PlaylistInsightCalculator {
             }
         }
 
-        return yearsAndCounts;
+        // Convert Java hashmap to our data type, for JSON conversion
+        YearSongCountMap[] map = new YearSongCountMap[yearsAndCounts.size()];
+        int index = 0;
+        for (Map.Entry<String, Integer> entry : yearsAndCounts.entrySet()) {
+            map[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
+            index++;
+        }
+
+        return map;
     }
 
-    /** Returns a mapping of artist IDs mapped to the proportion of tracks they're on*/
-    private static Map<ArtistSimplified, Float> calculateArtistProportions(ArrayList<Track> tracks) {
+    /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
+    private static ArtistProportionMap[] calculateArtistProportions(ArrayList<Track> tracks) {
         // Dictionary map to store years with the corresponding number of song occurrences
-        Map<ArtistSimplified, Integer> artistsAndCounts = new HashMap<ArtistSimplified, Integer>();
+        Map<String, Integer> artistsAndCounts = new HashMap<>();
         ArtistSimplified current;
         int totalArtistInstances = 0;
 
@@ -190,11 +90,11 @@ public class PlaylistInsightCalculator {
 
             // Iterate through all artists and update their dictionary entries accordingly
             for (ArtistSimplified artist : artists) {
-                current = artist;
-                if (artistsAndCounts.containsKey(current)) {
-                    artistsAndCounts.replace(artist, artistsAndCounts.get(current) + 1);
+                String currentID = artist.getId();
+                if (artistsAndCounts.containsKey(currentID)) {
+                    artistsAndCounts.replace(currentID, artistsAndCounts.get(currentID) + 1);
                 } else {
-                    artistsAndCounts.put(current, 1);
+                    artistsAndCounts.put(currentID, 1);
                 }
 
                 // There will likely be more artist instances than there are songs.
@@ -203,28 +103,35 @@ public class PlaylistInsightCalculator {
             }
         }
 
-        Map<ArtistSimplified, Float> artistProportions = new HashMap<ArtistSimplified, Float>();
-        for (Map.Entry<ArtistSimplified, Integer> entry : artistsAndCounts.entrySet()) {
-            artistProportions.put(entry.getKey(), entry.getValue() / (float) totalArtistInstances);
+        // Convert Java hashmap to our data type, for JSON conversion
+        // We also need to divide by the total number of artists here
+        ArtistProportionMap[] map = new ArtistProportionMap[artistsAndCounts.size()];
+        int index = 0;
+        for (Map.Entry<String, Integer> entry : artistsAndCounts.entrySet()) {
+            map[index] = new ArtistProportionMap(entry.getKey(), entry.getValue() / (float) totalArtistInstances);
+            index++;
         }
 
-        return artistProportions;
+        return map;
     }
 
-    /** Prints the tracks closest and furthest from the mean of a playlist, given an ID */
-    private static void pullPlaylist(String playlistId) {
-        ArrayList<Track> tracks = getPlaylistTracks(playlistId);
-        ArrayList<AudioFeatures> audioFeaturesList = getAudioFeatures(tracks);
-
-        Map<String, Integer> yearsAndCounts = calculateYears(tracks);
-        System.out.println("Year-Song Counts: " + yearsAndCounts.toString());
-
-        Map<ArtistSimplified, Float> artistProportions = calculateArtistProportions(tracks);
-        System.out.println("Year-Song Counts: " + artistProportions.toString());
+    /** Selects the relevant averages from a playlist to be shown on the frontend*/
+    private static float[] getRelevantAverages(AllFeaturesStats mean) {
+        return new float[] { mean.valence.average, mean.energy.average, mean.acousticness.average, mean.danceability.average };
     }
 
-    public static void getInsights(ArrayList<Track> tracks, ArrayList<AudioFeatures> audioFeaturesList) {
-        Track[] highlightedSongs = selectHighlightedSongs(tracks, audioFeaturesList);
+    /** Calculates playlist Insights, given a list of tracks and their respective audio features*/
+    public static PlaylistInsightsHTTPResponse getInsights(ArrayList<Track> tracks, ArrayList<AudioFeatures> audioFeaturesList) {
+        AllFeaturesStats stats = new AllFeaturesStats(audioFeaturesList);
+
+        // Calculate stats
+        String[] highlightedIDs = selectHighlightedSongs(tracks, audioFeaturesList, stats);
+        float[] averages = getRelevantAverages(stats);
+        YearSongCountMap[] yearSongs = calculateYears(tracks);
+        ArtistProportionMap[] artistProportions = calculateArtistProportions(tracks);
+
+        // Package it
+        return new PlaylistInsightsHTTPResponse(highlightedIDs, averages, yearSongs, artistProportions);
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
@@ -241,8 +148,10 @@ public class PlaylistInsightCalculator {
         }
     }
 
-    /** This is very unpleasant code, I'm deeply sorry */
-    public static class AudioFeaturesMean {
+    /** Used to store statistical analysis of all audio features for a playlist
+     * This is deeply unpleasant code, but it does get the job done
+     */
+    public static class AllFeaturesStats {
 
         // AudioFeatureStats for each feature.
         // Averages are initialised to 0 and then calculated in the constructor method.
@@ -259,7 +168,7 @@ public class PlaylistInsightCalculator {
         public AudioFeatureStats timeSignature = new AudioFeatureStats(0, 3, 7);
         public AudioFeatureStats valence = new AudioFeatureStats(0, 0, 1);
 
-        public AudioFeaturesMean(ArrayList<AudioFeatures> featuresList) {
+        public AllFeaturesStats(ArrayList<AudioFeatures> featuresList) {
             // We calculate the mean (average) as the sum of all songs' features, divided by the count
             for (AudioFeatures current : featuresList) {
                 acousticness.average += current.getAcousticness();

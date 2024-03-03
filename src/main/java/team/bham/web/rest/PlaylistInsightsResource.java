@@ -1,5 +1,6 @@
 package team.bham.web.rest;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 import team.bham.service.PlaylistService;
 import team.bham.service.PlaylistStatsService;
 import team.bham.service.spotify.CredentialsParser;
+import team.bham.service.spotify.PlaylistInsightsHTTPResponse;
 import team.bham.service.spotify.PlaylistRetriever;
 
 @RestController
@@ -46,11 +48,15 @@ public class PlaylistInsightsResource {
         Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
         List<Track> tracks = PlaylistRetriever.getTracks(spotifyApi, spotifyID);
         List<AudioFeatures> audioFeaturesList = PlaylistRetriever.getAudioFeatures(spotifyApi, tracks);
+
         team.bham.domain.PlaylistStats ret = playlistStatsService.createPlaylistStats(
             playlist,
             tracks.toArray(new Track[0]),
             audioFeaturesList.toArray(new AudioFeatures[0])
         );
+
+        // PlaylistInsightsHTTPResponse reply = new PlaylistInsightsHTTPResponse();
+        // Gson gson = new Gson();
         return ResponseEntity.status(HttpStatus.OK).body(url);
     }
 }
