@@ -2,6 +2,9 @@ package team.bham.service.spotify;
 
 import java.util.*;
 import se.michaelthelin.spotify.model_objects.specification.*;
+import team.bham.domain.Artist;
+import team.bham.domain.Playlist;
+import team.bham.domain.Song;
 
 /** WARNING: This is unfinished, uncommented, badly organised code that I still need to work on further.
  * I'm committing it so that other people can play around with it, but it does not integrate with the rest of the app
@@ -10,38 +13,38 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 public class PlaylistInsightCalculator {
 
     /** Calculates and returns an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
-    private static String[] selectHighlightedSongs(List<Track> trackList, List<AudioFeatures> featuresList, AllFeaturesStats mean) {
+    public static String[] selectHighlightedSongs(Playlist playlist, AllFeaturesStats mean) {
         String[] selectedSongs = { null, null, null, null };
 
         double maxValence = -1; // Highest recorded valence of a song.
         double maxEnergy = -1; // Highest recorded energy of a song.
-        double minDist = 999; // Mininum recorded distance from the mean of all songs.
+        double minDist = 999; // Minimum recorded distance from the mean of all songs.
         double maxDist = -1; // Maximum recorded distance from the mean of all songs.
 
         double currentDist = 0; // Tracks current song's distance from the mean of all songs.
         double currentValence = 0; // Tracks current song's valence.
         double currentEnergy = 0; // Tracks current song's energy.
 
-        for (AudioFeatures audioFeatures : featuresList) {
-            currentValence = audioFeatures.getValence();
+        for (Song song : playlist.getSongs().toArray(new Song[0])) {
+            currentValence = song.getValence();
             if (currentValence > maxValence) {
                 maxValence = currentValence;
-                selectedSongs[0] = audioFeatures.getId();
+                selectedSongs[0] = song.getSpotifyID();
             }
-            currentEnergy = audioFeatures.getEnergy();
+            currentEnergy = song.getEnergy();
             if (currentEnergy > maxEnergy) {
                 maxEnergy = currentEnergy;
-                selectedSongs[1] = audioFeatures.getId();
+                selectedSongs[1] = song.getSpotifyID();
             }
 
-            currentDist = mean.distanceFromMean(audioFeatures);
+            currentDist = mean.distanceFromMean(song);
             if (currentDist < minDist) {
                 minDist = currentDist;
-                selectedSongs[2] = audioFeatures.getId();
+                selectedSongs[2] = song.getSpotifyID();
             }
             if (currentDist > maxDist) {
                 maxDist = currentDist;
-                selectedSongs[3] = audioFeatures.getId();
+                selectedSongs[3] = song.getSpotifyID();
             }
         }
 
@@ -49,12 +52,12 @@ public class PlaylistInsightCalculator {
     }
 
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static YearSongCountMap[] calculateYears(List<Track> tracks) {
+    private static YearSongCountMap[] calculateYears(Playlist playlist) {
         // Dictionary map to store years with the corresponding number of song occurrences
         Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
 
-        for (Track track : tracks) {
-            String year = track.getAlbum().getReleaseDate().substring(0, 4);
+        for (Song song : playlist.getSongs().toArray(new Song[0])) {
+            String year = song.getReleaseDate().toString().substring(0, 4);
             if (yearsAndCounts.containsKey(year)) {
                 yearsAndCounts.replace(year, yearsAndCounts.get(year) + 1);
             } else {
@@ -74,19 +77,19 @@ public class PlaylistInsightCalculator {
     }
 
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static ArtistProportionMap[] calculateArtistProportions(List<Track> tracks) {
+    private static ArtistProportionMap[] calculateArtistProportions(Playlist playlist) {
         // Dictionary map to store years with the corresponding number of song occurrences
         Map<String, Integer> artistsAndCounts = new HashMap<>();
         ArtistSimplified current;
         int totalArtistInstances = 0;
 
-        for (Track track : tracks) {
+        for (Song song : playlist.getSongs().toArray(new Song[0])) {
             // Each track has multiple artists
-            ArtistSimplified[] artists = track.getAlbum().getArtists();
+            Artist[] artists = song.getArtists().toArray(new Artist[0]);
 
             // Iterate through all artists and update their dictionary entries accordingly
-            for (ArtistSimplified artist : artists) {
-                String currentID = artist.getId();
+            for (Artist artist : artists) {
+                String currentID = artist.getSpotifyID();
                 if (artistsAndCounts.containsKey(currentID)) {
                     artistsAndCounts.replace(currentID, artistsAndCounts.get(currentID) + 1);
                 } else {
@@ -117,14 +120,14 @@ public class PlaylistInsightCalculator {
     }
 
     /** Calculates playlist Insights, given a list of tracks and their respective audio features*/
-    public static PlaylistInsightsHTTPResponse getInsights(List<Track> tracks, List<AudioFeatures> audioFeaturesList) {
-        AllFeaturesStats stats = new AllFeaturesStats(audioFeaturesList);
+    public static PlaylistInsightsHTTPResponse getInsights(Playlist playlist) {
+        AllFeaturesStats stats = new AllFeaturesStats(playlist);
 
         // Calculate stats
-        String[] highlightedIDs = selectHighlightedSongs(tracks, audioFeaturesList, stats);
+        String[] highlightedIDs = selectHighlightedSongs(playlist, stats);
         float[] averages = getRelevantAverages(stats);
-        YearSongCountMap[] yearSongs = calculateYears(tracks);
-        ArtistProportionMap[] artistProportions = calculateArtistProportions(tracks);
+        YearSongCountMap[] yearSongs = calculateYears(playlist);
+        ArtistProportionMap[] artistProportions = calculateArtistProportions(playlist);
 
         // Package it
         return new PlaylistInsightsHTTPResponse(highlightedIDs, averages, yearSongs, artistProportions);
@@ -164,17 +167,17 @@ public class PlaylistInsightCalculator {
         public AudioFeatureStats timeSignature = new AudioFeatureStats(0, 3, 7);
         public AudioFeatureStats valence = new AudioFeatureStats(0, 0, 1);
 
-        public AllFeaturesStats(List<AudioFeatures> featuresList) {
+        public AllFeaturesStats(Playlist playlist) {
             // We calculate the mean (average) as the sum of all songs' features, divided by the count
-            for (AudioFeatures current : featuresList) {
+            for (Song current : playlist.getSongs().toArray(new Song[0])) {
                 acousticness.average += current.getAcousticness();
                 danceability.average += current.getDanceability();
                 energy.average += current.getEnergy();
                 instrumentalness.average += current.getInstrumentalness();
-                key.average += current.getKey();
+                key.average += current.getMusicalKey();
                 liveness.average += current.getLiveness();
                 loudness.average += current.getLoudness();
-                mode.average += current.getMode().ordinal();
+                mode.average += current.getMode() ? 1 : 0;
                 speechiness.average += current.getSpeechiness();
                 timeSignature.average += current.getTimeSignature();
                 valence.average += current.getValence();
@@ -190,7 +193,7 @@ public class PlaylistInsightCalculator {
                 }
             }
 
-            int length = featuresList.size();
+            int length = playlist.getSongs().size();
 
             // Divide all by the number of items
 
@@ -208,20 +211,20 @@ public class PlaylistInsightCalculator {
         }
 
         /** Calculate a weighted distance between a track's audio features and the mean*/
-        public double distanceFromMean(AudioFeatures trackFeatures) {
+        public double distanceFromMean(Song song) {
             return (
-                weightedFeatureDistance(acousticness, trackFeatures.getAcousticness(), 1) +
-                weightedFeatureDistance(danceability, trackFeatures.getDanceability(), 0.1f) +
-                weightedFeatureDistance(energy, trackFeatures.getEnergy(), 1) +
-                weightedFeatureDistance(instrumentalness, trackFeatures.getInstrumentalness(), 0.5f) +
-                weightedFeatureDistance(key, trackFeatures.getKey(), 0.1f) +
-                weightedFeatureDistance(liveness, trackFeatures.getLiveness(), 0.3f) +
-                weightedFeatureDistance(loudness, trackFeatures.getLoudness(), 0.3f) +
-                weightedFeatureDistance(mode, trackFeatures.getMode().ordinal(), 0.3f) +
-                weightedFeatureDistance(speechiness, trackFeatures.getSpeechiness(), 0.1f) +
-                weightedFeatureDistance(tempo, trackFeatures.getTempo(), 0.1f) +
-                weightedFeatureDistance(timeSignature, trackFeatures.getTimeSignature(), 0.1f) +
-                weightedFeatureDistance(valence, trackFeatures.getValence(), 0.1f)
+                weightedFeatureDistance(acousticness, song.getAcousticness(), 1) +
+                weightedFeatureDistance(danceability, song.getDanceability(), 0.1f) +
+                weightedFeatureDistance(energy, song.getEnergy(), 1) +
+                weightedFeatureDistance(instrumentalness, song.getInstrumentalness(), 0.5f) +
+                weightedFeatureDistance(key, song.getMusicalKey(), 0.1f) +
+                weightedFeatureDistance(liveness, song.getLiveness(), 0.3f) +
+                weightedFeatureDistance(loudness, song.getLoudness(), 0.3f) +
+                weightedFeatureDistance(mode, song.getMode() ? 1 : 0, 0.3f) +
+                weightedFeatureDistance(speechiness, song.getSpeechiness(), 0.1f) +
+                weightedFeatureDistance(tempo, song.getTempo(), 0.1f) +
+                weightedFeatureDistance(timeSignature, song.getTimeSignature(), 0.1f) +
+                weightedFeatureDistance(valence, song.getValence(), 0.1f)
             );
         }
 
