@@ -30,8 +30,17 @@ describe('RegisterService Service', () => {
       const login = 'abc';
       const email = 'test@test.com';
       const password = 'pass';
+      const spotifyID = 'myaccountname';
+      const bio = 'This is my bio';
+      const credentials = {
+        accessToken: 'token',
+        tokenType: 'tokentype',
+        scope: 'scope1, scope2',
+        expiresIn: 0,
+        refreshToken: 'refresh',
+      };
       const langKey = 'FR';
-      const registration = new Registration(login, email, password, langKey);
+      const registration = new Registration(login, email, password, spotifyID, bio, credentials, langKey);
 
       // WHEN
       service.save(registration).subscribe();
@@ -42,7 +51,7 @@ describe('RegisterService Service', () => {
       });
 
       // THEN
-      expect(testRequest.request.body).toEqual({ email, langKey, login, password });
+      expect(testRequest.request.body).toEqual({ email, langKey, login, password, spotifyID, bio, credentials });
     });
   });
 });

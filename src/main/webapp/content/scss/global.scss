@@ -224,6 +224,18 @@ ui bootstrap tweaks
   padding-left: 0;
 }
 
+jhi-password-strength-bar {
+  #strength {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    #strengthBar {
+      padding-left: 0.75rem;
+      margin-bottom: 4px;
+    }
+  }
+}
+
 /* ==========================================================================
 angular-cli removes postcss-rtl processed inline css, processed rules must be added here instead
 ========================================================================== */

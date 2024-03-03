@@ -1,7 +1,7 @@
 <div>
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
-      <h1 data-cy="registerTitle">Registration</h1>
+      <h1 data-cy="registerTitle">Create an account</h1>
 
       <div class="alert alert-success" *ngIf="success"><strong>Registration saved!</strong> Please check your email for confirmation.</div>
 
@@ -13,6 +13,10 @@
 
       <div class="alert alert-danger" *ngIf="errorEmailExists"><strong>Email is already in use!</strong> Please choose another one.</div>
 
+      <div class="alert alert-danger" *ngIf="errorSpotifyUserExists">
+        <strong>This Spotify account is already signed up!</strong> Please log in to this account or reset its password.
+      </div>
+
       <div class="alert alert-danger" *ngIf="doNotMatch">The password and its confirmation do not match!</div>
     </div>
   </div>
@@ -20,6 +24,7 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
+        <!--Login (Username)-->
         <div class="mb-3">
           <label class="form-label" for="login">Username</label>
           <input
@@ -33,21 +38,25 @@
             #login
           />
 
-          <div *ngIf="registerForm.get('login')!.invalid && (registerForm.get('login')!.dirty || registerForm.get('login')!.touched)">
-            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.required"> Your username is required. </small>
+          <ul
+            class="errors"
+            *ngIf="registerForm.get('login')!.invalid && (registerForm.get('login')!.dirty || registerForm.get('login')!.touched)"
+          >
+            <li class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.required">Your username is required.</li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.minlength">
+            <li class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.minlength">
               Your username is required to be at least 1 character.
-            </small>
+            </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.maxlength">
+            <li class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.maxlength">
               Your username cannot be longer than 50 characters.
-            </small>
+            </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.pattern"> Your username is invalid. </small>
-          </div>
+            <li class="form-text text-danger" *ngIf="registerForm.get('login')?.errors?.pattern">Your username is invalid.</li>
+          </ul>
         </div>
 
+        <!--Email-->
         <div class="mb-3">
           <label class="form-label" for="email">Email</label>
           <input
@@ -60,23 +69,42 @@
             data-cy="email"
           />
 
-          <div *ngIf="registerForm.get('email')!.invalid && (registerForm.get('email')!.dirty || registerForm.get('email')!.touched)">
-            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.required"> Your email is required. </small>
+          <ul
+            class="errors"
+            *ngIf="registerForm.get('email')!.invalid && (registerForm.get('email')!.dirty || registerForm.get('email')!.touched)"
+          >
+            <li class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.required">Your email is required.</li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.invalid"> Your email is invalid. </small>
+            <li class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.email">This email is invalid.</li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.minlength">
+            <li class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.minlength">
               Your email is required to be at least 5 characters.
-            </small>
+            </li>
 
             <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.maxlength">
               Your email cannot be longer than 50 characters.
             </small>
-          </div>
+          </ul>
         </div>
 
+        <!--Biography-->
         <div class="mb-3">
-          <label class="form-label" for="password">New password</label>
+          <label class="form-label" for="bio">About me</label>
+          <textarea
+            type="text"
+            class="form-control"
+            rows="4"
+            id="bio"
+            name="bio"
+            placeholder="Tell others a little bit about you and your tastes"
+            formControlName="bio"
+            data-cy="bio"
+          ></textarea>
+        </div>
+
+        <!--Password-->
+        <div class="mb-3">
+          <label class="form-label" for="password">Password</label>
           <input
             type="password"
             class="form-control"
@@ -87,54 +115,144 @@
             data-cy="firstPassword"
           />
 
-          <div
+          <ul
+            class="errors small-margin"
             *ngIf="registerForm.get('password')!.invalid && (registerForm.get('password')!.dirty || registerForm.get('password')!.touched)"
           >
-            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.required"> Your password is required. </small>
+            <li class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.required">Your password is required.</li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.minlength">
-              Your password is required to be at least 4 characters.
-            </small>
+            <li class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.minlength">
+              Your password must be at least 4 characters.
+            </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.maxlength">
+            <li class="form-text text-danger" *ngIf="registerForm.get('password')?.errors?.maxlength">
               Your password cannot be longer than 50 characters.
-            </small>
-          </div>
+            </li>
+          </ul>
 
-          <jhi-password-strength-bar [passwordToCheck]="registerForm.get('password')!.value"></jhi-password-strength-bar>
+          <jhi-password-strength-bar
+            class="strength-bar"
+            [passwordToCheck]="registerForm.get('password')!.value"
+          ></jhi-password-strength-bar>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label" for="confirmPassword">New password confirmation</label>
+        <!--Confirm password-->
+        <div class="mb-5">
+          <label class="form-label" for="confirmPassword">Password confirmation</label>
           <input
             type="password"
             class="form-control"
             id="confirmPassword"
             name="confirmPassword"
-            placeholder="Confirm the new password"
+            placeholder="Confirm your password"
             formControlName="confirmPassword"
             data-cy="secondPassword"
           />
 
-          <div
+          <ul
+            class="errors"
             *ngIf="
               registerForm.get('confirmPassword')!.invalid &&
               (registerForm.get('confirmPassword')!.dirty || registerForm.get('confirmPassword')!.touched)
             "
           >
-            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.required">
-              Your confirmation password is required.
-            </small>
+            <li class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.required">
+              You need to confirm your password.
+            </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.minlength">
-              Your confirmation password is required to be at least 4 characters.
-            </small>
+            <li class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.minlength">
+              Your password must be at least 4 characters.
+            </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.maxlength">
-              Your confirmation password cannot be longer than 50 characters.
+            <li class="form-text text-danger" *ngIf="registerForm.get('confirmPassword')?.errors?.maxlength">
+              Your password cannot be longer than 50 characters.
+            </li>
+          </ul>
+        </div>
+
+        <hr class="mb-5" />
+
+        <!--Spotify ID-->
+        <div class="mb-3">
+          <label class="form-label" for="bio">Spotify Account ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="spotifyID"
+            name="spotifyID"
+            placeholder="Your account ID (the name at the end of your profile URL)"
+            formControlName="spotifyID"
+            data-cy="spotifyID"
+          />
+
+          <div
+            *ngIf="
+              registerForm.get('spotifyID')!.invalid && (registerForm.get('spotifyID')!.dirty || registerForm.get('spotifyID')!.touched)
+            "
+          >
+            <small class="form-text text-danger" *ngIf="registerForm.get('spotifyID')?.errors?.required">
+              Your Spotify Account ID is required.
             </small>
           </div>
         </div>
+
+        <!--Access Token-->
+        <div class="mb-3">
+          <label class="form-label" for="accessToken">Access Token</label>
+          <input
+            type="text"
+            class="form-control"
+            id="accessToken"
+            name="accessToken"
+            placeholder="Your Spotify account's access token for this app"
+            formControlName="accessToken"
+            data-cy="accessToken"
+          />
+        </div>
+
+        <!--Token Type-->
+        <div class="mb-3">
+          <label class="form-label" for="accessToken">Token Type</label>
+          <input
+            type="text"
+            class="form-control"
+            id="tokenType"
+            name="tokenType"
+            placeholder="The type of token generated"
+            formControlName="tokenType"
+            data-cy="tokenType"
+          />
+        </div>
+
+        <!--Token Expiry Date-->
+        <div class="mb-3">
+          <label class="form-label" for="bio">Token Expiry Date</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            id="expiresIn"
+            name="expiresIn"
+            placeholder="When the token expires, and needs to be refreshed"
+            formControlName="expiresIn"
+            data-cy="expiresIn"
+          />
+        </div>
+
+        <!--Refresh Type-->
+        <div class="mb-5">
+          <label class="form-label" for="refreshToken">Refresh Token</label>
+          <input
+            type="text"
+            class="form-control"
+            id="refreshToken"
+            name="refreshToken"
+            placeholder="The token used to refresh the access token"
+            formControlName="refreshToken"
+            data-cy="refreshToken"
+          />
+        </div>
+
+        <!--        <hr class="mb-5"/>-->
 
         <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Register</button>
       </form>
