@@ -1,11 +1,25 @@
 <h1>Playlist Insights</h1>
 
 <br />
-<form (ngSubmit)="sendLink()" [formGroup]="urlForm">
-  <label>Paste the link to your playlist here:</label>
-  <input type="text" name="name" formControlName="name" style="width: 600px" />
-  <div *ngIf="urlForm.get('name')!.invalid && (urlForm.get('name')!.dirty || urlForm.get('name')!.touched)">
-    <small class="form-text text-danger" *ngIf="urlForm.get('name')?.errors?.required"> This field is required.</small>
-  </div>
+
+<form (ngSubmit)="sendLink()" [formGroup]="urlForm" style="text-align: center">
+  <input type="text" name="name" formControlName="name" style="width: 700px" placeholder="Paste the link to your Spotify playlist here!" />
+
   <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">Go!</button>
+  <div *ngIf="urlForm.get('name')!.invalid && (urlForm.get('name')!.dirty || urlForm.get('name')!.touched)">
+    <small class="form-text text-danger" *ngIf="urlForm.get('name')?.errors?.required"> A playlist link is required!</small>
+  </div>
 </form>
+
+<br />
+
+<div class="row">
+  <div class="column">
+    <h2>Average stats go here!</h2>
+    <h2>Selected songs go here!</h2>
+  </div>
+  <div class="column">
+    <h2>Artist proportion pie chart goes here!</h2>
+    <h2>Songs over time chart goes here!</h2>
+  </div>
+</div>
