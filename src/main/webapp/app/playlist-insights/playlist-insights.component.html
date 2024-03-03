@@ -2,13 +2,33 @@
 
 <br />
 
-<form (ngSubmit)="sendLink()" [formGroup]="urlForm" style="text-align: center">
-  <input type="text" name="name" formControlName="name" style="width: 700px" placeholder="Paste the link to your Spotify playlist here!" />
+<form (ngSubmit)="sendLink()" [formGroup]="urlForm" style="width: 700px">
+  <div class="mb-3">
+    <label class="form-label" for="name"> Playlist URL </label>
 
-  <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">Go!</button>
-  <div *ngIf="urlForm.get('name')!.invalid && (urlForm.get('name')!.dirty || urlForm.get('name')!.touched)">
-    <small class="form-text text-danger" *ngIf="urlForm.get('name')?.errors?.required"> A playlist link is required!</small>
+    <input
+      type="text"
+      class="form-control"
+      id="name"
+      name="link-input"
+      formControlName="name"
+      style="width: 700px"
+      placeholder="Paste the link to your Spotify playlist here!"
+      [(ngModel)]="linkInput"
+      required
+    />
   </div>
+
+  <button
+    type="submit"
+    id="submit-link"
+    data-cy="entityCreateSaveButton"
+    class="btn btn-primary"
+    style="width: 100px"
+    [disabled]="linkInput === ''"
+  >
+    Go!
+  </button>
 </form>
 
 <br />
