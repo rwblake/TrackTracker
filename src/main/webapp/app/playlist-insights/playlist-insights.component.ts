@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { PlaylistInsightsService } from './playlist-insights.service';
-import { PlaylistInsightsResponse } from './playlist-insights-response-interface';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -21,6 +20,6 @@ export class PlaylistInsightsComponent implements OnInit {
   sendLink() {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
-    this.playlistInsightsService.sendURL(url).subscribe(response => console.log(response));
+    this.playlistInsightsService.sendURL(url).subscribe(value => console.log(value));
   }
 }
