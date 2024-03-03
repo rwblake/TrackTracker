@@ -36,6 +36,19 @@ public class SongService {
         //this.genreRepository = genreRepository;
     }
 
+    private Instant toInstant(String releaseDate, ReleaseDatePrecision precision) {
+        // Convert to ISO-8601 format
+        switch (precision) {
+            case YEAR:
+                releaseDate = releaseDate + "-01";
+            case MONTH:
+                releaseDate = releaseDate + "-01";
+            case DAY:
+                releaseDate = releaseDate + "T00:00:00Z";
+        }
+        return Instant.parse(releaseDate);
+    }
+
     private Album createAlbum(AlbumSimplified album) {
         // Check if album is already in the database
         String spotifyID = album.getId();
@@ -49,18 +62,7 @@ public class SongService {
         myAlbum.setSpotifyID(album.getId());
         myAlbum.setName(album.getName());
         myAlbum.setImageURL(album.getImages()[0].getUrl());
-        // Convert into required ISO-8601 format
-        ReleaseDatePrecision precision = album.getReleaseDatePrecision();
-        String releaseDate = album.getReleaseDate();
-        switch (precision) {
-            case YEAR:
-                releaseDate = releaseDate + "-01";
-            case MONTH:
-                releaseDate = releaseDate + "-01";
-            case DAY:
-                releaseDate = releaseDate + "T00:00:00Z";
-        }
-        myAlbum.setReleaseDate(Instant.parse(releaseDate));
+        myAlbum.setReleaseDate(toInstant(album.getReleaseDate(), album.getReleaseDatePrecision())); // Convert into required ISO-8601 format
 
         AlbumType myAlbumType;
         switch (album.getAlbumType()) {
@@ -112,19 +114,7 @@ public class SongService {
         song.setSpotifyID(track.getId());
         song.setName(track.getName());
         song.setImageURL(track.getAlbum().getImages()[0].getUrl());
-        // Convert into required ISO-8601 format
-        ReleaseDatePrecision precision = track.getAlbum().getReleaseDatePrecision();
-        String releaseDate = track.getAlbum().getReleaseDate();
-        switch (precision) {
-            case YEAR:
-                releaseDate = releaseDate + "-01";
-            case MONTH:
-                releaseDate = releaseDate + "-01";
-            case DAY:
-                releaseDate = releaseDate + "T00:00:00Z";
-        }
-        song.setReleaseDate(Instant.parse(releaseDate));
-
+        song.setReleaseDate(toInstant(track.getAlbum().getReleaseDate(), track.getAlbum().getReleaseDatePrecision())); // Convert into required ISO-8601 format
         song.setDuration(Duration.ofMillis(track.getDurationMs()));
         // set audio feature fields
         song.setAcousticness(audioFeatures.getAcousticness());
@@ -151,9 +141,8 @@ public class SongService {
         for (ArtistSimplified artist : track.getArtists()) {
             tmpArtist = createArtist(artist);
             artistRepository.save(tmpArtist);
-            //tmpArtist.addSong(song);
+
             song.addArtist(tmpArtist);
-            //tmpArtist.addAlbum(album);
             album.addArtist(tmpArtist);
         }
         // save objects to database

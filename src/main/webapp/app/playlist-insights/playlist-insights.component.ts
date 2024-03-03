@@ -11,6 +11,7 @@ import { PlaylistInsightsService } from './playlist-insights.service';
 })
 export class PlaylistInsightsComponent implements OnInit {
   urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
+  linkInput: any;
   constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
 
   ngOnInit(): void {

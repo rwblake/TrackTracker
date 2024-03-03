@@ -1,0 +1,31 @@
+<div class="navbar navbar-dark navbar-expand-md">
+  <!-- overflow-x-scroll -->
+  <div class="container-fluid">
+    <a
+      class="navbar-toggler d-lg-none ms-auto"
+      href="javascript:void(0);"
+      data-toggle="collapse"
+      data-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      (click)="toggleNavbar()"
+    >
+      <span>Display: {{ selectedTimePeriod.label }}</span>
+      <fa-icon icon="chevron-down" [fixedWidth]="true"></fa-icon>
+    </a>
+
+    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed">
+      <ul class="navbar-nav ms-auto">
+        <li
+          *ngFor="let period of timePeriods"
+          class="nav-item ms-auto"
+          [class.active]="selectedTimePeriod === period"
+          (click)="setTimePeriod(period)"
+        >
+          <span class="nav-link text-nowrap">{{ period.label }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100%;
+  }
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 auto;
+  text-align: center;
+
+  #submit-link {
+    margin: 0 auto;
+  }
+}

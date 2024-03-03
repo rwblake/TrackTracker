@@ -17,7 +17,7 @@ export class RegisterService {
     return this.http.post(this.applicationConfigService.getEndpointFor('api/register'), registration);
   }
 
-  getAuthenticationURI(): Observable<HttpResponse<UR>> {
+  getAuthenticationURI(): Observable<HttpResponse<URL>> {
     return this.http.get<URL>(this.applicationConfigService.getEndpointFor('api/spotify/authentication_uri'), { observe: 'response' });
   }
 }
