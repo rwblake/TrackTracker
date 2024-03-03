@@ -44,10 +44,12 @@ public class AppUserService extends team.bham.service.UserService {
     }
 
     /** Performs same actions as UserService, whilst also creating all other linked entities */
-    public AppUser registerAppUser(ManagedAppUserVM appUserVM, String password) {
-        // Extract credentials from appUserVM
-        AuthorizationCodeCredentials spotifyCredentials = appUserVM.getCredentials();
-
+    public AppUser registerAppUser(
+        ManagedAppUserVM appUserVM,
+        String password,
+        String spotifyUserID,
+        AuthorizationCodeCredentials spotifyCredentials
+    ) {
         // Check that login isn't used by anyone else.
         // If it is, check that the other account is activated, delete account if not.
         userRepository
@@ -71,7 +73,7 @@ public class AppUserService extends team.bham.service.UserService {
 
         // Check that Spotify id isn't used by anyone else
         appUserRepository
-            .findOneBySpotifyID(appUserVM.getSpotifyID())
+            .findOneBySpotifyID(spotifyUserID)
             .ifPresent(appUser -> {
                 boolean removed = removeNonActivatedUser(appUser.getInternalUser());
                 if (!removed) {
@@ -107,7 +109,7 @@ public class AppUserService extends team.bham.service.UserService {
             spotifyCredentials.getRefreshToken()
         );
 
-        AppUser newAppUser = new AppUser(appUserVM.getSpotifyID(), spotifyToken);
+        AppUser newAppUser = new AppUser(spotifyUserID, spotifyToken);
 
         newAppUser.setBio(appUserVM.getBio());
 

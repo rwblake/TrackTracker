@@ -39,30 +39,6 @@ export class RegisterComponent implements AfterViewInit {
       nonNullable: false,
       validators: [Validators.maxLength(200)],
     }),
-
-    // Below section won't be there in final UI
-    spotifyID: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.minLength(22), Validators.maxLength(22)],
-    }),
-    accessToken: new FormControl('', {
-      nonNullable: true,
-    }),
-    tokenType: new FormControl('', {
-      nonNullable: true,
-    }),
-    scope: new FormControl('', {
-      nonNullable: true,
-    }),
-    expiresIn: new FormControl('', {
-      nonNullable: true,
-      // validators: [Validators.pattern('[a-zA-Z ]*')],
-    }),
-    refreshToken: new FormControl('', {
-      nonNullable: true,
-    }),
-    // --------
-
     password: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
@@ -92,26 +68,40 @@ export class RegisterComponent implements AfterViewInit {
     if (password !== confirmPassword) {
       this.doNotMatch = true;
     } else {
-      const { login, email, bio, spotifyID, accessToken, tokenType, scope, expiresIn, refreshToken } = this.registerForm.getRawValue();
-      const num_expiresIn = Number.parseInt(expiresIn);
+      const { login, email, bio } = this.registerForm.getRawValue();
       this.registerService
         .save({
           login,
           email,
           password,
           bio,
-          spotifyID,
-          credentials: {
-            accessToken,
-            tokenType,
-            scope,
-            expiresIn: num_expiresIn,
-            refreshToken,
-          },
           langKey: 'en',
         })
         .subscribe({ next: () => (this.success = true), error: response => this.processError(response) });
     }
+  }
+
+  requestAccess(): void {
+    let url_returned: string | null = null;
+    const { password, confirmPassword } = this.registerForm.getRawValue();
+    if (password !== confirmPassword) {
+      this.doNotMatch = true;
+      return;
+    }
+
+    this.registerService
+      .getAuthenticationURI()
+      .subscribe({ next: response => (url_returned = response.url), error: response => this.processError(response) });
+
+    if (url_returned === null) {
+      console.error('No url returned, not handled by .subscribe() error handling for some reason');
+      this.error = true;
+      return;
+    }
+
+    console.log('URL_returned: ' + url_returned);
+
+    // TODO: redirect to the returned url
   }
 
   private processError(response: HttpErrorResponse): void {

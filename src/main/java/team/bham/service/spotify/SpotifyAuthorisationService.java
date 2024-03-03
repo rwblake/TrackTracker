@@ -10,7 +10,10 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
+import se.michaelthelin.spotify.model_objects.specification.User;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 /** Handles authorising a spotify account, getting tokens and refreshing tokens. */
 @Service
@@ -55,7 +58,9 @@ public class SpotifyAuthorisationService {
         }
     }
 
-    /** Get the URI for the page which allows a user to connect their Spotify account to our app */
+    /** Get the URI for the page which allows a user to connect their Spotify account to our app.
+     *
+     *  @return The url which links to the spotify page to permit/deny access */
     public URI getAuthorisationCodeUri() throws RuntimeException {
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
             .authorizationCodeUri()
@@ -71,7 +76,7 @@ public class SpotifyAuthorisationService {
      * Initialises the credentials of the spotifyAPI object, given the returned URI.
      *
      * @param uri The returned uri after responding to Spotify
-     * @return Whether the credentials could be initialised
+     * @return the credentials (null, if there was an error)
      */
     public AuthorizationCodeCredentials initialiseCredentials(URI uri) {
         try {
@@ -105,6 +110,18 @@ public class SpotifyAuthorisationService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Creates a new API object, given credentials.
+     *
+     * @param credentials The access credentials for a user
+     * @return A new SpotifyAPI object (null, if there was an error)
+     */
+    public SpotifyApi getAPI(AuthorizationCodeCredentials credentials) {
+        SpotifyApi spotifyApi = SpotifyApi.builder().setClientId(clientId).setClientSecret(clientSecret).build();
+        spotifyApi.setAccessToken(credentials.getAccessToken());
+        return spotifyApi;
     }
 
     /** Generate a random alphanumeric string of length n */

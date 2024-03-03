@@ -1,14 +1,18 @@
 package team.bham.web.rest;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import team.bham.domain.AppUser;
 import team.bham.domain.SpotifyToken;
@@ -74,25 +78,38 @@ public class AccountResource {
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
+     * @throws DeclinedSpotifyAccessException {@code 400 (Bad Request)} if the user declined access to Spotify account.
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM) {
+    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM, URI returned_uri)
+        throws IOException, ParseException, SpotifyWebApiException {
         if (isPasswordLengthInvalid(managedAppUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
-        //        // before creating user, link spotify account
-        //        URI uri = spotifyAuthorisationService.getAuthorisationCodeUri();
-        //        URI returned = URI.create("example url here");
-        //        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(returned);
-        //        if (credentials == null) {
-        //            throw new DeclinedSpotifyAccessException();
-        //        }
-        //
-        //        System.out.println("Successfully generated credentials: " + credentials);
 
-        AppUser appUser = appUserService.registerAppUser(managedAppUserVM, managedAppUserVM.getPassword());
+        // attempt to generate credentials
+        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(returned_uri);
+        if (credentials == null) {
+            throw new DeclinedSpotifyAccessException();
+        }
+
+        SpotifyApi spotifyApi = spotifyAuthorisationService.getAPI(credentials);
+
+        // once credentials generated, get SpotifyUserID using credentials
+        String spotifyUserID = spotifyApi.getCurrentUsersProfile().build().execute().getId();
+
+        AppUser appUser = appUserService.registerAppUser(managedAppUserVM, managedAppUserVM.getPassword(), spotifyUserID, credentials);
         mailService.sendActivationEmail(appUser.getInternalUser());
+    }
+
+    /**
+     * {@code GET /spotify/authentication_uri} : get the Spotify account authentication URI
+     */
+    @GetMapping("/spotify/authentication_uri")
+    @ResponseStatus(HttpStatus.OK)
+    public URI getAuthenticationURI() {
+        return spotifyAuthorisationService.getAuthorisationCodeUri();
     }
 
     /**

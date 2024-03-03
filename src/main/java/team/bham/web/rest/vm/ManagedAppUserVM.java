@@ -22,10 +22,6 @@ public class ManagedAppUserVM extends AdminUserDTO {
     @Size(max = BIO_MAX_LENGTH)
     private String bio;
 
-    private String spotifyID;
-
-    private AuthorizationCodeCredentials credentials;
-
     public ManagedAppUserVM() {
         // Empty constructor needed for Jackson.
     }
@@ -44,22 +40,6 @@ public class ManagedAppUserVM extends AdminUserDTO {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public String getSpotifyID() {
-        return spotifyID;
-    }
-
-    public void setSpotifyID(String spotifyID) {
-        this.spotifyID = spotifyID;
-    }
-
-    public AuthorizationCodeCredentials getCredentials() {
-        return credentials;
-    }
-
-    public void setCredentials(AuthorizationCodeCredentials credentials) {
-        this.credentials = credentials;
     }
 
     // prettier-ignore

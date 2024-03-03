@@ -170,91 +170,93 @@
           </ul>
         </div>
 
-        <hr class="mb-5" />
+        <!--        <hr class="mb-5" />-->
+        <!---->
+        <!--        &lt;!&ndash;Spotify ID&ndash;&gt;-->
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="bio">Spotify Account ID</label>-->
+        <!--          <input-->
+        <!--            type="text"-->
+        <!--            class="form-control"-->
+        <!--            id="spotifyID"-->
+        <!--            name="spotifyID"-->
+        <!--            placeholder="Your account ID (the name at the end of your profile URL)"-->
+        <!--            formControlName="spotifyID"-->
+        <!--            data-cy="spotifyID"-->
+        <!--          />-->
 
-        <!--Spotify ID-->
-        <div class="mb-3">
-          <label class="form-label" for="bio">Spotify Account ID</label>
-          <input
-            type="text"
-            class="form-control"
-            id="spotifyID"
-            name="spotifyID"
-            placeholder="Your account ID (the name at the end of your profile URL)"
-            formControlName="spotifyID"
-            data-cy="spotifyID"
-          />
+        <!--          <div-->
+        <!--            *ngIf="-->
+        <!--              registerForm.get('spotifyID')!.invalid && (registerForm.get('spotifyID')!.dirty || registerForm.get('spotifyID')!.touched)-->
+        <!--            "-->
+        <!--          >-->
+        <!--            <small class="form-text text-danger" *ngIf="registerForm.get('spotifyID')?.errors?.required">-->
+        <!--              Your Spotify Account ID is required.-->
+        <!--            </small>-->
+        <!--          </div>-->
+        <!--        </div>-->
 
-          <div
-            *ngIf="
-              registerForm.get('spotifyID')!.invalid && (registerForm.get('spotifyID')!.dirty || registerForm.get('spotifyID')!.touched)
-            "
-          >
-            <small class="form-text text-danger" *ngIf="registerForm.get('spotifyID')?.errors?.required">
-              Your Spotify Account ID is required.
-            </small>
-          </div>
-        </div>
+        <!--        &lt;!&ndash;Access Token&ndash;&gt;-->
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="accessToken">Access Token</label>-->
+        <!--          <input-->
+        <!--            type="text"-->
+        <!--            class="form-control"-->
+        <!--            id="accessToken"-->
+        <!--            name="accessToken"-->
+        <!--            placeholder="Your Spotify account's access token for this app"-->
+        <!--            formControlName="accessToken"-->
+        <!--            data-cy="accessToken"-->
+        <!--          />-->
+        <!--        </div>-->
 
-        <!--Access Token-->
-        <div class="mb-3">
-          <label class="form-label" for="accessToken">Access Token</label>
-          <input
-            type="text"
-            class="form-control"
-            id="accessToken"
-            name="accessToken"
-            placeholder="Your Spotify account's access token for this app"
-            formControlName="accessToken"
-            data-cy="accessToken"
-          />
-        </div>
+        <!--        &lt;!&ndash;Token Type&ndash;&gt;-->
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="accessToken">Token Type</label>-->
+        <!--          <input-->
+        <!--            type="text"-->
+        <!--            class="form-control"-->
+        <!--            id="tokenType"-->
+        <!--            name="tokenType"-->
+        <!--            placeholder="The type of token generated"-->
+        <!--            formControlName="tokenType"-->
+        <!--            data-cy="tokenType"-->
+        <!--          />-->
+        <!--        </div>-->
 
-        <!--Token Type-->
-        <div class="mb-3">
-          <label class="form-label" for="accessToken">Token Type</label>
-          <input
-            type="text"
-            class="form-control"
-            id="tokenType"
-            name="tokenType"
-            placeholder="The type of token generated"
-            formControlName="tokenType"
-            data-cy="tokenType"
-          />
-        </div>
+        <!--        &lt;!&ndash;Token Expiry Date&ndash;&gt;-->
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="bio">Token Expiry Date</label>-->
+        <!--          <input-->
+        <!--            type="datetime-local"-->
+        <!--            class="form-control"-->
+        <!--            id="expiresIn"-->
+        <!--            name="expiresIn"-->
+        <!--            placeholder="When the token expires, and needs to be refreshed"-->
+        <!--            formControlName="expiresIn"-->
+        <!--            data-cy="expiresIn"-->
+        <!--          />-->
+        <!--        </div>-->
 
-        <!--Token Expiry Date-->
-        <div class="mb-3">
-          <label class="form-label" for="bio">Token Expiry Date</label>
-          <input
-            type="datetime-local"
-            class="form-control"
-            id="expiresIn"
-            name="expiresIn"
-            placeholder="When the token expires, and needs to be refreshed"
-            formControlName="expiresIn"
-            data-cy="expiresIn"
-          />
-        </div>
+        <!--        &lt;!&ndash;Refresh Type&ndash;&gt;-->
+        <!--        <div class="mb-5">-->
+        <!--          <label class="form-label" for="refreshToken">Refresh Token</label>-->
+        <!--          <input-->
+        <!--            type="text"-->
+        <!--            class="form-control"-->
+        <!--            id="refreshToken"-->
+        <!--            name="refreshToken"-->
+        <!--            placeholder="The token used to refresh the access token"-->
+        <!--            formControlName="refreshToken"-->
+        <!--            data-cy="refreshToken"-->
+        <!--          />-->
+        <!--        </div>-->
 
-        <!--Refresh Type-->
-        <div class="mb-5">
-          <label class="form-label" for="refreshToken">Refresh Token</label>
-          <input
-            type="text"
-            class="form-control"
-            id="refreshToken"
-            name="refreshToken"
-            placeholder="The token used to refresh the access token"
-            formControlName="refreshToken"
-            data-cy="refreshToken"
-          />
-        </div>
+        <button type="button" [disabled]="registerForm.invalid" class="btn btn-primary" (click)="requestAccess()">
+          Link your Spotify account
+        </button>
 
-        <!--        <hr class="mb-5"/>-->
-
-        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Register</button>
+        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Create account</button>
       </form>
 
       <div class="mt-3 alert alert-warning">
