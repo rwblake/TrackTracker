@@ -1,8 +1,9 @@
 <h1>Playlist Insights</h1>
 
+<br />
 <form (ngSubmit)="sendLink()" [formGroup]="urlForm">
   <label>Paste the link to your playlist here:</label>
-  <input type="text" name="name" formControlName="name" />
+  <input type="text" name="name" formControlName="name" style="width: 600px" />
   <div *ngIf="urlForm.get('name')!.invalid && (urlForm.get('name')!.dirty || urlForm.get('name')!.touched)">
     <small class="form-text text-danger" *ngIf="urlForm.get('name')?.errors?.required"> This field is required.</small>
   </div>
