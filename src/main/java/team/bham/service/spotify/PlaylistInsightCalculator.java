@@ -10,11 +10,7 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 public class PlaylistInsightCalculator {
 
     /** Calculates and returns an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
-    private static String[] selectHighlightedSongs(
-        ArrayList<Track> trackList,
-        ArrayList<AudioFeatures> featuresList,
-        AllFeaturesStats mean
-    ) {
+    private static String[] selectHighlightedSongs(List<Track> trackList, List<AudioFeatures> featuresList, AllFeaturesStats mean) {
         String[] selectedSongs = { null, null, null, null };
 
         double maxValence = -1; // Highest recorded valence of a song.
@@ -53,7 +49,7 @@ public class PlaylistInsightCalculator {
     }
 
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static YearSongCountMap[] calculateYears(ArrayList<Track> tracks) {
+    private static YearSongCountMap[] calculateYears(List<Track> tracks) {
         // Dictionary map to store years with the corresponding number of song occurrences
         Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
 
@@ -78,7 +74,7 @@ public class PlaylistInsightCalculator {
     }
 
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static ArtistProportionMap[] calculateArtistProportions(ArrayList<Track> tracks) {
+    private static ArtistProportionMap[] calculateArtistProportions(List<Track> tracks) {
         // Dictionary map to store years with the corresponding number of song occurrences
         Map<String, Integer> artistsAndCounts = new HashMap<>();
         ArtistSimplified current;
@@ -121,7 +117,7 @@ public class PlaylistInsightCalculator {
     }
 
     /** Calculates playlist Insights, given a list of tracks and their respective audio features*/
-    public static PlaylistInsightsHTTPResponse getInsights(ArrayList<Track> tracks, ArrayList<AudioFeatures> audioFeaturesList) {
+    public static PlaylistInsightsHTTPResponse getInsights(List<Track> tracks, List<AudioFeatures> audioFeaturesList) {
         AllFeaturesStats stats = new AllFeaturesStats(audioFeaturesList);
 
         // Calculate stats
@@ -168,7 +164,7 @@ public class PlaylistInsightCalculator {
         public AudioFeatureStats timeSignature = new AudioFeatureStats(0, 3, 7);
         public AudioFeatureStats valence = new AudioFeatureStats(0, 0, 1);
 
-        public AllFeaturesStats(ArrayList<AudioFeatures> featuresList) {
+        public AllFeaturesStats(List<AudioFeatures> featuresList) {
             // We calculate the mean (average) as the sum of all songs' features, divided by the count
             for (AudioFeatures current : featuresList) {
                 acousticness.average += current.getAcousticness();

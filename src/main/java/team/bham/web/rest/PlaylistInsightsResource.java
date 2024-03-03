@@ -21,6 +21,7 @@ import se.michaelthelin.spotify.model_objects.specification.Track;
 import team.bham.service.PlaylistService;
 import team.bham.service.PlaylistStatsService;
 import team.bham.service.spotify.CredentialsParser;
+import team.bham.service.spotify.PlaylistInsightCalculator;
 import team.bham.service.spotify.PlaylistInsightsHTTPResponse;
 import team.bham.service.spotify.PlaylistRetriever;
 
@@ -55,8 +56,8 @@ public class PlaylistInsightsResource {
             audioFeaturesList.toArray(new AudioFeatures[0])
         );
 
-        // PlaylistInsightsHTTPResponse reply = new PlaylistInsightsHTTPResponse();
-        // Gson gson = new Gson();
-        return ResponseEntity.status(HttpStatus.OK).body(url);
+        PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(tracks, audioFeaturesList);
+        Gson gson = new Gson();
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(reply));
     }
 }
