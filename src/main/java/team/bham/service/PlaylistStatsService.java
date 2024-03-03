@@ -62,30 +62,16 @@ public class PlaylistStatsService {
 
         // Create new playlist stats object
         PlaylistStats myPlaylistStats = new PlaylistStats();
-        /*if (selectedTracks.length != 4 || selectedAudioFeatures.length != 4) {
-            throw new IllegalArgumentException("tracks and audio feature arrays must have size 4");
-        }*/
 
         // Set selected songs
         Song happiestSong = songService.createSong(selectedTracks[0], selectedAudioFeatures[0]);
-        //happiestSong.addHappiestPlaylistStats(myPlaylistStats);
         myPlaylistStats.setHappiestSong(happiestSong);
-        //songRepository.save(happiestSong);
-
         Song energeticSong = songService.createSong(selectedTracks[1], selectedAudioFeatures[1]);
-        //energeticSong.addHappiestPlaylistStats(myPlaylistStats);
         myPlaylistStats.setEnergeticSong(energeticSong);
-        //songRepository.save(energeticSong);
-
         Song sumsUpSong = songService.createSong(selectedTracks[2], selectedAudioFeatures[2]);
-        //sumsUpSong.addHappiestPlaylistStats(myPlaylistStats);
         myPlaylistStats.setSumsUpSong(sumsUpSong);
-        //songRepository.save(sumsUpSong);
-
         Song anomalousSong = songService.createSong(selectedTracks[3], selectedAudioFeatures[3]);
-        //anomalousSong.addHappiestPlaylistStats(myPlaylistStats);
         myPlaylistStats.setAnonmalousSong(anomalousSong);
-        //songRepository.save(anomalousSong);
 
         // Update playlist with stats, and vice versa
         myPlaylistStats.setPlaylist(correspondingPlaylist);
