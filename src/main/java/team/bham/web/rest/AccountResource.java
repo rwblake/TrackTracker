@@ -108,8 +108,10 @@ public class AccountResource {
      */
     @GetMapping("/spotify/authentication_uri")
     @ResponseStatus(HttpStatus.OK)
-    public URI getAuthenticationURI() {
-        return spotifyAuthorisationService.getAuthorisationCodeUri();
+    public URI getAuthenticationURI(HttpServletRequest request) {
+        URI requestUri = URI.create(request.getRequestURL().toString());
+        String origin = requestUri.getScheme() + "://" + requestUri.getAuthority();
+        return spotifyAuthorisationService.getAuthorisationCodeUri(origin);
     }
 
     /**

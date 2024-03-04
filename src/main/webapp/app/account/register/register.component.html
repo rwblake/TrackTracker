@@ -252,9 +252,22 @@
         <!--          />-->
         <!--        </div>-->
 
-        <button type="button" [disabled]="registerForm.invalid" class="btn btn-primary" (click)="requestAccess()">
-          Link your Spotify account
-        </button>
+        <!--Spotify Authentication-->
+        <div class="mb-5">
+          <label class="form-label" for="confirmPassword">Spotify Account</label>
+          <br />
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"
+            (click)="openSpotifyAuthPopup()"
+          >
+            <span *ngIf="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"> Account Linked! </span>
+            <span *ngIf="registerForm.get('spotifyAuthCode')!.invalid || registerForm.get('spotifyAuthState')!.invalid">
+              Link Your Spotify Account
+            </span>
+          </button>
+        </div>
 
         <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Create account</button>
       </form>

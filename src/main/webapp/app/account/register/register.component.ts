@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE, SPOTIFY_ID_ALREADY_USED_TYPE } from 'app/config/error.constants';
@@ -47,6 +47,14 @@ export class RegisterComponent implements AfterViewInit {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
     }),
+    spotifyAuthCode: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    spotifyAuthState: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
 
   constructor(private registerService: RegisterService) {}
@@ -54,6 +62,21 @@ export class RegisterComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.login) {
       this.login.nativeElement.focus();
+    }
+  }
+
+  @HostListener('window:message', ['$event'])
+  onMessage(event: MessageEvent): void {
+    if (typeof event.data === 'string') {
+      const pattern = /^code=(.*)&state=(.*)$/;
+      if (pattern.test(event.data)) {
+        const results = pattern.exec(event.data);
+        if (results !== null) {
+          const code = results[1],
+            state = results[2];
+          this.registerForm.patchValue({ spotifyAuthCode: code, spotifyAuthState: state });
+        }
+      }
     }
   }
 
@@ -77,34 +100,49 @@ export class RegisterComponent implements AfterViewInit {
           bio,
           langKey: 'en',
         })
-        .subscribe({ next: () => (this.success = true), error: response => this.processError(response) });
+        .subscribe({ next: () => (this.success = true), error: response => this.processAuthenticationURIError(response) });
     }
   }
 
-  requestAccess(): void {
-    let url_returned: string | null = null;
+  openSpotifyAuthPopup(): void {
     const { password, confirmPassword } = this.registerForm.getRawValue();
     if (password !== confirmPassword) {
       this.doNotMatch = true;
       return;
     }
 
-    this.registerService
-      .getAuthenticationURI()
-      .subscribe({ next: response => (url_returned = response.url), error: response => this.processError(response) });
+    this.registerService.getAuthenticationURI().subscribe({
+      next: this.processAuthenticationURIResponse,
+      error: this.processAuthenticationURIError,
+    });
+  }
 
-    if (url_returned === null) {
-      console.error('No url returned, not handled by .subscribe() error handling for some reason');
+  private processAuthenticationURIResponse(response: HttpResponse<URL>): void {
+    if (response.body == null) {
       this.error = true;
+      console.error('An error occurred attempting to fetch the spotify authentication URI: response.body=null');
       return;
     }
 
-    console.log('URL_returned: ' + url_returned);
+    // Open Spotify authentication URI as popup
+    const authorisationURL = response.body.toString();
+    const popupFeatures = Object.entries({
+      popup: true,
+      width: 500,
+      height: window.innerHeight,
+      left: window.innerWidth / 2 - 250,
+    })
+      .map(([key, val]) => `${key}=${val.toString()}`)
+      .join(',');
 
-    // TODO: redirect to the returned url
+    const newWindow = window.open(authorisationURL, '', popupFeatures);
+    if (newWindow == null) {
+      console.error('An error occured attempting to open the spotify authentication popup');
+      this.error = true;
+    }
   }
 
-  private processError(response: HttpErrorResponse): void {
+  private processAuthenticationURIError(response: HttpErrorResponse): void {
     if (response.status === 400 && response.error.type === LOGIN_ALREADY_USED_TYPE) {
       this.errorUserExists = true;
     } else if (response.status === 400 && response.error.type === EMAIL_ALREADY_USED_TYPE) {

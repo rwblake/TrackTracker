@@ -22,7 +22,6 @@ public class SpotifyAuthorisationService {
     // Static - can be shared between authentication requests
     private static final String clientId = CredentialsParser.parseCredentials()[0];
     private static final String clientSecret = CredentialsParser.parseCredentials()[1];
-    private static final URI redirectUri = SpotifyHttpManager.makeUri("http://localhost:8080/");
 
     private static final String scope =
         "playlist-read-private, user-follow-read," +
@@ -30,39 +29,21 @@ public class SpotifyAuthorisationService {
         "user-read-recently-played, user-library-read";
 
     // Non-Static - specific to each authentication request
-    private final SpotifyApi spotifyApi = new SpotifyApi.Builder()
-        .setClientId(clientId)
-        .setClientSecret(clientSecret)
-        .setRedirectUri(redirectUri)
-        .build();
-
-    // To test this code whilst developing
-    public static void main(String[] args) {
-        // Create new authenticator connection
-        SpotifyAuthorisationService auth = new SpotifyAuthorisationService();
-
-        // Create a URI which links to Spotify's permissions page
-        URI uri = auth.getAuthorisationCodeUri();
-        System.out.println("URL: " + uri.toString());
-
-        System.out.println("Please enter the returned URL after granting or declining the permissions:\n");
-        Scanner input = new Scanner(System.in);
-        String newURI = input.nextLine();
-
-        // Initialise credentials
-        AuthorizationCodeCredentials credentials = auth.initialiseCredentials(URI.create(newURI));
-        if (credentials != null) {
-            System.out.println("Successfully generated credentials: " + credentials);
-        } else {
-            System.out.println("Credentials not generated - need to prompt user to accept, or abort account creation.");
-        }
-    }
+    private final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).build();
 
     /** Get the URI for the page which allows a user to connect their Spotify account to our app.
      *
      *  @return The url which links to the spotify page to permit/deny access */
-    public URI getAuthorisationCodeUri() throws RuntimeException {
-        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApi
+    public URI getAuthorisationCodeUri(String origin) throws RuntimeException {
+        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/spotify-callback/");
+
+        SpotifyApi spotifyApiForAuthentication = new SpotifyApi.Builder()
+            .setClientId(clientId)
+            .setClientSecret(clientSecret)
+            .setRedirectUri(redirectUri)
+            .build();
+
+        AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApiForAuthentication
             .authorizationCodeUri()
             .state(generateAlphaNumericString(11)) // A random number challenge which the client must return
             .scope(scope) // The different types of permission requested
