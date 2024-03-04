@@ -6,10 +6,6 @@ import team.bham.domain.Artist;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
 
-/** WARNING: This is unfinished, uncommented, badly organised code that I still need to work on further.
- * I'm committing it so that other people can play around with it, but it does not integrate with the rest of the app
- * right now.
- */
 public class PlaylistInsightCalculator {
 
     /** Calculates and returns an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
