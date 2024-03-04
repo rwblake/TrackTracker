@@ -1,4 +1,6 @@
 export interface PlaylistInsightsResponse {
+  playlistTitle: string;
+  imageURL: string;
   happiestSongID: string;
   energeticSongID: string;
   sumsUpSongID: string;
