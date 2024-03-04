@@ -91,13 +91,15 @@ export class RegisterComponent implements AfterViewInit {
     if (password !== confirmPassword) {
       this.doNotMatch = true;
     } else {
-      const { login, email, bio } = this.registerForm.getRawValue();
+      const { login, email, bio, spotifyAuthState, spotifyAuthCode } = this.registerForm.getRawValue();
       this.registerService
         .save({
           login,
           email,
           password,
           bio,
+          spotifyAuthCode,
+          spotifyAuthState,
           langKey: 'en',
         })
         .subscribe({ next: () => (this.success = true), error: response => this.processAuthenticationURIError(response) });

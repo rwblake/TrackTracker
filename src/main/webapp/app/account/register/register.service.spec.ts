@@ -32,15 +32,10 @@ describe('RegisterService Service', () => {
       const password = 'pass';
       const spotifyID = 'myaccountname';
       const bio = 'This is my bio';
-      const credentials = {
-        accessToken: 'token',
-        tokenType: 'tokentype',
-        scope: 'scope1, scope2',
-        expiresIn: 0,
-        refreshToken: 'refresh',
-      };
+      const spotifyAuthCode = 'code';
+      const spotifyAuthState = 'state';
       const langKey = 'FR';
-      const registration = new Registration(login, email, password, spotifyID, bio, credentials, langKey);
+      const registration = new Registration(login, email, password, spotifyID, bio, spotifyAuthCode, spotifyAuthState, langKey);
 
       // WHEN
       service.save(registration).subscribe();
