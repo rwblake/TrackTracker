@@ -56,6 +56,10 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           path: '',
           loadChildren: () => import(`./entities/entity-routing.module`).then(m => m.EntityRoutingModule),
         },
+        {
+          path: 'spotify-callback',
+          loadChildren: () => import('./spotify-callback/spotify-callback.module').then(m => m.SpotifyCallbackModule),
+        },
         navbarRoute,
         ...errorRoute,
       ],
