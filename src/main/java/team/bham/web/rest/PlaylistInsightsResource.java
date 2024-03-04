@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
@@ -15,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
-import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.PlaylistStats;
 import team.bham.repository.PlaylistRepository;
 import team.bham.service.PlaylistService;
@@ -34,16 +34,10 @@ public class PlaylistInsightsResource {
 
     private final Logger log = LoggerFactory.getLogger(PlaylistInsightsResource.class);
 
-    private final PlaylistStatsService playlistStatsService;
     private final PlaylistService playlistService;
     private final PlaylistRepository playlistRepository;
 
-    public PlaylistInsightsResource(
-        PlaylistStatsService playlistStatsService,
-        PlaylistService playlistService,
-        PlaylistRepository playlistRepository
-    ) {
-        this.playlistStatsService = playlistStatsService;
+    public PlaylistInsightsResource(PlaylistService playlistService, PlaylistRepository playlistRepository) {
         this.playlistService = playlistService;
         this.playlistRepository = playlistRepository;
     }
@@ -61,8 +55,14 @@ public class PlaylistInsightsResource {
             SpotifyApi spotifyApi = PlaylistRetriever.clientCredentials(credentials[0], credentials[1]);
             Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
             List<Track> tracks = PlaylistRetriever.getTracks(spotifyApi, spotifyID);
+            List<ArtistSimplified> artists = new ArrayList<>(tracks.size());
+            for (Track track : tracks) {
+                artists.addAll(List.of(track.getArtists()));
+            }
+            Artist[] myArtists = PlaylistRetriever.getArtists(spotifyApi, artists);
+
             List<AudioFeatures> audioFeaturesList = PlaylistRetriever.getAudioFeatures(spotifyApi, tracks);
-            myPlaylist = playlistService.createPlaylist(playlist, tracks, audioFeaturesList);
+            myPlaylist = playlistService.createPlaylist(playlist, tracks, audioFeaturesList, myArtists);
         }
 
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);

@@ -2,15 +2,13 @@ package team.bham.service.spotify;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
-import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
-import se.michaelthelin.spotify.model_objects.specification.Paging;
-import se.michaelthelin.spotify.model_objects.specification.PlaylistTrack;
-import se.michaelthelin.spotify.model_objects.specification.Track;
+import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 
 public class PlaylistRetriever {
@@ -86,5 +84,33 @@ public class PlaylistRetriever {
             offset += limit;
         } while (tracksRecieved == limit);
         return features;
+    }
+
+    public static Artist[] getArtists(SpotifyApi spotifyApi, List<ArtistSimplified> artists)
+        throws IOException, ParseException, SpotifyWebApiException {
+        List<String> artistIDs = artists.stream().map(ArtistSimplified::getId).collect(Collectors.toList());
+
+        final int limit = 50; // maximum items in one request
+        Artist[] myArtists = new Artist[artists.size()];
+        int offset = 0;
+        int artistsRecieved;
+        int i;
+        int end;
+        Artist[] newArtists;
+
+        do {
+            end = offset + limit;
+            if (offset + limit >= myArtists.length) {
+                end = myArtists.length;
+            }
+            newArtists = spotifyApi.getSeveralArtists(artistIDs.subList(offset, end).toArray(new String[0])).build().execute();
+            artistsRecieved = newArtists.length;
+            for (i = 0; i < artistsRecieved; i++) {
+                myArtists[offset + i] = newArtists[i];
+            }
+            offset += limit;
+        } while (artistsRecieved == limit);
+
+        return myArtists;
     }
 }

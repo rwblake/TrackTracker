@@ -9,4 +9,8 @@ import team.bham.domain.Genre;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface GenreRepository extends JpaRepository<Genre, Long> {}
+public interface GenreRepository extends JpaRepository<Genre, Long> {
+    public Boolean existsByName(String name);
+
+    public Genre findGenreByName(String name);
+}
