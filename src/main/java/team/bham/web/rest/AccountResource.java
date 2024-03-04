@@ -82,14 +82,17 @@ public class AccountResource {
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM, URI returned_uri)
+    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM)
         throws IOException, ParseException, SpotifyWebApiException {
         if (isPasswordLengthInvalid(managedAppUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
 
         // attempt to generate credentials
-        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(returned_uri);
+        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(
+            managedAppUserVM.getSpotifyAuthCode(),
+            managedAppUserVM.getSpotifyAuthState()
+        );
         if (credentials == null) {
             throw new DeclinedSpotifyAccessException();
         }

@@ -7,6 +7,7 @@ import team.bham.service.dto.AdminUserDTO;
 /**
  * View Model extending the AdminUserDTO, which is meant to be used in the user management UI.
  * This Class lists the fields an AppUser can have (extending the default User fields).
+ * It needs to mirror register.model.ts in frontend
  */
 public class ManagedAppUserVM extends AdminUserDTO {
 
@@ -21,6 +22,10 @@ public class ManagedAppUserVM extends AdminUserDTO {
 
     @Size(max = BIO_MAX_LENGTH)
     private String bio;
+
+    private String spotifyAuthCode;
+
+    private String spotifyAuthState;
 
     public ManagedAppUserVM() {
         // Empty constructor needed for Jackson.
@@ -40,6 +45,22 @@ public class ManagedAppUserVM extends AdminUserDTO {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getSpotifyAuthCode() {
+        return spotifyAuthCode;
+    }
+
+    public void setSpotifyAuthCode(String spotifyAuthCode) {
+        this.spotifyAuthCode = spotifyAuthCode;
+    }
+
+    public String getSpotifyAuthState() {
+        return spotifyAuthState;
+    }
+
+    public void setSpotifyAuthState(String spotifyAuthState) {
+        this.spotifyAuthState = spotifyAuthState;
     }
 
     // prettier-ignore

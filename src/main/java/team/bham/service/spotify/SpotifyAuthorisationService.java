@@ -56,35 +56,22 @@ public class SpotifyAuthorisationService {
     /**
      * Initialises the credentials of the spotifyAPI object, given the returned URI.
      *
-     * @param uri The returned uri after responding to Spotify
+     * @param spotifyAuthCode The authentication code returned after the user grants access to Spotify account.
+     * @param spotifyAuthState The state returned after the user grants access to Spotify account.
      * @return the credentials (null, if there was an error)
      */
-    public AuthorizationCodeCredentials initialiseCredentials(URI uri) {
+    public AuthorizationCodeCredentials initialiseCredentials(String spotifyAuthCode, String spotifyAuthState) {
         try {
-            // Split the uri into the different queries
-            String[] queries = uri.getQuery().split("&");
-            Map<String, String> map = new java.util.HashMap<>(Map.of());
-            for (String query : queries) {
-                String[] parts = query.split("=");
-                map.put(parts[0], parts[1]);
-            }
-
-            // Check that there is a code given
-            if (map.get("code") == null) {
-                System.out.println("User declined. Error: " + map.get("error"));
-                return null;
-            }
-
-            System.out.println("Initialising the credentials given query: " + map.get("code"));
+            // TODO: Should check for state equality here but dont know how to store state on backend throughout a transaction.
 
             // Get credentials from returned url
-            AuthorizationCodeCredentials authorisationCodeCredentials = spotifyApi.authorizationCode(map.get("code")).build().execute();
+            AuthorizationCodeCredentials authorisationCodeCredentials = spotifyApi.authorizationCode(spotifyAuthCode).build().execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(authorisationCodeCredentials.getAccessToken());
             spotifyApi.setRefreshToken(authorisationCodeCredentials.getRefreshToken());
 
-            System.out.println("Expires in: " + authorisationCodeCredentials.getExpiresIn() + " seconds");
+            System.out.println("Generated code expires in: " + authorisationCodeCredentials.getExpiresIn() + " seconds");
 
             return authorisationCodeCredentials;
         } catch (IOException | ParseException | SpotifyWebApiException e) {
