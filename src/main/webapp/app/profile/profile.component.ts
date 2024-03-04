@@ -62,4 +62,7 @@ export class ProfileComponent implements OnInit {
       console.error('Modal element not found');
     }
   }
+  navigateToGDPR() {
+    this.router.navigate(['/gdpr-policy']);
+  }
 }
