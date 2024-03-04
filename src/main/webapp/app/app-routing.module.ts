@@ -60,6 +60,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           path: 'spotify-callback',
           loadChildren: () => import('./spotify-callback/spotify-callback.module').then(m => m.SpotifyCallbackModule),
         },
+        { path: 'gdpr-policy', loadChildren: () => import('./gdpr-policy/gdpr-policy.module').then(m => m.GdprPolicyModule) },
         navbarRoute,
         ...errorRoute,
       ],
