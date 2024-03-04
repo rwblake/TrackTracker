@@ -7,6 +7,9 @@ public class PlaylistInsightsHTTPResponse {
     /** This class is used to temporarily store data for a PlaylistInsights HTTP response.
      * It is converted to JSON before being sent.
      */
+
+    String playlistTitle;
+    String imageURL;
     String happiestSongID;
     String energeticSongID;
     String sumsUpSongID;
@@ -21,11 +24,16 @@ public class PlaylistInsightsHTTPResponse {
     ArtistProportionMap[] artistsToProportions;
 
     public PlaylistInsightsHTTPResponse(
+        String playlistTitle,
+        String imageURL,
         String[] selectedSongIDs,
         float[] statAverages,
         YearSongCountMap[] yearsToSongs,
         ArtistProportionMap[] artistsToProportions
     ) {
+        this.playlistTitle = playlistTitle;
+        this.imageURL = imageURL;
+
         happiestSongID = selectedSongIDs[0];
         energeticSongID = selectedSongIDs[1];
         sumsUpSongID = selectedSongIDs[2];

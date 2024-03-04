@@ -126,7 +126,14 @@ public class PlaylistInsightCalculator {
         ArtistProportionMap[] artistProportions = calculateArtistProportions(playlist);
 
         // Package it
-        return new PlaylistInsightsHTTPResponse(highlightedIDs, averages, yearSongs, artistProportions);
+        return new PlaylistInsightsHTTPResponse(
+            playlist.getName(),
+            playlist.getImageURL(),
+            highlightedIDs,
+            averages,
+            yearSongs,
+            artistProportions
+        );
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
