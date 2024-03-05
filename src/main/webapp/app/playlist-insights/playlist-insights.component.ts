@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { PlaylistInsightsService } from './playlist-insights.service';
-import { PlaylistInsightsResponse } from './playlist-insights-response-interface';
+import { ArtistsToProportionResponse, PlaylistInsightsResponse, YearsToSongResponse } from './playlist-insights-response-interface';
 import { InsightsComponent } from '../insights/insights.component';
 import { CommonModule } from '@angular/common';
 import { InsightsRoutingModule } from '../insights/insights-routing.module';
@@ -19,103 +19,13 @@ export class PlaylistInsightsComponent implements OnInit {
   urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
   linkInput: any;
 
-  artistsPieChartTitle = 'Artists Listened To';
-  artistsPieChart = [
-    {
-      name: 'Loyle Carner',
-      value: 40632,
-      extra: {
-        code: 'lc',
-      },
-    },
-    {
-      name: 'Kanye',
-      value: 50000,
-      extra: {
-        code: 'ky',
-      },
-    },
-    {
-      name: 'Bob Marley',
-      value: 36745,
-      extra: {
-        code: 'bm',
-      },
-    },
-  ];
+  artistsPieChartTitle: string = 'Number of Songs Artist Appears On';
+  artistsPieChart: { name: string; value: number }[] = [];
 
-  songsPieChartTitle = 'Songs Listened To';
-  songsPieChart = [
-    {
-      name: 'Pop',
-      value: 40632,
-      extra: {
-        code: 'po',
-      },
-    },
-    {
-      name: 'Rock',
-      value: 50000,
-      extra: {
-        code: 'rk',
-      },
-    },
-    {
-      name: 'Hip Hop',
-      value: 36745,
-      extra: {
-        code: 'hh',
-      },
-    },
-  ];
-
-  xaxisLabelBar = 'Time period';
-  yaxisLabelBar = 'Hours';
+  xaxisLabelBar = 'Decade';
+  yaxisLabelBar = 'Number of Songs';
   below = LegendPosition.Below;
-  timeperiodBar = [
-    {
-      name: '1950s',
-      value: 40632,
-      extra: {
-        code: 'de',
-      },
-    },
-    {
-      name: '1960s',
-      value: 50000,
-      extra: {
-        code: 'us',
-      },
-    },
-    {
-      name: '1970s',
-      value: 36745,
-      extra: {
-        code: 'fr',
-      },
-    },
-    {
-      name: '1980s',
-      value: 36240,
-      extra: {
-        code: 'uk',
-      },
-    },
-    {
-      name: '1990s',
-      value: 50000,
-      extra: {
-        code: 'us',
-      },
-    },
-    {
-      name: '2000s',
-      value: 50000,
-      extra: {
-        code: 'us',
-      },
-    },
-  ];
+  timePeriodBar: { name: string; value: number }[] = [];
 
   pulledData: boolean = false;
 
@@ -126,14 +36,35 @@ export class PlaylistInsightsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
   }
 
-  track(index: number): number {
-    return index;
-  }
   sendLink() {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
-    this.playlistInsightsService.sendURL(url).subscribe(value => (this.response = value));
+    this.playlistInsightsService.sendURL(url).subscribe(value => this.onSuccessfulResponse(value));
+  }
+
+  onSuccessfulResponse(val: PlaylistInsightsResponse) {
+    this.response = val;
+
+    this.addArtistsToChart(this.response.artistsToProportions);
+    this.addSongYearsToChart(this.response.yearsToSongs);
     this.pulledData = true;
-    console.log(this.response?.anomalousSong?.songTitle);
+  }
+
+  addArtistsToChart(artistsToProportions: ArtistsToProportionResponse[]) {
+    for (let i = 0; i < artistsToProportions.length; i++) {
+      this.artistsPieChart.push({
+        name: artistsToProportions[i].artistName,
+        value: artistsToProportions[i].occurencesInPlaylist,
+      });
+    }
+  }
+
+  addSongYearsToChart(yearsToSongs: YearsToSongResponse[]) {
+    for (let i = 0; i < yearsToSongs.length; i++) {
+      this.timePeriodBar.push({
+        name: yearsToSongs[i].year,
+        value: yearsToSongs[i].songCount,
+      });
+    }
   }
 }
