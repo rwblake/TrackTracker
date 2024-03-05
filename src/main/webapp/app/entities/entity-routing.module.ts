@@ -65,11 +65,6 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./user-preferences/user-preferences.module').then(m => m.UserPreferencesModule),
       },
       {
-        path: 'spotify-token',
-        data: { pageTitle: 'SpotifyTokens' },
-        loadChildren: () => import('./spotify-token/spotify-token.module').then(m => m.SpotifyTokenModule),
-      },
-      {
         path: 'card',
         data: { pageTitle: 'Cards' },
         loadChildren: () => import('./card/card.module').then(m => m.CardModule),

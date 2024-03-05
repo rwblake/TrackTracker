@@ -121,7 +121,7 @@
           </td>
           <td>
             <div *ngIf="appUser.spotifyToken">
-              <a [routerLink]="['/spotify-token', appUser.spotifyToken.id, 'view']">{{ appUser.spotifyToken.id }}</a>
+              <a [routerLink]="['/admin/spotify-token', appUser.spotifyToken.id, 'view']">{{ appUser.spotifyToken.id }}</a>
             </div>
           </td>
           <td>

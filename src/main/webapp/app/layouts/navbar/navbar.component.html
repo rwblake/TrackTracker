@@ -230,18 +230,6 @@
             <li>
               <a
                 class="dropdown-item"
-                routerLink="spotify-token"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                <span>Spotify Token</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
                 routerLink="card"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }"
@@ -333,6 +321,18 @@
               <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
                 <fa-icon icon="users" [fixedWidth]="true"></fa-icon>
                 <span>User management</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="admin/spotify-token"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span>Spotify Token</span>
               </a>
             </li>
             <li>
