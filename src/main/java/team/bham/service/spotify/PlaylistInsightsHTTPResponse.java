@@ -10,10 +10,10 @@ public class PlaylistInsightsHTTPResponse {
 
     String playlistTitle;
     String imageURL;
-    String happiestSongID;
-    String energeticSongID;
-    String sumsUpSongID;
-    String anomalousSongID;
+    SimpleSong happiestSongID;
+    SimpleSong energeticSongID;
+    SimpleSong sumsUpSongID;
+    SimpleSong anomalousSongID;
 
     float averageValence;
     float averageEnergy;
@@ -26,7 +26,7 @@ public class PlaylistInsightsHTTPResponse {
     public PlaylistInsightsHTTPResponse(
         String playlistTitle,
         String imageURL,
-        String[] selectedSongIDs,
+        SimpleSong[] selectedSongs,
         float[] statAverages,
         YearSongCountMap[] yearsToSongs,
         ArtistProportionMap[] artistsToProportions
@@ -34,10 +34,10 @@ public class PlaylistInsightsHTTPResponse {
         this.playlistTitle = playlistTitle;
         this.imageURL = imageURL;
 
-        happiestSongID = selectedSongIDs[0];
-        energeticSongID = selectedSongIDs[1];
-        sumsUpSongID = selectedSongIDs[2];
-        anomalousSongID = selectedSongIDs[3];
+        happiestSongID = selectedSongs[0];
+        energeticSongID = selectedSongs[1];
+        sumsUpSongID = selectedSongs[2];
+        anomalousSongID = selectedSongs[3];
 
         averageValence = statAverages[0];
         averageEnergy = statAverages[1];
