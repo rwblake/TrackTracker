@@ -44,7 +44,7 @@ public class PlaylistInsightsResource {
 
     @PostMapping("/playlist-insights")
     public ResponseEntity<String> createPlaylist(@Valid @RequestBody String url)
-        throws URISyntaxException, IOException, ParseException, SpotifyWebApiException {
+        throws IOException, ParseException, SpotifyWebApiException {
         String spotifyID = PlaylistRetriever.parsePlaylistIDfromURL(url);
 
         team.bham.domain.Playlist myPlaylist;
