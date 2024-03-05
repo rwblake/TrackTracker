@@ -33,9 +33,17 @@
 
 <br />
 
+<p>Viewing insights for playlist: {{ response?.playlistTitle }}</p>
+
+<br />
+
 <div class="row">
   <div class="column">
     <h2>Average stats go here!</h2>
+    <p>Average Valence: {{ response?.averageValence }}</p>
+    <p>Average Energy: {{ response?.averageEnergy }}</p>
+    <p>Average Acousticness: {{ response?.averageAcousticness }}</p>
+    <p>Average Danceability: {{ response?.averageDanceability }}</p>
     <h2>Selected songs go here!</h2>
   </div>
   <div class="column">
