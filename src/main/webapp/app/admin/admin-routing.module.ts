@@ -14,6 +14,11 @@ import { RouterModule } from '@angular/router';
         },
       },
       {
+        path: 'spotify-token',
+        data: { pageTitle: 'SpotifyTokens' },
+        loadChildren: () => import('./spotify-token/spotify-token.module').then(m => m.SpotifyTokenModule),
+      },
+      {
         path: 'docs',
         loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule),
       },

@@ -1,6 +1,6 @@
 import { IUser } from 'app/entities/user/user.model';
 import { IUserPreferences } from 'app/entities/user-preferences/user-preferences.model';
-import { ISpotifyToken } from 'app/entities/spotify-token/spotify-token.model';
+import { ISpotifyToken } from 'app/admin/spotify-token/spotify-token.model';
 import { IFeed } from 'app/entities/feed/feed.model';
 
 export interface IAppUser {
