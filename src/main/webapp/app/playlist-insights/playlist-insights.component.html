@@ -33,26 +33,41 @@
 
 <br />
 
-<p>Viewing insights for playlist: {{ response?.playlistTitle }}</p>
+<div *ngIf="pulledData">
+  <p style="text-align: center">
+    Viewing insights for <b>{{ response?.playlistTitle }}</b>
+  </p>
+  <div class="row">
+    <div class="column">
+      <h2>Playlist Averages</h2>
+      <p>Average Valence: {{ response?.averageValence }}</p>
+      <p>Average Energy: {{ response?.averageEnergy }}</p>
+      <p>Average Acousticness: {{ response?.averageAcousticness }}</p>
+      <p>Average Danceability: {{ response?.averageDanceability }}</p>
 
-<br />
+      <h2>Selected Songs</h2>
 
-<div class="row">
-  <div class="column">
-    <h2>Playlist Averages</h2>
-    <p>Average Valence: {{ response?.averageValence }}</p>
-    <p>Average Energy: {{ response?.averageEnergy }}</p>
-    <p>Average Acousticness: {{ response?.averageAcousticness }}</p>
-    <p>Average Danceability: {{ response?.averageDanceability }}</p>
-    <h2>Selected Songs</h2>
-    <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
-    <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
-    <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
-    <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
-  </div>
+      <div class="songCard">
+        <img [src]="response?.happiestSong?.songImageURL" />
+        <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+      </div>
+      <div class="songCard">
+        <img [src]="response?.energeticSong?.songImageURL" />
+        <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+      </div>
+      <div class="songCard">
+        <img [src]="response?.sumsUpSong?.songImageURL" />
+        <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
+      </div>
+      <div class="songCard">
+        <img [src]="response?.anomalousSong?.songImageURL" />
+        <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
+      </div>
+    </div>
 
-  <div class="column">
-    <h2>Playlist Artists</h2>
-    <h2>Songs over Time</h2>
+    <div class="column">
+      <h2>Playlist Artists</h2>
+      <h2>Songs over Time</h2>
+    </div>
   </div>
 </div>

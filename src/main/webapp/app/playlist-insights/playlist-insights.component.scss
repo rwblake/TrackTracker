@@ -12,6 +12,15 @@
   }
 }
 
+.songCard {
+  display: flex;
+  max-width: 500px;
+}
+
+img {
+  padding: 5px;
+}
+
 form {
   display: flex;
   flex-wrap: wrap;
