@@ -7,6 +7,7 @@ import team.bham.domain.PlaylistStats;
 import team.bham.repository.PlaylistStatsRepository;
 import team.bham.repository.SongRepository;
 import team.bham.service.spotify.PlaylistInsightCalculator;
+import team.bham.service.spotify.SimpleSong;
 
 @Service
 public class PlaylistStatsService {
@@ -31,13 +32,13 @@ public class PlaylistStatsService {
 
         // Calculate stats
         PlaylistInsightCalculator.AllFeaturesStats stats = new PlaylistInsightCalculator.AllFeaturesStats(playlist);
-        String[] highlightedIDs = PlaylistInsightCalculator.selectHighlightedSongs(playlist, stats);
+        SimpleSong[] highlightedSongs = PlaylistInsightCalculator.selectHighlightedSongs(playlist, stats);
 
         // Set selected songs
-        myPlaylistStats.setHappiestSong(songRepository.findSongBySpotifyID(highlightedIDs[0]));
-        myPlaylistStats.setEnergeticSong(songRepository.findSongBySpotifyID(highlightedIDs[1]));
-        myPlaylistStats.setSumsUpSong(songRepository.findSongBySpotifyID(highlightedIDs[2]));
-        myPlaylistStats.setAnonmalousSong(songRepository.findSongBySpotifyID(highlightedIDs[3]));
+        myPlaylistStats.setHappiestSong(songRepository.findSongBySpotifyID(highlightedSongs[0].songSpotifyID));
+        myPlaylistStats.setEnergeticSong(songRepository.findSongBySpotifyID(highlightedSongs[1].songSpotifyID));
+        myPlaylistStats.setSumsUpSong(songRepository.findSongBySpotifyID(highlightedSongs[2].songSpotifyID));
+        myPlaylistStats.setAnonmalousSong(songRepository.findSongBySpotifyID(highlightedSongs[3].songSpotifyID));
 
         // Update playlist with stats, and vice versa
         myPlaylistStats.setPlaylist(playlist);

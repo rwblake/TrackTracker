@@ -1,10 +1,10 @@
 export interface PlaylistInsightsResponse {
   playlistTitle: string;
   imageURL: string;
-  happiestSongID: string;
-  energeticSongID: string;
-  sumsUpSongID: string;
-  anomalousSongID: string;
+  happiestSongID: SimpleSong;
+  energeticSongID: SimpleSong;
+  sumsUpSongID: SimpleSong;
+  anomalousSongID: SimpleSong;
   averageValence: number;
   averageEnergy: number;
   averageAcousticness: number;
@@ -18,7 +18,15 @@ export interface YearsToSongResponse {
   songCount: number;
 }
 
+export interface SimpleSong {
+  spotifyID: string;
+  title: string;
+  imageURL: string;
+}
+
 export interface ArtistsToProportionResponse {
-  artistID: string;
+  artistSpotifyID: string;
+  artistName: string;
+  artistImageURL: string;
   proportionOfPlaylist: number;
 }

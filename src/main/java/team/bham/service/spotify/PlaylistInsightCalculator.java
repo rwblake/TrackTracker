@@ -9,8 +9,8 @@ import team.bham.domain.Song;
 public class PlaylistInsightCalculator {
 
     /** Calculates and returns an array containing playlist's happiest, most energetic, most and least anomalous tracks (in this order)  */
-    public static String[] selectHighlightedSongs(Playlist playlist, AllFeaturesStats mean) {
-        String[] selectedSongs = { null, null, null, null };
+    public static SimpleSong[] selectHighlightedSongs(Playlist playlist, AllFeaturesStats mean) {
+        Song[] selectedSongs = { null, null, null, null };
 
         double maxValence = -1; // Highest recorded valence of a song.
         double maxEnergy = -1; // Highest recorded energy of a song.
@@ -25,26 +25,34 @@ public class PlaylistInsightCalculator {
             currentValence = song.getValence();
             if (currentValence > maxValence) {
                 maxValence = currentValence;
-                selectedSongs[0] = song.getSpotifyID();
+                selectedSongs[0] = song;
             }
             currentEnergy = song.getEnergy();
             if (currentEnergy > maxEnergy) {
                 maxEnergy = currentEnergy;
-                selectedSongs[1] = song.getSpotifyID();
+                selectedSongs[1] = song;
             }
 
             currentDist = mean.distanceFromMean(song);
             if (currentDist < minDist) {
                 minDist = currentDist;
-                selectedSongs[2] = song.getSpotifyID();
+                selectedSongs[2] = song;
             }
             if (currentDist > maxDist) {
                 maxDist = currentDist;
-                selectedSongs[3] = song.getSpotifyID();
+                selectedSongs[3] = song;
             }
         }
 
-        return selectedSongs;
+        // Convert to HTTP-sendable simple song
+        SimpleSong[] simpleSongs = { null, null, null, null };
+        Song current;
+        for (int i = 0; i < 4; i++) {
+            current = selectedSongs[i];
+            simpleSongs[i] = new SimpleSong(current.getSpotifyID(), current.getName(), current.getImageURL());
+        }
+
+        return simpleSongs;
     }
 
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
@@ -75,9 +83,7 @@ public class PlaylistInsightCalculator {
     /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
     private static ArtistProportionMap[] calculateArtistProportions(Playlist playlist) {
         // Dictionary map to store years with the corresponding number of song occurrences
-        Map<String, Integer> artistsAndCounts = new HashMap<>();
-        ArtistSimplified current;
-        int totalArtistInstances = 0;
+        Map<Artist, Integer> artistsAndCounts = new HashMap<>();
 
         for (Song song : playlist.getSongs().toArray(new Song[0])) {
             // Each track has multiple artists
@@ -85,16 +91,11 @@ public class PlaylistInsightCalculator {
 
             // Iterate through all artists and update their dictionary entries accordingly
             for (Artist artist : artists) {
-                String currentID = artist.getSpotifyID();
-                if (artistsAndCounts.containsKey(currentID)) {
-                    artistsAndCounts.replace(currentID, artistsAndCounts.get(currentID) + 1);
+                if (artistsAndCounts.containsKey(artist)) {
+                    artistsAndCounts.replace(artist, artistsAndCounts.get(artist) + 1);
                 } else {
-                    artistsAndCounts.put(currentID, 1);
+                    artistsAndCounts.put(artist, 1);
                 }
-
-                // There will likely be more artist instances than there are songs.
-                // To calculate their proportions, we need to divide by total artist instances.
-                totalArtistInstances++;
             }
         }
 
@@ -102,8 +103,14 @@ public class PlaylistInsightCalculator {
         // We also need to divide by the total number of artists here
         ArtistProportionMap[] map = new ArtistProportionMap[artistsAndCounts.size()];
         int index = 0;
-        for (Map.Entry<String, Integer> entry : artistsAndCounts.entrySet()) {
-            map[index] = new ArtistProportionMap(entry.getKey(), entry.getValue() / (float) totalArtistInstances);
+        for (Map.Entry<Artist, Integer> entry : artistsAndCounts.entrySet()) {
+            map[index] =
+                new ArtistProportionMap(
+                    entry.getKey().getSpotifyID(),
+                    entry.getKey().getName(),
+                    entry.getKey().getImageURL(),
+                    entry.getValue()
+                );
             index++;
         }
 
@@ -120,7 +127,7 @@ public class PlaylistInsightCalculator {
         AllFeaturesStats stats = new AllFeaturesStats(playlist);
 
         // Calculate stats
-        String[] highlightedIDs = selectHighlightedSongs(playlist, stats);
+        SimpleSong[] highlightedIDs = selectHighlightedSongs(playlist, stats);
         float[] averages = getRelevantAverages(stats);
         YearSongCountMap[] yearSongs = calculateYears(playlist);
         ArtistProportionMap[] artistProportions = calculateArtistProportions(playlist);

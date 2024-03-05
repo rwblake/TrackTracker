@@ -24,6 +24,6 @@ export class PlaylistInsightsComponent implements OnInit {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
     this.playlistInsightsService.sendURL(url).subscribe(value => (this.response = value));
-    console.log(this.response?.playlistTitle);
+    console.log(this.response);
   }
 }
