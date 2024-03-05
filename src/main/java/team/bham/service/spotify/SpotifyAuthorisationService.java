@@ -26,7 +26,8 @@ public class SpotifyAuthorisationService {
     private static final String scope =
         "playlist-read-private, user-follow-read," +
         "user-read-playback-position, user-top-read, " +
-        "user-read-recently-played, user-library-read";
+        "user-read-recently-played, user-library-read, " +
+        "user-read-email";
 
     // Non-Static - specific to each authentication request
     private final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).build();
@@ -35,7 +36,10 @@ public class SpotifyAuthorisationService {
      *
      *  @return The url which links to the spotify page to permit/deny access */
     public URI getAuthorisationCodeUri(String origin) throws RuntimeException {
+        // Get redirectUri
         URI redirectUri = SpotifyHttpManager.makeUri(origin + "/spotify-callback/");
+
+        System.out.println(redirectUri.toString());
 
         SpotifyApi spotifyApiForAuthentication = new SpotifyApi.Builder()
             .setClientId(clientId)
@@ -60,16 +64,25 @@ public class SpotifyAuthorisationService {
      * @param spotifyAuthState The state returned after the user grants access to Spotify account.
      * @return the credentials (null, if there was an error)
      */
-    public AuthorizationCodeCredentials initialiseCredentials(String spotifyAuthCode, String spotifyAuthState) {
+    public AuthorizationCodeCredentials initialiseCredentials(String spotifyAuthCode, String spotifyAuthState, URI redirectUri) {
         try {
             // TODO: Should check for state equality here but dont know how to store state on backend throughout a transaction.
 
+            SpotifyApi spotifyApiForAuthentication = new SpotifyApi.Builder()
+                .setClientId(clientId)
+                .setClientSecret(clientSecret)
+                .setRedirectUri(redirectUri)
+                .build();
+
             // Get credentials from returned url
-            AuthorizationCodeCredentials authorisationCodeCredentials = spotifyApi.authorizationCode(spotifyAuthCode).build().execute();
+            AuthorizationCodeCredentials authorisationCodeCredentials = spotifyApiForAuthentication
+                .authorizationCode(spotifyAuthCode)
+                .build()
+                .execute();
 
             // Set access and refresh token for further "spotifyApi" object usage
-            spotifyApi.setAccessToken(authorisationCodeCredentials.getAccessToken());
-            spotifyApi.setRefreshToken(authorisationCodeCredentials.getRefreshToken());
+            spotifyApiForAuthentication.setAccessToken(authorisationCodeCredentials.getAccessToken());
+            spotifyApiForAuthentication.setRefreshToken(authorisationCodeCredentials.getRefreshToken());
 
             System.out.println("Generated code expires in: " + authorisationCodeCredentials.getExpiresIn() + " seconds");
 
@@ -89,6 +102,7 @@ public class SpotifyAuthorisationService {
     public SpotifyApi getAPI(AuthorizationCodeCredentials credentials) {
         SpotifyApi spotifyApi = SpotifyApi.builder().setClientId(clientId).setClientSecret(clientSecret).build();
         spotifyApi.setAccessToken(credentials.getAccessToken());
+        spotifyApi.setRefreshToken(credentials.getRefreshToken());
         return spotifyApi;
     }
 

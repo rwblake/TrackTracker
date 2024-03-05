@@ -12,5 +12,7 @@ import team.bham.domain.User;
  */
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
-    Optional<AppUser> findOneBySpotifyID(String email);
+    Optional<AppUser> findOneBySpotifyID(String spotifyID);
+
+    Optional<AppUser> findOneByInternalUser(User internalUser);
 }
