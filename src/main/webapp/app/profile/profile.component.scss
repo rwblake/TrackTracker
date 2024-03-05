@@ -28,9 +28,10 @@
 
 .row {
   z-index: 1;
-  font-family: 'Courier New';
+  font-size: 62, 5%;
+  //font-family: 'Courier New';
   //color: #ccc; // Light gray text
-  color: #d8b4e2; // Light purple/lavender text
+  //color: #d8b4e2; // Light purple/lavender text
 }
 h2 {
   font-weight: normal;
@@ -87,7 +88,6 @@ h3 {
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
-  color: #d8b4e2;
 }
 
 /* The Close Button */
