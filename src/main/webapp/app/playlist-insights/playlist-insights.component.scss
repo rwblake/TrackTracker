@@ -1,4 +1,18 @@
 @media screen and (max-width: 600px) {
+}
+
+.row {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 50%;
+  align-items: center;
+}
+
+@media screen and (max-width: 800px) {
   .column {
     flex: 100%;
   }
@@ -21,6 +35,37 @@
 .top-buffer {
   margin-top: 150px;
 }
+
+//.songCard {
+//  display: flex;
+//  max-width: 500px;
+//  background: rgb(255, 255, 255, 0.2);
+//  border-radius: 8px;
+//  align-items: center;
+//  border: solid 1px rgb(255, 255, 255, 0.5);
+//  gap: 16px;
+//  overflow: clip;
+//  //padding: 21px;
+//
+//  p {
+//    font-size: 1.2rem;
+//    width: 50%;
+//    margin: 0;
+//    text-align: left;
+//  }
+//}
+//
+//.statBox {
+//  display: flex;
+//  flex-direction: column;
+//  gap: 15px;
+//  margin-bottom: 15px;
+//  text-align: center;
+//}
+//
+//.lead {
+//  font-weight: 400;
+//}
 
 form {
   display: flex;

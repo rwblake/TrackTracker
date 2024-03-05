@@ -72,9 +72,11 @@ public class PlaylistService {
             myPlaylist.addSong(tmpSong);
         }
 
-        // Get artist Genres
+        // Get artist attributes that couldn't previously be set
         Genre myGenre;
+        team.bham.domain.Artist myArtist;
         for (se.michaelthelin.spotify.model_objects.specification.Artist artist : artists) {
+            // Set artist genres (by setting genre artists which cascade)
             for (String name : artist.getGenres()) {
                 if (genreRepository.existsByName(name)) {
                     myGenre = genreRepository.findGenreByName(name);
@@ -85,6 +87,10 @@ public class PlaylistService {
                 myGenre.addArtist(artistRepository.findArtistBySpotifyID(artist.getId()));
                 genreRepository.save(myGenre);
             }
+            // Set artist image
+            myArtist = artistRepository.findArtistBySpotifyID(artist.getId());
+            myArtist.setImageURL(artist.getImages()[0].getUrl());
+            artistRepository.save(myArtist);
         }
 
         playlistStatsService.createPlaylistStats(myPlaylist);

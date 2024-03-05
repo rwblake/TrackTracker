@@ -116,6 +116,9 @@ export class PlaylistInsightsComponent implements OnInit {
       },
     },
   ];
+
+  pulledData: boolean = false;
+
   constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
   response: PlaylistInsightsResponse | undefined;
 
@@ -123,10 +126,14 @@ export class PlaylistInsightsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
   }
 
+  track(index: number): number {
+    return index;
+  }
   sendLink() {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
     this.playlistInsightsService.sendURL(url).subscribe(value => (this.response = value));
+    this.pulledData = true;
     console.log(this.response?.anomalousSong?.songTitle);
   }
 }
