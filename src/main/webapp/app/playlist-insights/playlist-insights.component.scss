@@ -1,15 +1,25 @@
-.row {
-  display: flex;
-}
-
-.column {
-  flex: 50%;
-}
-
 @media screen and (max-width: 600px) {
   .column {
     flex: 100%;
   }
+}
+
+::ng-deep .ngx-charts {
+  text {
+    fill: #fff !important;
+  }
+}
+
+.buffer {
+  margin-top: 120px;
+}
+
+.small-buffer {
+  margin-top: 30px;
+}
+
+.top-buffer {
+  margin-top: 150px;
 }
 
 form {

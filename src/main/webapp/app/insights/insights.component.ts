@@ -13,24 +13,24 @@ export class InsightsComponent implements OnInit {
   genrePieChartTitle = 'Genres Listened To';
   genrePieChart = [
     {
-      name: 'Germany',
+      name: 'Pop',
       value: 40632,
       extra: {
-        code: 'de',
+        code: 'po',
       },
     },
     {
-      name: 'United States',
+      name: 'Rock',
       value: 50000,
       extra: {
-        code: 'us',
+        code: 'rk',
       },
     },
     {
-      name: 'France',
+      name: 'Hip Hop',
       value: 36745,
       extra: {
-        code: 'fr',
+        code: 'hh',
       },
     },
   ];
@@ -41,42 +41,42 @@ export class InsightsComponent implements OnInit {
 
   listenedTimeBar = [
     {
-      name: 'Germany',
+      name: 'Monday',
       value: 40632,
       extra: {
         code: 'de',
       },
     },
     {
-      name: 'United States',
+      name: 'Tuesday',
       value: 50000,
       extra: {
         code: 'us',
       },
     },
     {
-      name: 'France',
+      name: 'Wednesday',
       value: 36745,
       extra: {
         code: 'fr',
       },
     },
     {
-      name: 'United Kingdom',
+      name: 'Thursday',
       value: 36240,
       extra: {
         code: 'uk',
       },
     },
     {
-      name: 'Spain',
+      name: 'Friday',
       value: 33000,
       extra: {
         code: 'es',
       },
     },
     {
-      name: 'Italy',
+      name: 'Saturday',
       value: 35800,
       extra: {
         code: 'it',
@@ -88,7 +88,7 @@ export class InsightsComponent implements OnInit {
   artistLineChartTitle = 'Artists';
   artistTrendLine = [
     {
-      name: 'Spain',
+      name: 'Ye',
       series: [
         {
           value: 5361,
@@ -113,7 +113,7 @@ export class InsightsComponent implements OnInit {
       ],
     },
     {
-      name: 'Bangladesh',
+      name: 'Bob Marley',
       series: [
         {
           value: 3553,
@@ -138,7 +138,7 @@ export class InsightsComponent implements OnInit {
       ],
     },
     {
-      name: 'Brazil',
+      name: 'Beyonce',
       series: [
         {
           value: 5138,
@@ -163,7 +163,7 @@ export class InsightsComponent implements OnInit {
       ],
     },
     {
-      name: 'Uruguay',
+      name: 'The Red Hot Chilli Peppers',
       series: [
         {
           value: 2415,
@@ -192,45 +192,38 @@ export class InsightsComponent implements OnInit {
   xaxisLabelBarAlbum = 'Albums';
   albumsListenedBar = [
     {
-      name: 'Germany',
+      name: 'Hugo',
       value: 40632,
       extra: {
-        code: 'de',
+        code: 'lc',
       },
     },
     {
-      name: 'United States',
+      name: 'Halo',
       value: 50000,
       extra: {
-        code: 'us',
+        code: 'bk',
       },
     },
     {
-      name: 'France',
+      name: 'Purpose',
       value: 36745,
       extra: {
-        code: 'fr',
+        code: 'jb',
       },
     },
     {
-      name: 'United Kingdom',
+      name: '30',
       value: 36240,
       extra: {
-        code: 'uk',
+        code: 'ad',
       },
     },
     {
-      name: 'Spain',
+      name: '25',
       value: 33000,
       extra: {
-        code: 'es',
-      },
-    },
-    {
-      name: 'Italy',
-      value: 35800,
-      extra: {
-        code: 'it',
+        code: 'ad',
       },
     },
   ];
