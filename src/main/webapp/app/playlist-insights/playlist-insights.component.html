@@ -13,7 +13,7 @@
       name="link-input"
       formControlName="name"
       style="width: 700px"
-      placeholder="Paste the link to your Spotify playlist here!"
+      placeholder="Paste the link to a public Spotify playlist here..."
       [(ngModel)]="linkInput"
       required
     />
@@ -39,15 +39,20 @@
 
 <div class="row">
   <div class="column">
-    <h2>Average stats go here!</h2>
+    <h2>Playlist Averages</h2>
     <p>Average Valence: {{ response?.averageValence }}</p>
     <p>Average Energy: {{ response?.averageEnergy }}</p>
     <p>Average Acousticness: {{ response?.averageAcousticness }}</p>
     <p>Average Danceability: {{ response?.averageDanceability }}</p>
-    <h2>Selected songs go here!</h2>
+    <h2>Selected Songs</h2>
+    <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+    <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+    <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
+    <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
   </div>
+
   <div class="column">
-    <h2>Artist proportion pie chart goes here!</h2>
-    <h2>Songs over time chart goes here!</h2>
+    <h2>Playlist Artists</h2>
+    <h2>Songs over Time</h2>
   </div>
 </div>

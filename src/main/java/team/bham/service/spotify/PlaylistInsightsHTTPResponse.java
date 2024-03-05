@@ -1,7 +1,5 @@
 package team.bham.service.spotify;
 
-import java.time.Year;
-
 public class PlaylistInsightsHTTPResponse {
 
     /** This class is used to temporarily store data for a PlaylistInsights HTTP response.
@@ -10,10 +8,10 @@ public class PlaylistInsightsHTTPResponse {
 
     String playlistTitle;
     String imageURL;
-    SimpleSong happiestSongID;
-    SimpleSong energeticSongID;
-    SimpleSong sumsUpSongID;
-    SimpleSong anomalousSongID;
+    SimpleSong happiestSong;
+    SimpleSong energeticSong;
+    SimpleSong sumsUpSong;
+    SimpleSong anomalousSong;
 
     float averageValence;
     float averageEnergy;
@@ -34,10 +32,10 @@ public class PlaylistInsightsHTTPResponse {
         this.playlistTitle = playlistTitle;
         this.imageURL = imageURL;
 
-        happiestSongID = selectedSongs[0];
-        energeticSongID = selectedSongs[1];
-        sumsUpSongID = selectedSongs[2];
-        anomalousSongID = selectedSongs[3];
+        happiestSong = selectedSongs[0];
+        energeticSong = selectedSongs[1];
+        sumsUpSong = selectedSongs[2];
+        anomalousSong = selectedSongs[3];
 
         averageValence = statAverages[0];
         averageEnergy = statAverages[1];
