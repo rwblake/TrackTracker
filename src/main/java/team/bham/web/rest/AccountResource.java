@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import team.bham.domain.AppUser;
@@ -82,8 +83,15 @@ public class AccountResource {
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM)
+    public void registerAccount(@Valid @RequestBody ManagedAppUserVM managedAppUserVM, HttpServletRequest request)
         throws IOException, ParseException, SpotifyWebApiException {
+        // Get origin of request
+        URI requestUri = URI.create(request.getRequestURL().toString());
+        String origin = requestUri.getScheme() + "://" + requestUri.getAuthority();
+
+        // Regenerate redirectUri for SpotifyAPI
+        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/spotify-callback/");
+
         if (isPasswordLengthInvalid(managedAppUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
@@ -91,19 +99,27 @@ public class AccountResource {
         // attempt to generate credentials
         AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(
             managedAppUserVM.getSpotifyAuthCode(),
-            managedAppUserVM.getSpotifyAuthState()
+            managedAppUserVM.getSpotifyAuthState(),
+            redirectUri
         );
         if (credentials == null) {
-            throw new DeclinedSpotifyAccessException();
+            throw new Error(
+                "Could not initialise Credentials given: " +
+                Arrays.toString(new String[] { managedAppUserVM.getSpotifyAuthCode(), managedAppUserVM.getSpotifyAuthState() })
+            );
         }
 
         SpotifyApi spotifyApi = spotifyAuthorisationService.getAPI(credentials);
 
+        System.out.println("Created Spotify API object with Access Token: " + spotifyApi.getAccessToken());
+
         // once credentials generated, get SpotifyUserID using credentials
         String spotifyUserID = spotifyApi.getCurrentUsersProfile().build().execute().getId();
 
+        // Save user in database
         AppUser appUser = appUserService.registerAppUser(managedAppUserVM, managedAppUserVM.getPassword(), spotifyUserID, credentials);
-        mailService.sendActivationEmail(appUser.getInternalUser());
+        // Send email to verify account TODO: Uncomment this once authorisation via email works
+        //        mailService.sendActivationEmail(appUser.getInternalUser());
     }
 
     /**
