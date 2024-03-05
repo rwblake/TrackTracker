@@ -29,6 +29,7 @@ insert-secure-files:
   script:
     - echo "Testing current directory"
     - ls -l
+    - pwd
     - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
 
 maven-compile:
@@ -50,6 +51,7 @@ maven-package:
     - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
     - echo "Testing current directory"
     - ls -l
+    - pwd
   artifacts:
     paths:
       - target/*.jar
