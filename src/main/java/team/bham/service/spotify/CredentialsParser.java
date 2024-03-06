@@ -9,8 +9,8 @@ public class CredentialsParser {
     /** Reads credentials.txt and returns the Client ID and Client Secret*/
     public static String[] parseCredentials() {
         String[] idAndSecret = { "", "" };
-        idAndSecret[0] = System.getenv("SPOTIFY_CLIENT_ID");
-        idAndSecret[1] = System.getenv("SPOTIFY_CLIENT_SECRET");
+        //idAndSecret[0] = System.getenv("SPOTIFY_CLIENT_ID");
+        //idAndSecret[1] = System.getenv("SPOTIFY_CLIENT_SECRET");
         try {
             File file = new File("credentials.txt");
             Scanner reader = new Scanner(file);
