@@ -7,6 +7,10 @@ section {
   display: flex;
 }
 
+.alert {
+  text-align: center;
+}
+
 p {
   margin: 0;
 }
@@ -50,6 +54,11 @@ p {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+  }
+
+  .messages {
+    display: block;
+    align-items: center;
   }
 
   .scroll-wrapper {

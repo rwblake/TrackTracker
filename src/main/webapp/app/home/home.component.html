@@ -54,17 +54,16 @@
     <p class="lead">Your music tastes, <em>connected</em></p>
   </div>
 
-  <div class="alert alert-warning">
-    <span>If you want to </span>
-    <a class="alert-link" (click)="gotoLogin()">sign in</a
-    ><span
-      >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-      password="user").</span
-    >
-  </div>
-
-  <div class="alert alert-warning">
-    <span>You don't have an account yet?</span>&nbsp;
-    <a class="alert-link" routerLink="account/register">Register a new account</a>
+  <div class="messages">
+    <div class="alert alert-warning">
+      <span>You can access </span><a class="alert-link" routerLink="/insights/playlist">Playlist Insights</a>
+      <span>
+        without an account, but if <br />
+        you'd like access to all features you'll need to
+      </span>
+      <a class="alert-link" routerLink="/account/register">sign up</a>
+      <span> or </span>
+      <a class="alert-link" routerLink="/login">log in.</a>
+    </div>
   </div>
 </div>

@@ -2,9 +2,6 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       <h1 class="mb-4" data-cy="registerTitle">Create an account</h1>
-      <p class="mb-4">
-        <em>For best compatibility, we suggest you use Google Chrome for signing up as it handles the authentication popup better.</em>
-      </p>
 
       <div class="alert alert-success" *ngIf="success"><strong>Registration saved!</strong> Please check your email for confirmation.</div>
 
@@ -26,6 +23,12 @@
 
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
+      <div class="mt-3 alert alert-warning">
+        <span>
+          For the best experience, we suggest you use <strong>Google Chrome</strong> for signing up, as other browsers sometimes have issues
+          with the authentication popup.
+        </span>
+      </div>
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
         <!--Login (Username)-->
         <div class="mb-3">
@@ -272,15 +275,6 @@
 
         <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Create account</button>
       </form>
-
-      <div class="mt-3 alert alert-warning">
-        <span>If you want to </span>
-        <a class="alert-link" routerLink="/login">sign in</a
-        ><span
-          >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-          password="user").</span
-        >
-      </div>
     </div>
   </div>
 </div>
