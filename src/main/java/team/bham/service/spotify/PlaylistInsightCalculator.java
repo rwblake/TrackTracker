@@ -1,6 +1,7 @@
 package team.bham.service.spotify;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.Artist;
 import team.bham.domain.Playlist;
@@ -61,7 +62,7 @@ public class PlaylistInsightCalculator {
         Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
 
         for (Song song : playlist.getSongs().toArray(new Song[0])) {
-            String year = song.getReleaseDate().toString().substring(0, 4);
+            String year = song.getReleaseDate().toString().substring(0, 3) + "0s";
             if (yearsAndCounts.containsKey(year)) {
                 yearsAndCounts.replace(year, yearsAndCounts.get(year) + 1);
             } else {
@@ -69,10 +70,16 @@ public class PlaylistInsightCalculator {
             }
         }
 
+        List<Map.Entry<String, Integer>> yearsAndCountsList = yearsAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Comparator.comparing(Map.Entry::getKey))
+            .collect(Collectors.toList());
+
         // Convert Java hashmap to our data type, for JSON conversion
         YearSongCountMap[] map = new YearSongCountMap[yearsAndCounts.size()];
         int index = 0;
-        for (Map.Entry<String, Integer> entry : yearsAndCounts.entrySet()) {
+        for (Map.Entry<String, Integer> entry : yearsAndCountsList) {
             map[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
             index++;
         }
@@ -99,11 +106,18 @@ public class PlaylistInsightCalculator {
             }
         }
 
+        // sort by count for the pie chart
+        List<Map.Entry<Artist, Integer>> artistAndCountsList = artistsAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Comparator.comparing(Map.Entry::getValue))
+            .collect(Collectors.toList());
+
         // Convert Java hashmap to our data type, for JSON conversion
         // We also need to divide by the total number of artists here
         ArtistProportionMap[] map = new ArtistProportionMap[artistsAndCounts.size()];
         int index = 0;
-        for (Map.Entry<Artist, Integer> entry : artistsAndCounts.entrySet()) {
+        for (Map.Entry<Artist, Integer> entry : artistAndCountsList) {
             map[index] =
                 new ArtistProportionMap(
                     entry.getKey().getSpotifyID(),
