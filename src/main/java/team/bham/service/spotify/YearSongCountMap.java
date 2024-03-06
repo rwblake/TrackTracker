@@ -1,7 +1,8 @@
 package team.bham.service.spotify;
 
-import java.util.HashMap;
-
+/** Associates a year with a number of song occurrences.
+ * Used to form the Playlist Insights HTTP response.
+ */
 public class YearSongCountMap {
 
     public String year;

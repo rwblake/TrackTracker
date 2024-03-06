@@ -70,6 +70,7 @@ public class PlaylistInsightCalculator {
             }
         }
 
+        // Sorts the year-count map by year value
         List<Map.Entry<String, Integer>> yearsAndCountsList = yearsAndCounts
             .entrySet()
             .stream()

@@ -123,7 +123,7 @@ export class PlaylistInsightsComponent implements OnInit {
       }
       this.artistsPieChart.push({
         name: artistsToProportions[i].artistName,
-        value: artistsToProportions[i].occurencesInPlaylist,
+        value: artistsToProportions[i].occurrencesInPlaylist,
       });
     }
   }

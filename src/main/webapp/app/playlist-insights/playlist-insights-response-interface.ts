@@ -28,5 +28,5 @@ export interface ArtistsToProportionResponse {
   artistSpotifyID: string;
   artistName: string;
   artistImageURL: string;
-  occurencesInPlaylist: number;
+  occurrencesInPlaylist: number;
 }
