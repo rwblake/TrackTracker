@@ -30,39 +30,6 @@ export class PlaylistInsightsComponent implements OnInit {
     group: ScaleType.Ordinal,
     domain: ['#7825BC', '#B237EC', '#EA3AC1', '#EA002B', '#FF3407', '#FF6528', '#FF8E16', '#FFB219', '#FFD54C', '#FFEFA3'],
   };
-  barScheme: Color = {
-    name: 'barScheme',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#BF31A8', '#B237EC', '#D62839', '#E66637', '#F49D37'],
-  };
-  valenceScheme: Color = {
-    name: 'valenceScheme',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#B237EC'],
-  };
-  energyScheme: Color = {
-    name: 'energyScheme',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#EA002B'],
-  };
-  acousticnessScheme: Color = {
-    name: 'acousticnessScheme',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#FF6528'],
-  };
-
-  danceabilityScheme: Color = {
-    name: 'danceabilityScheme',
-    selectable: true,
-    group: ScaleType.Ordinal,
-    domain: ['#FFD54C'],
-  };
-
-  cardImageSize: number = 150;
 
   // Information for the pie chart
   artistsPieChartTitle: string = 'Number of Songs Artist Appears On';
@@ -80,9 +47,6 @@ export class PlaylistInsightsComponent implements OnInit {
   energyValue: number = 0;
   acousticnessValue: number = 0;
   danceabilityValue: number = 0;
-
-  averageBarsHeight: number = 25;
-  averageBarsWidth: number = 500;
 
   constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
   response: PlaylistInsightsResponse | undefined;
@@ -107,10 +71,10 @@ export class PlaylistInsightsComponent implements OnInit {
     this.response = val;
     this.addArtistsToChart(this.response.artistsToProportions);
     this.addSongYearsToChart(this.response.yearsToSongs);
-    this.valenceValue = this.response.averageValence;
-    this.energyValue = this.response.averageEnergy;
-    this.acousticnessValue = this.response.averageAcousticness;
-    this.danceabilityValue = this.response.averageDanceability;
+    this.valenceValue = this.response.averageValence * 100;
+    this.energyValue = this.response.averageEnergy * 100;
+    this.acousticnessValue = this.response.averageAcousticness * 100;
+    this.danceabilityValue = this.response.averageDanceability * 100;
 
     // reveal the charts!
     this.pulledData = true;

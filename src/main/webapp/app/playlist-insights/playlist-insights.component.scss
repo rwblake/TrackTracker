@@ -9,10 +9,17 @@
   display: flex;
 }
 
-.column {
+.columnA {
   display: flex;
   flex-direction: column;
-  flex: 50%;
+  flex: 40%;
+  align-items: center;
+}
+
+.columnB {
+  display: flex;
+  flex-direction: column;
+  flex: 60%;
   align-items: center;
 }
 
@@ -34,22 +41,47 @@
   margin-top: 150px;
 }
 
+// "cards" that appear for selected songs
 .songCard {
   display: flex;
   max-width: 500px;
-  background: rgb(255, 255, 255, 0.2);
-  border-radius: 8px;
   align-items: center;
+  background: rgb(255, 255, 255, 0.1);
+  border-radius: 8px;
   border: solid 1px rgb(255, 255, 255, 0.5);
   gap: 16px;
   overflow: clip;
+  margin-bottom: 8px;
+
+  img {
+    width: 100px;
+    height: 100px;
+  }
 
   p {
     font-size: 1.2rem;
-    width: 50%;
-    margin: 0;
+    margin-right: 16px;
     text-align: left;
   }
+}
+
+// used for stat averages
+.progressBarOutside {
+  background: rgb(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: solid 1px rgb(255, 255, 255, 0.5);
+  width: 100vh;
+  height: 20px;
+  max-width: 500px;
+  margin-bottom: 8px;
+}
+
+.progressBarInside {
+  border-radius: 8px;
+  border: solid 1px rgb(255, 255, 255, 0);
+
+  height: 100%;
+  width: 50%;
 }
 
 .averageBar {
@@ -66,12 +98,15 @@ ngx-charts-linear-gauge {
 .statBox {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 30px;
-  text-align: center;
+  gap: 8px;
+  margin-bottom: 50px;
   align-items: center;
   min-width: 500px;
   max-width: 700px;
+
+  h3 {
+    text-align: left;
+  }
 }
 
 .lead {

@@ -36,107 +36,72 @@
     <br />
 
     <div class="row">
-      <div class="column">
+      <div class="columnA">
         <div class="statBox">
-          <h2>Playlist Averages</h2>
-          <div class="averageBar">
-            <p>Valence</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="valenceScheme"
-              [value]="valenceValue"
-              [previousValue]="valenceValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+          <h3>Valence</h3>
+          <div class="progressBarOutside">
+            <div
+              class="progressBarInside"
+              style="background: rgb(178, 55, 236, 1)"
+              [ngStyle]="{
+                'width.%': valenceValue
+              }"
+            ></div>
           </div>
-          <div class="averageBar">
-            <p>Energy</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="energyScheme"
-              [value]="energyValue"
-              [previousValue]="energyValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+          <h3>Energy</h3>
+          <div class="progressBarOutside">
+            <div
+              class="progressBarInside"
+              style="background: rgb(255, 178, 25, 1)"
+              [ngStyle]="{
+                'width.%': energyValue
+              }"
+            ></div>
           </div>
-          <div class="averageBar">
-            <p>Acousticness</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="acousticnessScheme"
-              [value]="acousticnessValue"
-              [previousValue]="acousticnessValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+          <h3>Acousticness</h3>
+          <div class="progressBarOutside">
+            <div
+              class="progressBarInside"
+              style="background: rgb(75, 163, 195, 1)"
+              [ngStyle]="{
+                'width.%': acousticnessValue
+              }"
+            ></div>
           </div>
-          <div class="averageBar">
-            <p>Danceability</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="danceabilityScheme"
-              [value]="danceabilityValue"
-              [previousValue]="danceabilityValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+          <h3>Danceability</h3>
+          <div class="progressBarOutside">
+            <div
+              class="progressBarInside"
+              style="background: rgb(234, 0, 43, 1)"
+              [ngStyle]="{
+                'width.%': danceabilityValue
+              }"
+            ></div>
           </div>
         </div>
 
         <div class="statBox">
-          <h2>Selected Songs</h2>
           <div class="songCard">
-            <img
-              [src]="response?.happiestSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.happiestSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
+            <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
             <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
           </div>
           <div class="songCard">
-            <img
-              [src]="response?.energeticSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.energeticSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
+            <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
             <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
           </div>
           <div class="songCard">
-            <img
-              [src]="response?.sumsUpSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
+            <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
             <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
           </div>
           <div class="songCard">
-            <img
-              [src]="response?.anomalousSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
+            <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
             <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
           </div>
         </div>
       </div>
 
-      <div class="column">
+      <div class="columnB">
         <div class="statBox">
-          <h2>Top 10 Playlist Artists</h2>
           <ngx-charts-pie-chart
             [view]="[700, 300]"
             [results]="artistsPieChart"
@@ -148,7 +113,6 @@
           </ngx-charts-pie-chart>
         </div>
         <div class="statBox">
-          <h2>Songs Over Time</h2>
           <ngx-charts-bar-vertical
             [results]="timePeriodBar"
             [view]="[500, 350]"
