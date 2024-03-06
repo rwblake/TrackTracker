@@ -84,9 +84,7 @@ deploy-dev:
     #run (install-app.sh) on the deployment server
     - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "sh team-project/install-app.sh"
   script:
-    - export SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID
-    - export SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "export SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID; export SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET; docker compose -f ~/team-project/prd.yml up -d && docker system prune --force --filter 'until=24h'"
+    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "docker compose -f ~/team-project/app.yml up -d && docker system prune --force --filter 'until=24h'"
 
 deploy-prod:
   image: alpine:latest
@@ -104,6 +102,4 @@ deploy-prod:
     - chmod og= $RSA
     - apk update && apk add openssh-client sshpass
   script:
-    - export SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID
-    - export SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "export SPOTIFY_CLIENT_ID=$SPOTIFY_CLIENT_ID; export SPOTIFY_CLIENT_SECRET=$SPOTIFY_CLIENT_SECRET; docker compose -f ~/team-project/prd.yml up -d && docker system prune --force --filter 'until=24h'"
+    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "docker compose -f ~/team-project/app.yml up -d && docker system prune --force --filter 'until=24h'"
