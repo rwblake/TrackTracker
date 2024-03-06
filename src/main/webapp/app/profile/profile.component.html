@@ -18,13 +18,13 @@
       <img
         class="rounded-circle mx-auto d-block"
         style="width: 50%; height: 50%; padding-bottom: 10%; background-color: #d8b4e2"
-        src="..."
+        src="{{ user?.avatarURL }}"
       />
     </div>
     <div class="col">
-      <h3>Friends:</h3>
+      <h3>Friends: 0</h3>
       <h3>Bio:</h3>
-      <div class="bio">This is where the bio goes...</div>
+      <div class="bio">{{ user?.bio }}</div>
     </div>
     <div class="col">
       <button (click)="edit()">Edit</button>

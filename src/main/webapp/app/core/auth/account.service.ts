@@ -7,6 +7,8 @@ import { shareReplay, tap, catchError } from 'rxjs/operators';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { ApplicationConfigService } from '../config/application-config.service';
 import { Account } from 'app/core/auth/account.model';
+import { User } from '../../entities/user/user.model';
+import { IAppUser } from '../../entities/app-user/app-user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -67,6 +69,9 @@ export class AccountService {
 
   private fetch(): Observable<Account> {
     return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
+  }
+  fetchUser(): Observable<IAppUser> {
+    return this.http.get<IAppUser>(this.applicationConfigService.getEndpointFor('api/account-user'));
   }
 
   private navigateToStoredUrl(): void {

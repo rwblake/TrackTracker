@@ -8,8 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 import { IAppUser } from '../entities/app-user/app-user.model';
 import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
+import { User } from '../entities/user/user.model';
+import { UserService } from '../entities/user/user.service';
 
 @Component({
   selector: 'jhi-profile',
@@ -17,7 +19,8 @@ import { Account } from 'app/core/auth/account.model';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  //appUser: IAppUser | null = null;
+  user: IAppUser | null = null;
+  //user: User | null = null;
   appUser: any;
   modal = document.getElementById('myModal');
   btn = document.getElementById('helpBtn');
@@ -40,6 +43,14 @@ export class ProfileComponent implements OnInit {
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => (this.account = account));
+    this.accountService.fetchUser().subscribe(
+      (data: IAppUser) => {
+        this.user = data;
+      },
+      error => {
+        console.error('Error fetching user bio:', error);
+      }
+    );
   }
   edit(): void {
     this.router.navigate(['./profile/edit-profile']);

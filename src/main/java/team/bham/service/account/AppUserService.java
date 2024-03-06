@@ -3,8 +3,6 @@ package team.bham.service.account;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
@@ -60,6 +58,11 @@ public class AppUserService extends team.bham.service.UserService {
         appUserRepository.flush();
         this.clearUserCaches(existingUser.getInternalUser());
         return true;
+    }
+
+    public Optional<AppUser> getAppUser(User internalUser) {
+        System.out.println(this.appUserRepository.findOneByInternalUser(internalUser));
+        return this.appUserRepository.findOneByInternalUser(internalUser);
     }
 
     /** Performs same actions as UserService, whilst also creating all other linked entities */

@@ -9,7 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -18,6 +21,7 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import team.bham.domain.AppUser;
 import team.bham.domain.SpotifyToken;
 import team.bham.domain.User;
+import team.bham.repository.AppUserRepository;
 import team.bham.repository.UserRepository;
 import team.bham.security.SecurityUtils;
 import team.bham.service.DeclinedSpotifyAccessException;
@@ -171,6 +175,17 @@ public class AccountResource {
             .getUserWithAuthorities()
             .map(AdminUserDTO::new)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
+    }
+
+    @GetMapping("/account-user")
+    public AppUser getAccountUser() {
+        User internalAppUser = userService
+            .getUserWithAuthorities()
+            .orElseThrow(() -> new AccountResourceException("User could not be found"));
+        AppUser appUser = appUserService.getAppUser(internalAppUser).get();
+        System.out.println("BackEnd" + appUser);
+        System.out.println(appUser.getBio());
+        return appUser;
     }
 
     /**
