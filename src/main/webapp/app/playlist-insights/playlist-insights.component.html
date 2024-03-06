@@ -1,174 +1,176 @@
-<h1>Playlist Insights</h1>
+<div class="playlist-insights root">
+  <h1>Playlist Insights</h1>
 
-<div class="row">
-  <br />
+  <div class="row">
+    <br />
 
-  <form (ngSubmit)="sendLink()" [formGroup]="urlForm" style="width: 700px; margin-bottom: 20px">
-    <div class="mb-3">
-      <label class="form-label" for="name"> Playlist URL </label>
+    <form (ngSubmit)="sendLink()" [formGroup]="urlForm" style="width: 700px; margin-bottom: 20px">
+      <div class="mb-3">
+        <label class="form-label" for="name"> Playlist URL </label>
 
-      <input
-        type="text"
-        class="form-control"
-        id="name"
-        name="link-input"
-        formControlName="name"
-        style="width: 700px"
-        placeholder="Paste the link to a public Spotify playlist here..."
-        [(ngModel)]="linkInput"
-        required
-      />
-    </div>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="link-input"
+          formControlName="name"
+          style="width: 700px"
+          placeholder="Paste the link to a public Spotify playlist here..."
+          [(ngModel)]="linkInput"
+          required
+        />
+      </div>
 
-    <button
-      type="submit"
-      id="submit-link"
-      data-cy="entityCreateSaveButton"
-      class="btn btn-primary"
-      style="width: 100px"
-      [disabled]="linkInput === ''"
-    >
-      Go!
-    </button>
-  </form>
-
-  <br />
-
-  <div *ngIf="pulledData">
-    <p class="lead">
-      Viewing insights for: <b>{{ response?.playlistTitle }}</b>
-    </p>
+      <button
+        type="submit"
+        id="submit-link"
+        data-cy="entityCreateSaveButton"
+        class="btn btn-primary"
+        style="width: 100px"
+        [disabled]="linkInput === ''"
+      >
+        Go!
+      </button>
+    </form>
 
     <br />
 
-    <div class="row">
-      <div class="column">
-        <div class="statBox">
-          <h2>Playlist Averages</h2>
-          <div class="averageBar">
-            <p>Valence</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="valenceScheme"
-              [value]="valenceValue"
-              [previousValue]="valenceValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+    <div *ngIf="pulledData">
+      <p class="lead">
+        Viewing insights for: <b>{{ response?.playlistTitle }}</b>
+      </p>
+
+      <br />
+
+      <div class="row">
+        <div class="column">
+          <div class="statBox">
+            <h2>Playlist Averages</h2>
+            <div class="averageBar">
+              <p>Valence</p>
+              <ngx-charts-linear-gauge
+                [view]="[averageBarsWidth, averageBarsHeight]"
+                [scheme]="valenceScheme"
+                [value]="valenceValue"
+                [previousValue]="valenceValue"
+                [min]="0"
+                [max]="1"
+                [units]="''"
+              >
+              </ngx-charts-linear-gauge>
+            </div>
+            <div class="averageBar">
+              <p>Energy</p>
+              <ngx-charts-linear-gauge
+                [view]="[averageBarsWidth, averageBarsHeight]"
+                [scheme]="energyScheme"
+                [value]="energyValue"
+                [previousValue]="energyValue"
+                [min]="0"
+                [max]="1"
+                [units]="''"
+              >
+              </ngx-charts-linear-gauge>
+            </div>
+            <div class="averageBar">
+              <p>Acousticness</p>
+              <ngx-charts-linear-gauge
+                [view]="[averageBarsWidth, averageBarsHeight]"
+                [scheme]="acousticnessScheme"
+                [value]="acousticnessValue"
+                [previousValue]="acousticnessValue"
+                [min]="0"
+                [max]="1"
+                [units]="''"
+              >
+              </ngx-charts-linear-gauge>
+            </div>
+            <div class="averageBar">
+              <p>Danceability</p>
+              <ngx-charts-linear-gauge
+                [view]="[averageBarsWidth, averageBarsHeight]"
+                [scheme]="danceabilityScheme"
+                [value]="danceabilityValue"
+                [previousValue]="danceabilityValue"
+                [min]="0"
+                [max]="1"
+                [units]="''"
+              >
+              </ngx-charts-linear-gauge>
+            </div>
           </div>
-          <div class="averageBar">
-            <p>Energy</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="energyScheme"
-              [value]="energyValue"
-              [previousValue]="energyValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
-          </div>
-          <div class="averageBar">
-            <p>Acousticness</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="acousticnessScheme"
-              [value]="acousticnessValue"
-              [previousValue]="acousticnessValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
-          </div>
-          <div class="averageBar">
-            <p>Danceability</p>
-            <ngx-charts-linear-gauge
-              [view]="[averageBarsWidth, averageBarsHeight]"
-              [scheme]="danceabilityScheme"
-              [value]="danceabilityValue"
-              [previousValue]="danceabilityValue"
-              [min]="0"
-              [max]="1"
-              [units]="''"
-            >
-            </ngx-charts-linear-gauge>
+
+          <div class="statBox">
+            <h2>Selected Songs</h2>
+            <div class="songCard">
+              <img
+                [src]="response?.happiestSong?.songImageURL"
+                [alt]="'Album artwork for ' + response?.happiestSong?.songTitle"
+                [height]="cardImageSize"
+                [width]="cardImageSize"
+              />
+              <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+            </div>
+            <div class="songCard">
+              <img
+                [src]="response?.energeticSong?.songImageURL"
+                [alt]="'Album artwork for ' + response?.energeticSong?.songTitle"
+                [height]="cardImageSize"
+                [width]="cardImageSize"
+              />
+              <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+            </div>
+            <div class="songCard">
+              <img
+                [src]="response?.sumsUpSong?.songImageURL"
+                [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle"
+                [height]="cardImageSize"
+                [width]="cardImageSize"
+              />
+              <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
+            </div>
+            <div class="songCard">
+              <img
+                [src]="response?.anomalousSong?.songImageURL"
+                [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle"
+                [height]="cardImageSize"
+                [width]="cardImageSize"
+              />
+              <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
+            </div>
           </div>
         </div>
 
-        <div class="statBox">
-          <h2>Selected Songs</h2>
-          <div class="songCard">
-            <img
-              [src]="response?.happiestSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.happiestSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
-            <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+        <div class="column">
+          <div class="statBox">
+            <h2>Top 10 Playlist Artists</h2>
+            <ngx-charts-pie-chart
+              [view]="[700, 300]"
+              [results]="artistsPieChart"
+              [legendPosition]="LegendPosition.Right"
+              [legend]="true"
+              [legendTitle]="artistsPieChartTitle"
+              [scheme]="pieSchemeA"
+            >
+            </ngx-charts-pie-chart>
           </div>
-          <div class="songCard">
-            <img
-              [src]="response?.energeticSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.energeticSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
-            <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+          <div class="statBox">
+            <h2>Songs Over Time</h2>
+            <ngx-charts-bar-vertical
+              [results]="timePeriodBar"
+              [view]="[500, 350]"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [rotateXAxisTicks]="true"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showGridLines]="false"
+              [xAxisLabel]="xaxisLabelBar"
+              [yAxisLabel]="yaxisLabelBar"
+              [scheme]="pieSchemeA"
+            >
+            </ngx-charts-bar-vertical>
           </div>
-          <div class="songCard">
-            <img
-              [src]="response?.sumsUpSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
-            <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
-          </div>
-          <div class="songCard">
-            <img
-              [src]="response?.anomalousSong?.songImageURL"
-              [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle"
-              [height]="cardImageSize"
-              [width]="cardImageSize"
-            />
-            <p>This playlist's <b>most anomalous song</b> {{ response?.anomalousSong?.songTitle }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="statBox">
-          <h2>Top 10 Playlist Artists</h2>
-          <ngx-charts-pie-chart
-            [view]="[700, 300]"
-            [results]="artistsPieChart"
-            [legendPosition]="LegendPosition.Right"
-            [legend]="true"
-            [legendTitle]="artistsPieChartTitle"
-            [scheme]="pieSchemeA"
-          >
-          </ngx-charts-pie-chart>
-        </div>
-        <div class="statBox">
-          <h2>Songs Over Time</h2>
-          <ngx-charts-bar-vertical
-            [results]="timePeriodBar"
-            [view]="[500, 350]"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            [rotateXAxisTicks]="true"
-            [xAxis]="true"
-            [yAxis]="true"
-            [showGridLines]="false"
-            [xAxisLabel]="xaxisLabelBar"
-            [yAxisLabel]="yaxisLabelBar"
-            [scheme]="pieSchemeA"
-          >
-          </ngx-charts-bar-vertical>
         </div>
       </div>
     </div>

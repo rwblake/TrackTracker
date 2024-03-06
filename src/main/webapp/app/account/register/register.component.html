@@ -1,7 +1,10 @@
-<div>
+<div class="register">
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
-      <h1 data-cy="registerTitle">Create an account</h1>
+      <h1 class="mb-4" data-cy="registerTitle">Create an account</h1>
+      <p class="mb-4">
+        <em>For best compatibility, we suggest you use Google Chrome for signing up as it handles the authentication popup better.</em>
+      </p>
 
       <div class="alert alert-success" *ngIf="success"><strong>Registration saved!</strong> Please check your email for confirmation.</div>
 
@@ -254,8 +257,6 @@
 
         <!--Spotify Authentication-->
         <div class="mb-5">
-          <label class="form-label" for="confirmPassword">Spotify Account</label>
-          <br />
           <button
             type="button"
             class="btn btn-primary"
@@ -264,7 +265,7 @@
           >
             <span *ngIf="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"> Account Linked! </span>
             <span *ngIf="registerForm.get('spotifyAuthCode')!.invalid || registerForm.get('spotifyAuthState')!.invalid">
-              Link Your Spotify Account
+              Link your Spotify account
             </span>
           </button>
         </div>

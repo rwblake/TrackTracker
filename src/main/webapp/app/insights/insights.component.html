@@ -1,215 +1,217 @@
-<h1>Insights</h1>
+<div class="root insights">
+  <h1>Insights</h1>
 
-<div class="row">
-  <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
+  <div class="row">
+    <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
 
-  <div class="w-100"></div>
+    <div class="w-100"></div>
 
-  <div class="w-100"></div>
+    <div class="w-100"></div>
 
-  <div class="row gx-5 buffer">
-    <h1>{{ graphNameChange() }}</h1>
-  </div>
-
-  <div class="row gx-5 buffer">
-    <h4 class="col-md-3">Genre Pie Chart</h4>
-    <h4 class="col-md-3">Overall listening time</h4>
-    <h4 class="col-md-3">Artists trends</h4>
-    <h4 class="col-md-3">Albums listened to</h4>
-  </div>
-
-  <div class="row gx-5 small-buffer">
-    <div class="col-md-3">
-      <!--   Genre pie chart     -->
-      <ngx-charts-pie-chart
-        [results]="genrePieChart"
-        [arcWidth]="3"
-        [explodeSlices]="true"
-        [legendPosition]="below"
-        [legend]="true"
-        [legendTitle]="genrePieChartTitle"
-      >
-      </ngx-charts-pie-chart>
+    <div class="row gx-5 buffer">
+      <h1>{{ graphNameChange() }}</h1>
     </div>
 
-    <div #containerRef class="col-md-3">
-      <!--   Listened time bar chart   -->
-      <ngx-charts-bar-vertical
-        [results]="listenedTimeBar"
-        [view]="[containerRef.offsetWidth, 400]"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [rotateXAxisTicks]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [showGridLines]="false"
-        [xAxisLabel]="xaxisLabelBar"
-        [yAxisLabel]="yaxisLabelBar"
-      >
-      </ngx-charts-bar-vertical>
-    </div>
-    <!--    <div class="w-50-m"></div>-->
-    <!--  <div class="row justify-content-start">-->
-    <div class="col-md-3">
-      <!--   artist trend    -->
-      <ngx-charts-line-chart
-        [results]="artistTrendLine"
-        [yAxis]="true"
-        [showGridLines]="false"
-        [legend]="true"
-        [showYAxisLabel]="true"
-        [yAxisLabel]="yaxisLabelLine"
-        [trimYAxisTicks]="true"
-        [autoScale]="true"
-        [legendPosition]="below"
-        [legendTitle]="artistLineChartTitle"
-      >
-      </ngx-charts-line-chart>
+    <div class="row gx-5 buffer">
+      <h4 class="col-md-3">Genre Pie Chart</h4>
+      <h4 class="col-md-3">Overall listening time</h4>
+      <h4 class="col-md-3">Artists trends</h4>
+      <h4 class="col-md-3">Albums listened to</h4>
     </div>
 
-    <div class="col-md-3">
-      <!--  Album listened to    -->
-      <ngx-charts-bar-vertical
-        [results]="albumsListenedBar"
-        [showXAxisLabel]="true"
-        [showYAxisLabel]="true"
-        [rotateXAxisTicks]="true"
-        [roundDomains]="true"
-        [xAxis]="true"
-        [yAxis]="true"
-        [showGridLines]="false"
-        [xAxisLabel]="xaxisLabelBarAlbum"
-        [yAxisLabel]="yaxisLabelBar"
-      >
-      </ngx-charts-bar-vertical>
-    </div>
-  </div>
+    <div class="row gx-5 small-buffer">
+      <div class="col-md-3">
+        <!--   Genre pie chart     -->
+        <ngx-charts-pie-chart
+          [results]="genrePieChart"
+          [arcWidth]="3"
+          [explodeSlices]="true"
+          [legendPosition]="below"
+          [legend]="true"
+          [legendTitle]="genrePieChartTitle"
+        >
+        </ngx-charts-pie-chart>
+      </div>
 
-  <div class="w-100"></div>
+      <div #containerRef class="col-md-3">
+        <!--   Listened time bar chart   -->
+        <ngx-charts-bar-vertical
+          [results]="listenedTimeBar"
+          [view]="[containerRef.offsetWidth, 400]"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [rotateXAxisTicks]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showGridLines]="false"
+          [xAxisLabel]="xaxisLabelBar"
+          [yAxisLabel]="yaxisLabelBar"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
+      <!--    <div class="w-50-m"></div>-->
+      <!--  <div class="row justify-content-start">-->
+      <div class="col-md-3">
+        <!--   artist trend    -->
+        <ngx-charts-line-chart
+          [results]="artistTrendLine"
+          [yAxis]="true"
+          [showGridLines]="false"
+          [legend]="true"
+          [showYAxisLabel]="true"
+          [yAxisLabel]="yaxisLabelLine"
+          [trimYAxisTicks]="true"
+          [autoScale]="true"
+          [legendPosition]="below"
+          [legendTitle]="artistLineChartTitle"
+        >
+        </ngx-charts-line-chart>
+      </div>
 
-  <div class="row gx-5 buffer top-buffer">
-    <h1>{{ leaderNameChange() }}</h1>
-  </div>
+      <div class="col-md-3">
+        <!--  Album listened to    -->
+        <ngx-charts-bar-vertical
+          [results]="albumsListenedBar"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [rotateXAxisTicks]="true"
+          [roundDomains]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showGridLines]="false"
+          [xAxisLabel]="xaxisLabelBarAlbum"
+          [yAxisLabel]="yaxisLabelBar"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
 
-  <div class="row gx-5 buffer">
-    <h4 class="col-md-3">Favourite Artists</h4>
-    <h4 class="col-md-3">Favourite Genre</h4>
-    <h4 class="col-md-3">Favourite Song</h4>
-    <h4 class="col-md-3">Favourite Time Period</h4>
-  </div>
+    <div class="w-100"></div>
 
-  <div class="row gx-5 small-buffer">
-    <div class="col-md-3">
-      <table class="table table-striped table-dark">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Artist</th>
-            <th scope="col">Hours Listened</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>4</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="row gx-5 buffer top-buffer">
+      <h1>{{ leaderNameChange() }}</h1>
     </div>
-    <div class="col-md-3">
-      <table class="table table-striped table-dark">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Artist</th>
-            <th scope="col">Hours Listened</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>4</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="row gx-5 buffer">
+      <h4 class="col-md-3">Favourite Artists</h4>
+      <h4 class="col-md-3">Favourite Genre</h4>
+      <h4 class="col-md-3">Favourite Song</h4>
+      <h4 class="col-md-3">Favourite Time Period</h4>
     </div>
-    <div class="col-md-3">
-      <table class="table table-striped table-dark">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Artist</th>
-            <th scope="col">Hours Listened</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>4</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-md-3">
-      <table class="table table-striped table-dark">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col">Artist</th>
-            <th scope="col">Hours Listened</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>10</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>8</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>4</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <div class="row gx-5 small-buffer">
+      <div class="col-md-3">
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Artist</th>
+              <th scope="col">Hours Listened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Artist</th>
+              <th scope="col">Hours Listened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Artist</th>
+              <th scope="col">Hours Listened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-3">
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Artist</th>
+              <th scope="col">Hours Listened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Mark</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Jacob</td>
+              <td>8</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+              <td>4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

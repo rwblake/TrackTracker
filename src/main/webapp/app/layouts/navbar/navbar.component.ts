@@ -49,6 +49,7 @@ export class NavbarComponent implements OnInit {
   }
 
   login(): void {
+    this.collapseNavbar();
     this.router.navigate(['/login']);
   }
 

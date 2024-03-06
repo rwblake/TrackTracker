@@ -6,7 +6,7 @@
       <span class="navbar-version">{{ version }}</span>
     </a>
     <a
-      class="navbar-toggler d-lg-none"
+      class="navbar-toggler d-md-none"
       href="javascript:void(0);"
       data-toggle="collapse"
       data-target="#navbarResponsive"
@@ -27,7 +27,7 @@
             </span>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/friends" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="user-group" [fixedWidth]="true"></fa-icon>
@@ -35,7 +35,7 @@
             </span>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="chart-simple" [fixedWidth]="true"></fa-icon>
@@ -43,7 +43,7 @@
             </span>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights/friends" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="chart-pie" [fixedWidth]="true"></fa-icon>
@@ -59,7 +59,7 @@
             </span>
           </a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/share" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="share" [fixedWidth]="true"></fa-icon>
@@ -69,7 +69,7 @@
         </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         <li
-          *ngSwitchCase="true"
+          *jhiHasAnyAuthority="'ROLE_ADMIN'"
           ngbDropdown
           class="nav-item dropdown pointer"
           display="dynamic"
