@@ -76,7 +76,7 @@ describe('Home Component', () => {
   describe('login', () => {
     it('Should navigate to /login on login', () => {
       // WHEN
-      comp.login();
+      comp.gotoLogin();
 
       // THEN
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);

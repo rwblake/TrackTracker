@@ -27,6 +27,15 @@ h2 {
   font-size: 2em;
 }
 
+p,
+.body-text {
+  font-size: 1em;
+}
+
+.lead {
+  font-size: 1rem;
+}
+
 // The top level div of each page
 .root {
   position: relative;
@@ -34,6 +43,8 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
 
   // The content div - different to div so that you can use bootstrap to resize dynamically
   .column {
@@ -106,9 +117,9 @@ Generic styles
   word-break: break-all;
 }
 
-//.form-control {
-//  background-color: #fff;
-//}
+.form-control {
+  background: rgb($body-bg-dark, 0.5);
+}
 
 .readonly {
   background-color: #eee;

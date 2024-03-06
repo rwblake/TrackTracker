@@ -1,54 +1,70 @@
-<div class="root row">
-  <!--  <div class="col-md-3">-->
-  <!--    <span class="hipster img-fluid rounded"></span>-->
-  <!--  </div>-->
+<!--LOGGED-IN--->
+<div *ngIf="account !== null" class="root">
+  <div class="greeting">
+    <h1>Welcome back, {{ customAccount.firstName }}!</h1>
+    <p class="lead">{{ getLastUpdateMessage() }}</p>
+  </div>
 
-  <div class="column col-md-9">
-    <h1>Welcome, to your JHipster application!</h1>
+  <div class="scroll-wrapper">
+    <section class="profiles">
+      <button (click)="gotoProfile()" class="profile-card">
+        <img [src]="customAccount.avatarURL" alt="Your profile picture" height="80" width="80" />
 
-    <p class="lead">This is the Home Feed.</p>
+        <div class="details">
+          <p class="name">{{ customAccount.firstName + ' ' + customAccount.lastName }}</p>
+          <p class="friends">{{ customAccount.friends.length }} friends</p>
+          <p class="hint">Click to visit your profile</p>
+        </div>
+      </button>
 
-    <div [ngSwitch]="account !== null">
-      <div class="alert alert-success" *ngSwitchCase="true">
-        <span id="home-logged-message" *ngIf="account">You are logged in as user "{{ account.login }}".</span>
-      </div>
+      <hr class="divider" />
 
-      <div class="alert alert-warning" *ngSwitchCase="false">
-        <span>If you want to </span>
-        <a class="alert-link" (click)="login()">sign in</a
-        ><span
-          >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-          password="user").</span
-        >
-      </div>
+      <button *ngFor="let friend of customAccount.friends; index as i; trackBy: trackByIndex" class="friend-card">
+        <img
+          *ngIf="friend.pinned"
+          [src]="friend.avatarURL"
+          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
+          height="64"
+          width="64"
+        />
+        <p *ngIf="friend.pinned" class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>
+      </button>
 
-      <div class="alert alert-warning" *ngSwitchCase="false">
-        <span>You don't have an account yet?</span>&nbsp;
-        <a class="alert-link" routerLink="account/register">Register a new account</a>
-      </div>
+      <button *ngIf="!hasMaxPinned()" class="friend-card">
+        <div class="circle-button">
+          <fa-icon icon="add" [fixedWidth]="true"></fa-icon>
+        </div>
+
+        <p class="name">Pin friend</p>
+      </button>
+    </section>
+  </div>
+
+  <div [ngSwitch]="account !== null">
+    <div class="alert alert-success" *ngSwitchCase="true">
+      <span id="home-logged-message" *ngIf="account">You are logged in as user "{{ account.login }}".</span>
     </div>
+  </div>
+</div>
 
-    <p>If you have any question on JHipster:</p>
+<!--LOGGED-OUT-->
+<div *ngIf="account === null" class="root">
+  <div class="greeting">
+    <h1>Welcome to {{ APP_NAME }}</h1>
+    <p class="lead">Your music tastes, <em>connected</em></p>
+  </div>
 
-    <ul>
-      <li><a href="https://www.jhipster.tech/" target="_blank" rel="noopener noreferrer">JHipster homepage</a></li>
-      <li>
-        <a href="https://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener noreferrer">JHipster on Stack Overflow</a>
-      </li>
-      <li>
-        <a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener noreferrer"
-          >JHipster bug tracker</a
-        >
-      </li>
-      <li>
-        <a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer">JHipster public chat room</a>
-      </li>
-      <li><a href="https://twitter.com/jhipster" target="_blank" rel="noopener noreferrer">follow @jhipster on Twitter</a></li>
-    </ul>
+  <div class="alert alert-warning">
+    <span>If you want to </span>
+    <a class="alert-link" (click)="gotoLogin()">sign in</a
+    ><span
+      >, you can try the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
+      password="user").</span
+    >
+  </div>
 
-    <p>
-      <span>If you like JHipster, don't forget to give us a star on</span>
-      <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer">GitHub</a>!
-    </p>
+  <div class="alert alert-warning">
+    <span>You don't have an account yet?</span>&nbsp;
+    <a class="alert-link" routerLink="account/register">Register a new account</a>
   </div>
 </div>

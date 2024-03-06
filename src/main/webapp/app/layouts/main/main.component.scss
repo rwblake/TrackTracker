@@ -2,10 +2,58 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
 }
 
 .contents {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+:host {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: linear-gradient(90deg, rgba(24, 2, 25, 1) 0%, rgba(0, 0, 0, 1) 26%, rgba(22, 4, 28, 1) 79%);
+
+  &::before {
+    all: unset;
+    z-index: 0;
+    content: '';
+    display: block;
+    position: absolute;
+    float: left;
+    width: 700px;
+    aspect-ratio: 1;
+    height: auto;
+    top: -20vw;
+    margin-left: calc((100% - 700px) / 2);
+    margin-right: calc((100% - 700px) / 2);
+    border-radius: 1000px;
+    pointer-events: none;
+
+    background: linear-gradient(rgb(black, 0%) 0%, rgb(164, 66, 210, 20%) 50%, rgb(164, 66, 210, 100%) 100%);
+    filter: blur(60px);
+    transition: filter ease-in-out 1000ms, top ease-in-out 1000ms;
+    //animation: hue-shift 60s ease infinite, pulse 14s ease infinite; /* Adjust duration and timing function */
+  }
+}
+
+:host:has(.playlist-insights) {
+  &::before {
+    filter: blur(120px) hue-rotate(20deg);
+    top: -500px;
+  }
+}
+
+:host:has(.register) {
+  &::before {
+    filter: blur(60px) hue-rotate(-20deg);
+  }
 }

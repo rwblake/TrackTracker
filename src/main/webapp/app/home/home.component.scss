@@ -2,61 +2,169 @@
 Main page styles
 ========================================================================== */
 
-//.hipster {
-//  display: inline-block;
-//  width: 347px;
-//  height: 497px;
-//  background: url('../../content/images/jhipster_family_member_0.svg') no-repeat center top;
-//  background-size: contain;
-//}
+div:not(.alert),
+section {
+  display: flex;
+}
 
-///* wait autoprefixer update to allow simple generation of high pixel density media query */
-//@media only screen and (-webkit-min-device-pixel-ratio: 2),
-//  only screen and (-moz-min-device-pixel-ratio: 2),
-//  only screen and (-o-min-device-pixel-ratio: 2/1),
-//  only screen and (min-resolution: 192dpi),
-//  only screen and (min-resolution: 2dppx) {
-//  .hipster {
-//    background: url('../../content/images/jhipster_family_member_0.svg') no-repeat center top;
-//    background-size: contain;
+p {
+  margin: 0;
+}
+
+//:host {
+//  margin: 0;
+//  min-height: 100vh;
+//  overflow-x: hidden;
+//
+//  &::before {
+//    all: unset;
+//    z-index: 0;
+//    content: '';
+//    display: block;
+//    position: absolute;
+//    float: left;
+//    width: 700px;
+//    aspect-ratio: 1;
+//    height: auto;
+//    top: -20vw;
+//    margin-left: calc((100% - 700px) / 2);
+//    margin-right: calc((100% - 700px) / 2);
+//    border-radius: 1000px;
+//    pointer-events: none;
+//
+//    background: linear-gradient(rgb(black, 0%) 0%, rgb(164, 66, 210, 20%) 50%, rgb(164, 66, 210, 100%) 100%);
+//    filter: blur(60px);
+//    //animation: hue-shift 60s ease infinite, pulse 14s ease infinite; /* Adjust duration and timing function */
 //  }
 //}
 
-// The top level div of each page
 .root {
   position: relative;
-  background: transparent;
-  display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 32px 64px;
+  gap: 64px;
+  overflow-x: hidden;
 
-  &::before {
-    all: unset;
-    z-index: 0;
-    content: '';
-    display: block;
-    position: fixed;
-    width: 700px;
-    aspect-ratio: 1;
-    height: auto;
-    top: -20vw;
-    margin-left: calc((100vw - 700px) / 2);
-    margin-right: calc((100vw - 700px) / 2);
-    border-radius: 1000px;
-    pointer-events: none;
-
-    background: linear-gradient(rgb(black, 0%) 0%, rgb(164, 66, 210, 20%) 50%, rgb(164, 66, 210, 100%) 100%);
-    filter: blur(60px);
-    animation: hue-shift 60s ease infinite, pulse 14s ease infinite; /* Adjust duration and timing function */
-  }
-
-  // The content div - different to div so that you can use bootstrap to resize dynamically
-  .column {
-    z-index: 1;
-    position: relative;
-    display: flex;
+  .greeting {
     flex-direction: column;
     align-items: center;
     gap: 8px;
   }
+
+  .scroll-wrapper {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profiles {
+    overflow-x: scroll;
+    gap: 32px;
+    justify-content: flex-start;
+
+    .name {
+      font-size: 1.3rem;
+    }
+
+    img {
+      border-radius: 1000px;
+      border: solid 1px rgb(var(--white), 0.25);
+    }
+
+    button {
+      cursor: pointer;
+      transition: background-color 50ms ease-out;
+      border: solid 1px rgb(255, 255, 255, 0.5);
+
+      &:hover p:not(.hint) {
+        text-decoration: underline;
+      }
+
+      &:active p:not(.hint) {
+        text-decoration: none;
+      }
+    }
+
+    .friend-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 16px;
+      border-radius: 8px;
+      gap: 16px;
+      background: transparent;
+
+      &:hover {
+        background: rgb(255, 255, 255, 0.1);
+      }
+
+      &:active {
+        background: rgb(255, 255, 255, 0.05);
+      }
+
+      .name {
+        white-space: nowrap;
+      }
+    }
+
+    .profile-card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 24px 32px;
+      border-radius: 8px;
+      gap: 32px;
+      background: rgb(255, 255, 255, 0.2);
+      transition: background-color 50ms ease-out;
+
+      &:hover {
+        background: rgb(255, 255, 255, 0.3);
+      }
+
+      &:active {
+        background: rgb(255, 255, 255, 0.25);
+      }
+
+      .details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+
+        .friends {
+          font-size: 1.1rem;
+        }
+
+        .hint {
+          margin-top: 8px;
+          font-size: 1rem;
+          color: rgb(var(--foreground), 0.75);
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+.circle-button {
+  height: 54px;
+  width: 54px;
+  margin: 5px;
+  border-radius: 1000px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+
+  fa-icon {
+    color: black;
+  }
+}
+
+hr {
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 55px;
+  width: 2px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 100px;
 }
