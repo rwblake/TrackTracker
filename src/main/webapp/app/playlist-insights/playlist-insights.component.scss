@@ -1,10 +1,6 @@
 @media screen and (max-width: 600px) {
 }
 
-//h1 {
-//  margin-bottom: 40px;
-//}
-
 .root {
   gap: 36px;
 }
@@ -18,12 +14,6 @@
   flex-direction: column;
   flex: 50%;
   align-items: center;
-}
-
-@media screen and (max-width: 500px) {
-  .column {
-    flex: 100%;
-  }
 }
 
 ::ng-deep .ngx-charts {
@@ -90,12 +80,27 @@ ngx-charts-linear-gauge {
 
 form {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin: 0 auto;
-  text-align: center;
+  flex-direction: column;
+}
 
-  #submit-link {
-    margin: 0 auto;
+// div for search bar content to be aligned side-by-side
+.searchBar {
+  display: flex;
+
+  button {
+    margin-left: 16px;
+    width: 64px;
+  }
+
+  input {
+    width: 70vw;
+    max-width: 700px;
+    min-width: 100px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100%;
   }
 }

@@ -18,7 +18,9 @@ import { right } from '@popperjs/core';
 })
 export class PlaylistInsightsComponent implements OnInit {
   urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
-  linkInput: any;
+
+  // Stores pasted-in playlist input
+  linkInput: string = '';
 
   // Colour schemes for the various charts
 
