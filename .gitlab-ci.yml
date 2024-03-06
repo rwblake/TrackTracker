@@ -21,18 +21,6 @@ nohttp:
   script:
     - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
 
-# add the spotify (and any other secure files) credentials secretly
-insert-secure-files:
-  stage: build
-  variables:
-    SECURE_FILES_DOWNLOAD_PATH: '.'
-  script:
-    - echo "Testing current directory"
-    - ls -l
-    - pwd
-    - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-    - ls -l
-
 maven-compile:
   stage: build
   script:
@@ -50,9 +38,6 @@ maven-package:
     - echo "jhipster" | sudo -S apt-get install -y chromium-browser
     - echo 'whereis chromium-browser'
     - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-    - echo "Testing current directory"
-    - ls -l
-    - pwd
   artifacts:
     paths:
       - target/*.jar
