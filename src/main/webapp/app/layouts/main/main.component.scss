@@ -40,7 +40,7 @@
 
     background: linear-gradient(rgb(black, 0%) 0%, rgb(164, 66, 210, 20%) 50%, rgb(164, 66, 210, 100%) 100%);
     filter: blur(60px);
-    transition: filter ease-in-out 1000ms, top ease-in-out 1000ms;
+    transition: filter ease-in-out 1000ms, top ease-in-out 1000ms, opacity ease-in-out 500ms;
     //animation: hue-shift 60s ease infinite, pulse 14s ease infinite; /* Adjust duration and timing function */
   }
 }
@@ -55,5 +55,11 @@
 :host:has(.register) {
   &::before {
     filter: blur(60px) hue-rotate(-20deg);
+  }
+}
+
+:host:has(.gdpr) {
+  &::before {
+    opacity: 0%;
   }
 }
