@@ -183,8 +183,6 @@ public class AccountResource {
             .getUserWithAuthorities()
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
         AppUser appUser = appUserService.getAppUser(internalAppUser).get();
-        System.out.println("BackEnd" + appUser);
-        System.out.println(appUser.getBio());
         return appUser;
     }
 

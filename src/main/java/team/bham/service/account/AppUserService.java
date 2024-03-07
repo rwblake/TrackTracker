@@ -61,7 +61,6 @@ public class AppUserService extends team.bham.service.UserService {
     }
 
     public Optional<AppUser> getAppUser(User internalUser) {
-        System.out.println(this.appUserRepository.findOneByInternalUser(internalUser));
         return this.appUserRepository.findOneByInternalUser(internalUser);
     }
 
