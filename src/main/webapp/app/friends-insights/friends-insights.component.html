@@ -1,2 +1,43 @@
-<h1>Friend Insights</h1>
-<p class="lead">Friend Insights works!</p>
+<div class="mx-4 mx-md-5 py-5">
+  <div class="row">
+    <h1>Your Friend Insights</h1>
+
+    <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
+
+    <div class="row gy-5" id="insights-container">
+      <div class="col" id="popular">
+        <h5>Popular with your friends | {{ selectedTimePeriod?.label }}</h5>
+
+        <hr />
+
+        <div class="row">
+          <div class="col-md-4 justify-content-center">
+            <h6 class="text-center">Artists</h6>
+            <div>Card Stack</div>
+          </div>
+          <div class="col-md-4 justify-content-center">
+            <h6 class="text-center">Albums</h6>
+            <div>Card Stack</div>
+          </div>
+          <div class="col-md-4 justify-content-center">
+            <h6 class="text-center">Tracks</h6>
+            <div>Card Stack</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-100"></div>
+
+      <div class="col" id="leaderboards">
+        <h5>Your Friends Leaderboards | {{ selectedTimePeriod?.label }}</h5>
+
+        <hr />
+
+        <div class="row">
+          <div class="col-md-6">Leaderboard</div>
+          <div class="col-md-6">Leaderboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

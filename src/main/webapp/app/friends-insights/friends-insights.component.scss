@@ -1,0 +1,33 @@
+/* Adjustments for better visualization */
+.image-stack {
+  overflow-x: auto;
+  white-space: nowrap;
+  position: relative;
+  height: 300px;
+}
+
+.image-stack img {
+  position: absolute;
+  height: 200px;
+  top: 50px;
+  border: 2px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease-in-out;
+}
+
+.image-stack img:first-child {
+  z-index: 1; /* To ensure the first image is always in the foreground */
+  height: 250px;
+  left: 0;
+}
+
+.image-stack img + img {
+  margin-left: -100px; /* Adjust the overlap */
+  z-index: 0;
+}
+
+.image-stack img:hover {
+  transform: scale(1.1); /* Hover effect to enlarge the image */
+  z-index: 2; /* Increase the z-index on hover to bring the image to the front */
+}
