@@ -102,4 +102,4 @@ deploy-prod:
     - chmod og= $RSA
     - apk update && apk add openssh-client sshpass
   script:
-    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "docker compose -f ~/team-project/app.yml up -d && docker system prune --force --filter 'until=24h'"
+    - sshpass -Ppassphrase -p $PASSPHRASE ssh -o StrictHostKeyChecking=no -i $RSA $USER@$IP "docker compose -f ~/team-project/prd.yml up -d && docker system prune --force --filter 'until=24h'"
