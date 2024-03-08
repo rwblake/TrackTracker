@@ -10,18 +10,21 @@
 
         <hr />
 
-        <div class="row">
+        <div class="row g-5">
           <div class="col-md-4 justify-content-center">
-            <h6 class="text-center">Artists</h6>
-            <div>Card Stack</div>
+            <h5 class="text-center my-4">Artists</h5>
+            <span *ngIf="popularCategories?.artists">{{ popularCategories?.artists }}</span>
+            <jhi-card-stack [data]="sampleData"></jhi-card-stack>
           </div>
           <div class="col-md-4 justify-content-center">
-            <h6 class="text-center">Albums</h6>
-            <div>Card Stack</div>
+            <h5 class="text-center my-4">Albums</h5>
+            <span *ngIf="popularCategories?.albums">{{ popularCategories?.albums }}</span>
+            <jhi-card-stack [data]="sampleData.slice().reverse()"></jhi-card-stack>
           </div>
           <div class="col-md-4 justify-content-center">
-            <h6 class="text-center">Tracks</h6>
-            <div>Card Stack</div>
+            <h5 class="text-center my-4">Tracks</h5>
+            <span *ngIf="popularCategories?.tracks">{{ popularCategories?.tracks }}</span>
+            <jhi-card-stack [data]="sampleData"></jhi-card-stack>
           </div>
         </div>
       </div>
