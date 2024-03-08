@@ -3,15 +3,11 @@ import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { Router } from '@angular/router';
 import { LoginService } from 'app/login/login.service';
-import { AppUserService } from '../entities/app-user/service/app-user.service';
-import { ActivatedRoute } from '@angular/router';
 import { IAppUser } from '../entities/app-user/app-user.model';
 import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
 import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
-import { User } from '../entities/user/user.model';
-import { UserService } from '../entities/user/user.service';
 
 @Component({
   selector: 'jhi-profile',
@@ -19,8 +15,9 @@ import { UserService } from '../entities/user/user.service';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  playlist: any;
+  friends: any;
   user: IAppUser | null = null;
-  //user: User | null = null;
   appUser: any;
   modal = document.getElementById('myModal');
   btn = document.getElementById('helpBtn');
@@ -32,8 +29,6 @@ export class ProfileComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private loginService: LoginService,
-    private appUserService: AppUserService,
-    private route: ActivatedRoute,
     private accountService: AccountService
   ) {}
 

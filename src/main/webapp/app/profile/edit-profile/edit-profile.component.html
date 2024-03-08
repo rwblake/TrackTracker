@@ -1,1 +1,55 @@
-<p>edit-profile works!</p>
+<div style="background-color: {{ background }}">
+  <div class="d-flex justify-content-center">
+    <div class="col-md-8">
+      <h2>Edit Profile</h2>
+      <form (ngSubmit)="onSubmit()" [formGroup]="preferencesForm">
+        <div class="mb-3">
+          <label class="form-label" for="username">App Username</label>
+          <input type="text" class="form-control" id="username" placeholder="Your username" formControlName="username" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="pic">Profile Pic</label>
+          <input type="text" class="form-control" id="pic" placeholder="Your profile picture URL" formControlName="pic" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="bio">Bio</label>
+          <input type="text" class="form-control" id="bio" placeholder="Your bio" formControlName="bio" />
+        </div>
+        <label class="form-select-label" for="profilePriv">Profile privacy</label>
+        <select class="form-select" aria-label="Default select example" id="profilePriv" formControlName="profilePriv">
+          <option selected>Global</option>
+          <option value="1">Friends of friends</option>
+          <option value="2">Friends</option>
+          <option value="3">Private</option>
+        </select>
+        <label class="form-select-label" for="playlistPriv">Playlist privacy</label>
+        <select class="form-select" aria-label="Default select example" id="playlistPriv" formControlName="playlistPriv">
+          <option selected>Global</option>
+          <option value="1">Friends of friends</option>
+          <option value="2">Friends</option>
+          <option value="3">Private</option>
+        </select>
+
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="DarkMode" checked formControlName="darkMode" />
+          <label class="form-check-label" for="DarkMode">Dark mode</label>
+        </div>
+        <div class="form-check form-switch" style="padding-bottom: 2%">
+          <input class="form-check-input" type="checkbox" role="switch" id="HighContrast" formControlName="highContrast" />
+          <label class="form-check-label" for="HighContrast">High contrast</label>
+        </div>
+
+        <button type="submit">Save</button>
+      </form>
+      <div>
+        {{ username }}
+        {{ pic }}
+        {{ bio }}
+        {{ profilePriv }}
+        {{ playlistPriv }}
+        {{ darkMode }}
+        {{ highContrast }}
+      </div>
+    </div>
+  </div>
+</div>
