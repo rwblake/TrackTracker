@@ -1,0 +1,31 @@
+<p *ngIf="data == undefined || data.length == 0" class="text-center">No Data :(</p>
+<div *ngIf="data != undefined && data.length > 0" class="row justify-content-center gy-2">
+  <div id="card-stack" class="col justify-content-center" (wheel)="onWheelEvent($event)" (touchstart)="onTouchStart($event)">
+    <img
+      class="card mx-auto"
+      *ngFor="let card of data; index as i"
+      [ngStyle]="getStylesForIndex(i)"
+      (click)="setSelectedIndex(i)"
+      [src]="card.image_url"
+      alt="i: {{ i }}, offset: {{ i - getSelectedIndex() }}"
+    />
+  </div>
+
+  <div class="w-100"></div>
+
+  <div class="col row" id="detail">
+    <button type="button" class="btn col-1" [disabled]="!canMoveLeft()" (click)="moveLeft()">
+      <fa-icon icon="angle-left"></fa-icon>
+    </button>
+
+    <div class="col user-select-none">
+      <h5 class="text-center m-0">#{{ getSelectedIndex() + 1 }}</h5>
+      <p class="text-center m-0 lh-1" id="title">{{ getSelectedCard()?.title }}</p>
+      <p class="text-center m-0 text-body-secondary" id="description">{{ getSelectedCard()?.description }}</p>
+    </div>
+
+    <button type="button" class="btn col-1" [disabled]="!canMoveRight()" (click)="moveRight()">
+      <fa-icon icon="angle-right"></fa-icon>
+    </button>
+  </div>
+</div>

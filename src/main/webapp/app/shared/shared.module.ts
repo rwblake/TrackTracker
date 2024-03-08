@@ -12,6 +12,7 @@ import { SortDirective } from './sort/sort.directive';
 import { ItemCountComponent } from './pagination/item-count.component';
 import { FilterComponent } from './filter/filter.component';
 import { TimePeriodPickerComponent } from '../time-period-picker/time-period-picker.component';
+import { CardStackComponent } from '../card-stack/card-stack.component';
 
 @NgModule({
   imports: [SharedLibsModule],
@@ -27,6 +28,7 @@ import { TimePeriodPickerComponent } from '../time-period-picker/time-period-pic
     ItemCountComponent,
     FilterComponent,
     TimePeriodPickerComponent,
+    CardStackComponent,
   ],
   exports: [
     SharedLibsModule,
@@ -41,6 +43,7 @@ import { TimePeriodPickerComponent } from '../time-period-picker/time-period-pic
     ItemCountComponent,
     FilterComponent,
     TimePeriodPickerComponent,
+    CardStackComponent,
   ],
 })
 export class SharedModule {}
