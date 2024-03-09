@@ -29,9 +29,9 @@
   <br />
 
   <div class="row" *ngIf="pulledData">
-    <p class="lead">
-      Viewing insights for: <b>{{ response?.playlistTitle }}</b>
-    </p>
+    <h2>
+      Viewing insights for <b>{{ response?.playlistTitle }}</b>
+    </h2>
 
     <br />
 
@@ -108,6 +108,17 @@
             [legendPosition]="LegendPosition.Right"
             [legend]="true"
             [legendTitle]="artistsPieChartTitle"
+            [scheme]="pieSchemeA"
+          >
+          </ngx-charts-pie-chart>
+        </div>
+        <div class="statBox">
+          <ngx-charts-pie-chart
+            [view]="[700, 300]"
+            [results]="genrePieChart"
+            [legendPosition]="LegendPosition.Right"
+            [legend]="true"
+            [legendTitle]="genrePieChartTitle"
             [scheme]="pieSchemeA"
           >
           </ngx-charts-pie-chart>

@@ -18,16 +18,14 @@ public class PlaylistInsightsHTTPResponse {
     float averageAcousticness;
     float averageDanceability;
 
-    YearSongCountMap[] yearsToSongs;
-    ArtistProportionMap[] artistsToProportions;
+    PlaylistInsightGraphData graphData;
 
     public PlaylistInsightsHTTPResponse(
         String playlistTitle,
         String imageURL,
         SimpleSong[] selectedSongs,
         float[] statAverages,
-        YearSongCountMap[] yearsToSongs,
-        ArtistProportionMap[] artistsToProportions
+        PlaylistInsightGraphData graphData
     ) {
         this.playlistTitle = playlistTitle;
         this.imageURL = imageURL;
@@ -42,7 +40,6 @@ public class PlaylistInsightsHTTPResponse {
         averageAcousticness = statAverages[2];
         averageDanceability = statAverages[3];
 
-        this.yearsToSongs = yearsToSongs;
-        this.artistsToProportions = artistsToProportions;
+        this.graphData = graphData;
     }
 }

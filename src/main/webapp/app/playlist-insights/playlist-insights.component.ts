@@ -3,7 +3,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { PlaylistInsightsService } from './playlist-insights.service';
-import { ArtistsToProportionResponse, PlaylistInsightsResponse, YearsToSongResponse } from './playlist-insights-response-interface';
+import {
+  ArtistMapResponse,
+  PlaylistInsightsResponse,
+  YearMapResponse,
+  GenreMapResponse,
+  GraphDataResponse,
+} from './playlist-insights-response-interface';
 import { InsightsComponent } from '../insights/insights.component';
 import { CommonModule } from '@angular/common';
 import { InsightsRoutingModule } from '../insights/insights-routing.module';
@@ -31,9 +37,12 @@ export class PlaylistInsightsComponent implements OnInit {
     domain: ['#7825BC', '#B237EC', '#EA3AC1', '#EA002B', '#FF3407', '#FF6528', '#FF8E16', '#FFB219', '#FFD54C', '#FFEFA3'],
   };
 
-  // Information for the pie chart
+  // Information for the pie charts
   artistsPieChartTitle: string = 'Number of Songs Artist Appears On';
   artistsPieChart: { name: string; value: number }[] = [];
+
+  genrePieChartTitle: string = 'Number of Songs Genre Appears On';
+  genrePieChart: { name: string; value: number }[] = [];
 
   // Information for the bar chart
   xaxisLabelBar = 'Decade';
@@ -67,10 +76,13 @@ export class PlaylistInsightsComponent implements OnInit {
   onFailure() {
     this.pulledData = false;
   }
+
   onSuccessfulResponse(val: PlaylistInsightsResponse) {
     this.response = val;
-    this.addArtistsToChart(this.response.artistsToProportions);
-    this.addSongYearsToChart(this.response.yearsToSongs);
+    this.addArtistsToChart(this.response.graphData.artistMaps);
+    this.addSongYearsToChart(this.response.graphData.yearMaps);
+    this.addGenresToChart(this.response.graphData.genreMaps);
+
     this.valenceValue = this.response.averageValence * 100;
     this.energyValue = this.response.averageEnergy * 100;
     this.acousticnessValue = this.response.averageAcousticness * 100;
@@ -80,7 +92,7 @@ export class PlaylistInsightsComponent implements OnInit {
     this.pulledData = true;
   }
 
-  addArtistsToChart(artistsToProportions: ArtistsToProportionResponse[]) {
+  addArtistsToChart(artistsToProportions: ArtistMapResponse[]) {
     this.artistsPieChart = [];
 
     for (let i = artistsToProportions.length - 1; i >= 0; i--) {
@@ -94,7 +106,18 @@ export class PlaylistInsightsComponent implements OnInit {
     }
   }
 
-  addSongYearsToChart(yearsToSongs: YearsToSongResponse[]) {
+  addGenresToChart(genresToCounts: GenreMapResponse[]) {
+    this.genrePieChart = [];
+
+    for (let i = genresToCounts.length - 1; i >= 0; i--) {
+      this.genrePieChart.push({
+        name: genresToCounts[i].genreName,
+        value: genresToCounts[i].occurrencesInPlaylist,
+      });
+    }
+  }
+
+  addSongYearsToChart(yearsToSongs: YearMapResponse[]) {
     this.timePeriodBar = [];
 
     for (let i = 0; i < yearsToSongs.length; i++) {
