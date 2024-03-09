@@ -89,7 +89,10 @@ public class PlaylistService {
             }
             // Set artist image
             myArtist = artistRepository.findArtistBySpotifyID(artist.getId());
-            myArtist.setImageURL(artist.getImages()[0].getUrl());
+            if (artist.getImages() != null && artist.getImages().length > 0) {
+                myArtist.setImageURL(artist.getImages()[0].getUrl());
+            }
+
             artistRepository.save(myArtist);
         }
 
