@@ -1,5 +1,5 @@
 <p *ngIf="data == undefined || data.length == 0" class="text-center">No Data :(</p>
-<div *ngIf="data != undefined && data.length > 0" class="row justify-content-center gy-2">
+<div *ngIf="data != undefined && data.length > 0" class="row justify-content-center align-items-start gy-2">
   <div id="card-stack" class="col justify-content-center" (wheel)="onWheelEvent($event)" (touchstart)="onTouchStart($event)">
     <img
       class="card mx-auto"
@@ -13,19 +13,22 @@
 
   <div class="w-100"></div>
 
-  <div class="col row" id="detail">
-    <button type="button" class="btn col-1" [disabled]="!canMoveLeft()" (click)="moveLeft()">
-      <fa-icon icon="angle-left"></fa-icon>
-    </button>
-
-    <div class="col user-select-none">
-      <h5 class="text-center m-0">#{{ getSelectedIndex() + 1 }}</h5>
-      <p class="text-center m-0 lh-1" id="title">{{ getSelectedCard()?.title }}</p>
-      <p class="text-center m-0 text-body-secondary" id="description">{{ getSelectedCard()?.description }}</p>
+  <button type="button" class="btn col-2" [disabled]="!canMoveLeft()" (click)="moveLeft()">
+    <fa-icon icon="angle-left"></fa-icon>
+  </button>
+  <div class="col-8 p-0 row" id="detail">
+    <div
+      id="info"
+      class="col user-select-none"
+      *ngFor="let card of data; index as i"
+      [ngStyle]="{ opacity: getSelectedIndex() === i ? 1 : 0 }"
+    >
+      <h5 class="text-center m-0">#{{ i + 1 }}</h5>
+      <p class="text-center m-0 lh-1" id="title">{{ card.title }}</p>
+      <p class="text-center m-0 text-body-secondary" id="description">{{ card.description }}</p>
     </div>
-
-    <button type="button" class="btn col-1" [disabled]="!canMoveRight()" (click)="moveRight()">
-      <fa-icon icon="angle-right"></fa-icon>
-    </button>
   </div>
+  <button type="button" class="btn col-2" [disabled]="!canMoveRight()" (click)="moveRight()">
+    <fa-icon icon="angle-right"></fa-icon>
+  </button>
 </div>

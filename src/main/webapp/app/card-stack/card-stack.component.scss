@@ -2,6 +2,7 @@
   display: grid;
 
   .card {
+    min-width: 50%;
     width: 50%;
     grid-area: 1 / 1 / 2 / 2;
     transition-property: left, transform, box-shadow;
@@ -9,10 +10,15 @@
   }
 }
 
+.btn {
+  border: none;
+}
+
 #detail {
+  display: grid;
   z-index: 100;
 
-  .btn {
-    border: none;
+  #info {
+    grid-area: 1 / 1 / 1 / 1;
   }
 }
