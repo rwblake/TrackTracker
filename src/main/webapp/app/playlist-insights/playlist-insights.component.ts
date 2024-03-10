@@ -29,7 +29,6 @@ export class PlaylistInsightsComponent implements OnInit {
   linkInput: string = '';
 
   // Colour schemes for the various charts
-
   pieSchemeA: Color = {
     name: 'pieSchemeA',
     selectable: true,
@@ -44,13 +43,14 @@ export class PlaylistInsightsComponent implements OnInit {
   genrePieChartTitle: string = 'Number of Songs Genre Appears On';
   genrePieChart: { name: string; value: number }[] = [];
 
-  // Information for the bar chart
-  xaxisLabelBar = 'Decade';
-  yaxisLabelBar = 'Number of Songs';
+  // Data for the Time Period bar chart
   timePeriodBar: { name: string; value: number }[] = [];
 
   // Used to check if data has been pulled
   pulledData: boolean = false;
+  waitingForResponse: boolean = false;
+  showWaitingMessage: boolean = false;
+  showErrorMessage: boolean = false;
 
   valenceValue: number = 0;
   energyValue: number = 0;
@@ -64,20 +64,44 @@ export class PlaylistInsightsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
   }
 
-  sendLink() {
+  // Sends playlist link to backend HTTP endpoint and subscribes to response
+  async sendLink() {
     // @ts-ignore
     const url: String = this.urlForm.get('name').value;
-    this.playlistInsightsService.sendURL(url).subscribe(
-      value => this.onSuccessfulResponse(value),
-      error => this.onFailure()
-    );
+
+    this.waitingForResponse = true;
+    this.pulledData = false;
+    this.showErrorMessage = false;
+
+    this.playlistInsightsService.sendURL(url).subscribe({
+      next: v => this.onSuccessfulResponse(v),
+      error: e => this.onFailure(e),
+    });
+
+    // Pulling data is sometimes effectively instant. It looks bad if the "waiting" message pops up
+    // for half a second - so we only show it if we've been waiting for some time.
+    await this.delay(750);
+    if (this.waitingForResponse) {
+      this.showWaitingMessage = true;
+    }
   }
 
-  onFailure() {
+  /** Wait for the specified number of seconds */
+  delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  onFailure(error: any) {
+    this.waitingForResponse = false;
+    this.showWaitingMessage = false;
     this.pulledData = false;
+    this.showErrorMessage = true;
   }
 
   onSuccessfulResponse(val: PlaylistInsightsResponse) {
+    this.waitingForResponse = false;
+    this.showWaitingMessage = false;
+
     this.response = val;
     this.addArtistsToChart(this.response.graphData.artistMaps);
     this.addSongYearsToChart(this.response.graphData.yearMaps);
@@ -88,7 +112,7 @@ export class PlaylistInsightsComponent implements OnInit {
     this.acousticnessValue = this.response.averageAcousticness * 100;
     this.danceabilityValue = this.response.averageDanceability * 100;
 
-    // reveal the charts!
+    // Reveal the lower section of the page.
     this.pulledData = true;
   }
 
