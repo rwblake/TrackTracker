@@ -27,13 +27,10 @@ public class SongService {
     private final ArtistRepository artistRepository;
     private final AlbumRepository albumRepository;
 
-    //private final GenreRepository genreRepository;
-
     public SongService(SongRepository songRepository, ArtistRepository artistRepository, AlbumRepository albumRepository) {
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
         this.albumRepository = albumRepository;
-        //this.genreRepository = genreRepository;
     }
 
     private Instant toInstant(String releaseDate, ReleaseDatePrecision precision) {
@@ -95,7 +92,6 @@ public class SongService {
         Artist myArtist = new Artist();
         myArtist.setSpotifyID(artist.getId());
         myArtist.setName(artist.getName());
-        // CAN'T GET GENRES or ARTIST IMAGE WITH SIMPLIFIEDARTIST OBJECT
         return myArtist;
     }
 
@@ -134,8 +130,6 @@ public class SongService {
         this.albumRepository.save(album);
         song.setAlbum(album);
         this.songRepository.save(song);
-        // create genres
-        // CAN'T GET GENRES WITH SIMPLIFIED ARTIST OBJECTS
         // create artists
         Artist tmpArtist;
         for (ArtistSimplified artist : track.getArtists()) {
