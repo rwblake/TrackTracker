@@ -29,7 +29,7 @@ public class Stream implements Serializable {
     @Column(name = "played_at", nullable = false)
     private Instant playedAt;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @NotNull
     @JsonIgnoreProperties(
         value = {
@@ -46,7 +46,7 @@ public class Stream implements Serializable {
     )
     private Song song;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties(
         value = {
             "internalUser",
