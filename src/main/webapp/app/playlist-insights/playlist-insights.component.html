@@ -1,47 +1,53 @@
 <div class="playlist-insights root">
-  <h1>Playlist Insights</h1>
+  <h1>Playlist Analyser</h1>
 
-  <div class="row">
-    <br />
+  <div class="container-fluid">
+    <div class="row">
+      <br />
 
-    <form (ngSubmit)="sendLink()" [formGroup]="urlForm">
-      <label class="form-label" for="name"> Playlist URL </label>
+      <div class="col-md-12">
+        <form (ngSubmit)="sendLink()" [formGroup]="urlForm">
+          <label class="form-label" for="name"> Playlist URL </label>
 
-      <div class="searchBar">
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          name="link-input"
-          formControlName="name"
-          placeholder="Paste the link to a public Spotify playlist here..."
-          [(ngModel)]="linkInput"
-          required
-        />
+          <div class="searchBar">
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="link-input"
+              formControlName="name"
+              placeholder="Paste the link to a public Spotify playlist here..."
+              [(ngModel)]="linkInput"
+              required
+            />
 
-        <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="btn btn-primary" [disabled]="linkInput === ''">
-          Go!
-        </button>
+            <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="btn btn-primary" [disabled]="linkInput === ''">
+              Go!
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
+    </div>
 
-  <div class="row">
-    <p *ngIf="showWaitingMessage">Please wait while we process your playlist. This won't take too long.</p>
-    <p *ngIf="showErrorMessage">Sorry, we weren't able to process your playlist due to an error.</p>
+    <div class="row">
+      <div class="col-md-12">
+        <p class="lead" *ngIf="showWaitingMessage">Please wait while we process your playlist. This won't take too long.</p>
+        <p class="lead" *ngIf="showErrorMessage">Sorry, we weren't able to process your playlist due to an error.</p>
+      </div>
+    </div>
   </div>
 
   <br />
 
-  <div class="row" *ngIf="pulledData">
+  <div class="container-fluid px-5" *ngIf="pulledData">
     <h2>
-      Viewing insights for <b>{{ response?.playlistTitle }}</b>
+      Viewing analysis for <b>{{ response?.playlistTitle }}</b>
     </h2>
 
-    <br />
+    <p></p>
 
-    <div class="row">
-      <div class="columnA">
+    <div class="row g-5 align-items-start">
+      <div class="col-md-5">
         <div class="statBox">
           <h3>Valence</h3>
           <div class="progressBarOutside">
@@ -105,33 +111,69 @@
         </div>
       </div>
 
-      <div class="columnB">
-        <div class="statBox">
-          <ngx-charts-pie-chart
-            [view]="[700, 300]"
-            [results]="artistsPieChart"
-            [legendPosition]="LegendPosition.Right"
-            [legend]="true"
-            [legendTitle]="artistsPieChartTitle"
-            [scheme]="pieSchemeA"
-          >
-          </ngx-charts-pie-chart>
+      <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Top Playlist Artists</h3>
+            <div #artistPieBox class="statBox">
+              <ngx-charts-pie-chart
+                [view]="[artistPieBox.offsetWidth, artistPieBox.offsetWidth * 0.9]"
+                [results]="artistsPieChart"
+                [legend]="false"
+                [scheme]="pieSchemeA"
+              >
+              </ngx-charts-pie-chart>
+
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th>Artist</th>
+                    <th>Songs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let artist of artistsPieChart">
+                    <td>{{ artist.name }}</td>
+                    <td>{{ artist.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <h3>Top Playlist Genres</h3>
+            <div #genrePieBox class="statBox">
+              <ngx-charts-pie-chart
+                [view]="[genrePieBox.offsetWidth, genrePieBox.offsetWidth * 0.9]"
+                [results]="genrePieChart"
+                [legend]="false"
+                [scheme]="pieSchemeA"
+              >
+              </ngx-charts-pie-chart>
+
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th>Genre</th>
+                    <th>Songs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let genre of genrePieChart">
+                    <td>{{ genre.name }}</td>
+                    <td>{{ genre.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="statBox">
-          <ngx-charts-pie-chart
-            [view]="[700, 300]"
-            [results]="genrePieChart"
-            [legendPosition]="LegendPosition.Right"
-            [legend]="true"
-            [legendTitle]="genrePieChartTitle"
-            [scheme]="pieSchemeA"
-          >
-          </ngx-charts-pie-chart>
-        </div>
-        <div class="statBox">
+
+        <div #timeChartBox class="statBox">
           <ngx-charts-bar-vertical
             [results]="timePeriodBar"
-            [view]="[500, 350]"
+            [view]="[timeChartBox.offsetWidth, 500]"
             [showXAxisLabel]="true"
             [showYAxisLabel]="true"
             [rotateXAxisTicks]="true"

@@ -25,6 +25,8 @@ import { right } from '@popperjs/core';
 export class PlaylistInsightsComponent implements OnInit {
   urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
 
+  pieLimit: number = 10;
+
   // Stores pasted-in playlist input
   linkInput: string = '';
 
@@ -120,7 +122,7 @@ export class PlaylistInsightsComponent implements OnInit {
     this.artistsPieChart = [];
 
     for (let i = artistsToProportions.length - 1; i >= 0; i--) {
-      if (i < artistsToProportions.length - 10) {
+      if (i < artistsToProportions.length - this.pieLimit) {
         break;
       }
       this.artistsPieChart.push({
@@ -134,6 +136,9 @@ export class PlaylistInsightsComponent implements OnInit {
     this.genrePieChart = [];
 
     for (let i = genresToCounts.length - 1; i >= 0; i--) {
+      if (i < genresToCounts.length - this.pieLimit) {
+        break;
+      }
       this.genrePieChart.push({
         name: genresToCounts[i].genreName,
         value: genresToCounts[i].occurrencesInPlaylist,
