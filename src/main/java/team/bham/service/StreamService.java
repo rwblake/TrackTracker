@@ -2,7 +2,6 @@ package team.bham.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
 import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
 import team.bham.domain.AppUser;
 import team.bham.domain.Song;
@@ -24,11 +23,7 @@ public class StreamService {
         this.streamRepository = streamRepository;
     }
 
-    public Stream createStream(PlayHistory stream, AudioFeatures audioFeatures, AppUser appUser) {
-        // Create the song (will check for duplicates)
-        Song mySong = this.songService.createSong(stream.getTrack(), audioFeatures);
-        this.songRepository.save(mySong);
-
+    public Stream createStream(PlayHistory stream, Song mySong, AppUser appUser) {
         // Create the stream
         Stream myStream = new Stream();
         myStream.setPlayedAt(stream.getPlayedAt().toInstant());

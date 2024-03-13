@@ -54,15 +54,8 @@ public class PlaylistInsightsResource {
             String[] credentials = CredentialsParser.parseCredentials();
             SpotifyApi spotifyApi = PlaylistRetriever.clientCredentials(credentials[0], credentials[1]);
             Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
-            List<Track> tracks = PlaylistRetriever.getTracks(spotifyApi, spotifyID);
-            List<ArtistSimplified> artists = new ArrayList<>(tracks.size());
-            for (Track track : tracks) {
-                artists.addAll(List.of(track.getArtists()));
-            }
-            Artist[] myArtists = PlaylistRetriever.getArtists(spotifyApi, artists);
 
-            List<AudioFeatures> audioFeaturesList = PlaylistRetriever.getAudioFeatures(spotifyApi, tracks);
-            myPlaylist = playlistService.createPlaylist(playlist, tracks, audioFeaturesList, myArtists);
+            myPlaylist = playlistService.createPlaylist(playlist, spotifyApi);
         }
 
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);

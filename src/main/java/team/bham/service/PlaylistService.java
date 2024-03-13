@@ -5,16 +5,12 @@ import java.util.List;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.Artist;
-import se.michaelthelin.spotify.model_objects.specification.AudioFeatures;
-import se.michaelthelin.spotify.model_objects.specification.Track;
-import team.bham.domain.Genre;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
-import team.bham.repository.ArtistRepository;
-import team.bham.repository.GenreRepository;
 import team.bham.repository.PlaylistRepository;
+import team.bham.service.spotify.PlaylistRetriever;
 
 @Service
 @Transactional
@@ -23,40 +19,20 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongService songService;
     private final PlaylistStatsService playlistStatsService;
-    private final GenreRepository genreRepository;
-    private final ArtistRepository artistRepository;
 
-    public PlaylistService(
-        PlaylistRepository playlistRepository,
-        SongService songService,
-        PlaylistStatsService playlistStatsService,
-        GenreRepository genreRepository,
-        ArtistRepository artistRepository
-    ) {
+    public PlaylistService(PlaylistRepository playlistRepository, SongService songService, PlaylistStatsService playlistStatsService) {
         this.playlistRepository = playlistRepository;
         this.songService = songService;
         this.playlistStatsService = playlistStatsService;
-        this.genreRepository = genreRepository;
-        this.artistRepository = artistRepository;
     }
 
-    public Playlist createPlaylist(
-        se.michaelthelin.spotify.model_objects.specification.Playlist playlist,
-        List<Track> tracks,
-        List<AudioFeatures> audioFeaturesList,
-        Artist[] artists
-    ) {
+    public Playlist createPlaylist(se.michaelthelin.spotify.model_objects.specification.Playlist playlist, SpotifyApi spotifyApi)
+        throws IOException, ParseException, SpotifyWebApiException {
         // Check if playlist is already in the database
         String spotifyID = playlist.getId();
         if (playlistRepository.existsBySpotifyID(spotifyID)) {
             // If yes: return that song
             return playlistRepository.findPlaylistBySpotifyID(spotifyID);
-        }
-
-        if (tracks.size() != audioFeaturesList.size()) {
-            throw new IllegalArgumentException(
-                "tracks and audioFeaturesList are different sizes, respectively: " + tracks.size() + " " + audioFeaturesList.size()
-            );
         }
 
         // Create new playlist object
@@ -65,35 +41,10 @@ public class PlaylistService {
         myPlaylist.setName(playlist.getName());
         myPlaylist.setImageURL(playlist.getImages()[0].getUrl());
 
-        Song tmpSong;
-        // for each song in playlist
-        for (int i = 0; i < tracks.size(); i++) {
-            tmpSong = songService.createSong(tracks.get(i), audioFeaturesList.get(i));
-            myPlaylist.addSong(tmpSong);
-        }
-
-        // Get artist attributes that couldn't previously be set
-        Genre myGenre;
-        team.bham.domain.Artist myArtist;
-        for (se.michaelthelin.spotify.model_objects.specification.Artist artist : artists) {
-            // Set artist genres (by setting genre artists which cascade)
-            for (String name : artist.getGenres()) {
-                if (genreRepository.existsByName(name)) {
-                    myGenre = genreRepository.findGenreByName(name);
-                } else {
-                    myGenre = new Genre();
-                    myGenre.setName(name);
-                }
-                myGenre.addArtist(artistRepository.findArtistBySpotifyID(artist.getId()));
-                genreRepository.save(myGenre);
-            }
-            // Set artist image
-            myArtist = artistRepository.findArtistBySpotifyID(artist.getId());
-            if (artist.getImages() != null && artist.getImages().length > 0) {
-                myArtist.setImageURL(artist.getImages()[0].getUrl());
-            }
-
-            artistRepository.save(myArtist);
+        // Create songs and add to playlist
+        List<Song> mySongs = this.songService.createSongs(PlaylistRetriever.getTracks(spotifyApi, playlist.getId()), spotifyApi);
+        for (Song mySong : mySongs) {
+            myPlaylist.addSong(mySong);
         }
 
         playlistStatsService.createPlaylistStats(myPlaylist);
