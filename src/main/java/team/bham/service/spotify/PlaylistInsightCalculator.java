@@ -61,17 +61,37 @@ public class PlaylistInsightCalculator {
         map.put(key, currentValue + 1);
     }
 
+    /** Adds missing years to the map*/
+    public static void addMissingKeys(Map<String, Integer> map, String lowest, String highest) {
+        for (int i = Integer.parseInt(lowest); i < Integer.parseInt(highest); i++) {
+            String key = Integer.toString(i);
+            System.out.println(key);
+            int currentValue = map.getOrDefault(key, 0);
+            map.put(key, currentValue);
+        }
+    }
+
     private static PlaylistInsightGraphData calculateGraphData(Playlist playlist) {
         // Dictionary mappings for each counted element of data.
         // Converted to our data types later.
         Map<String, Integer> yearsAndCounts = new HashMap<>();
+        Map<String, Integer> decadesAndCounts = new HashMap<>();
         Map<Artist, Integer> artistsAndCounts = new HashMap<>();
         Map<Genre, Integer> genresAndCounts = new HashMap<>();
 
+        String[] yearBounds = { "9999", "0000" };
+
         for (Song song : playlist.getSongs().toArray(new Song[0])) {
             // Each track has multiple artists
-            String year = song.getReleaseDate().toString().substring(0, 3) + "0s";
+            String year = song.getReleaseDate().toString().substring(0, 4);
             incrementIfPresent(yearsAndCounts, year);
+            if (year.compareTo(yearBounds[0]) < 0) {
+                yearBounds[0] = year;
+            }
+            if (year.compareTo(yearBounds[1]) > 0) {
+                yearBounds[1] = year;
+            }
+            incrementIfPresent(decadesAndCounts, year.substring(0, 3) + "0s"); // get decade from year
 
             // Iterate through all artists and update their dictionary entries accordingly
             for (Artist artist : song.getArtists()) {
@@ -82,34 +102,48 @@ public class PlaylistInsightCalculator {
             }
         }
 
+        addMissingKeys(yearsAndCounts, yearBounds[0], yearBounds[1]);
+
         // Sorting the various maps
         List<Map.Entry<String, Integer>> yearsAndCountsList = yearsAndCounts
             .entrySet()
             .stream()
-            .sorted(Comparator.comparing(Map.Entry::getKey))
+            .sorted(Map.Entry.comparingByKey())
+            .collect(Collectors.toList());
+
+        List<Map.Entry<String, Integer>> decadesAndCountsList = decadesAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByKey())
             .collect(Collectors.toList());
 
         List<Map.Entry<Artist, Integer>> artistAndCountsList = artistsAndCounts
             .entrySet()
             .stream()
-            .sorted(Comparator.comparing(Map.Entry::getValue))
+            .sorted(Map.Entry.comparingByValue())
             .collect(Collectors.toList());
 
         List<Map.Entry<Genre, Integer>> genreAndCountsList = genresAndCounts
             .entrySet()
             .stream()
-            .sorted(Comparator.comparing(Map.Entry::getValue))
+            .sorted(Map.Entry.comparingByValue())
             .collect(Collectors.toList());
 
         // Convert Java hashmap to our data type, for JSON conversion
         // We also need to divide by the total number of artists here
         YearSongCountMap[] yearMaps = new YearSongCountMap[yearsAndCounts.size()];
+        YearSongCountMap[] decadeMaps = new YearSongCountMap[decadesAndCounts.size()];
         ArtistSongCountMap[] artistMaps = new ArtistSongCountMap[artistsAndCounts.size()];
         GenreSongCountMap[] genreMaps = new GenreSongCountMap[genresAndCounts.size()];
 
         int index = 0;
         for (Map.Entry<String, Integer> entry : yearsAndCountsList) {
             yearMaps[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
+            index++;
+        }
+        index = 0;
+        for (Map.Entry<String, Integer> entry : decadesAndCountsList) {
+            decadeMaps[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
             index++;
         }
         index = 0;
@@ -123,7 +157,7 @@ public class PlaylistInsightCalculator {
             index++;
         }
 
-        return new PlaylistInsightGraphData(yearMaps, artistMaps, genreMaps);
+        return new PlaylistInsightGraphData(yearMaps, decadeMaps, artistMaps, genreMaps);
     }
 
     /** Selects the relevant averages from a playlist to be shown on the frontend*/

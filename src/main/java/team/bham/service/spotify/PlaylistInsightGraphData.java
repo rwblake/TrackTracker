@@ -5,11 +5,18 @@ package team.bham.service.spotify;
 public class PlaylistInsightGraphData {
 
     YearSongCountMap[] yearMaps;
+    YearSongCountMap[] decadeMaps;
     ArtistSongCountMap[] artistMaps;
     GenreSongCountMap[] genreMaps;
 
-    public PlaylistInsightGraphData(YearSongCountMap[] yearMaps, ArtistSongCountMap[] artistMaps, GenreSongCountMap[] genreMaps) {
+    public PlaylistInsightGraphData(
+        YearSongCountMap[] yearMaps,
+        YearSongCountMap[] decadeMaps,
+        ArtistSongCountMap[] artistMaps,
+        GenreSongCountMap[] genreMaps
+    ) {
         this.yearMaps = yearMaps;
+        this.decadeMaps = decadeMaps;
         this.artistMaps = artistMaps;
         this.genreMaps = genreMaps;
     }

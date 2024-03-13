@@ -25,13 +25,14 @@ import { right } from '@popperjs/core';
 export class PlaylistInsightsComponent implements OnInit {
   urlForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required]) });
 
+  //  Max number of elements to show on a pie chart
   pieLimit: number = 10;
 
   // Stores pasted-in playlist input
   linkInput: string = '';
 
-  // Colour schemes for the various charts
-  pieSchemeA: Color = {
+  // Colour scheme for the various charts
+  chartScheme: Color = {
     name: 'pieSchemeA',
     selectable: true,
     group: ScaleType.Ordinal,
@@ -39,14 +40,12 @@ export class PlaylistInsightsComponent implements OnInit {
   };
 
   // Information for the pie charts
-  artistsPieChartTitle: string = 'Number of Songs Artist Appears On';
   artistsPieChart: { name: string; value: number }[] = [];
-
-  genrePieChartTitle: string = 'Number of Songs Genre Appears On';
   genrePieChart: { name: string; value: number }[] = [];
 
-  // Data for the Time Period bar chart
-  timePeriodBar: { name: string; value: number }[] = [];
+  // Data for the Time Period bar charts
+  yearBarChart: { name: string; value: number }[] = [];
+  decadeBarChart: { name: string; value: number }[] = [];
 
   // Used to check if data has been pulled
   pulledData: boolean = false;
@@ -106,7 +105,8 @@ export class PlaylistInsightsComponent implements OnInit {
 
     this.response = val;
     this.addArtistsToChart(this.response.graphData.artistMaps);
-    this.addSongYearsToChart(this.response.graphData.yearMaps);
+    this.addYearsToChart(this.response.graphData.yearMaps);
+    this.addDecadesToChart(this.response.graphData.decadeMaps);
     this.addGenresToChart(this.response.graphData.genreMaps);
 
     this.valenceValue = this.response.averageValence * 100;
@@ -146,17 +146,27 @@ export class PlaylistInsightsComponent implements OnInit {
     }
   }
 
-  addSongYearsToChart(yearsToSongs: YearMapResponse[]) {
-    this.timePeriodBar = [];
+  addYearsToChart(yearsToSongs: YearMapResponse[]) {
+    this.yearBarChart = [];
 
     for (let i = 0; i < yearsToSongs.length; i++) {
-      this.timePeriodBar.push({
+      this.yearBarChart.push({
         name: yearsToSongs[i].year,
         value: yearsToSongs[i].songCount,
       });
     }
   }
 
+  addDecadesToChart(decadesToSongs: YearMapResponse[]) {
+    this.decadeBarChart = [];
+
+    for (let i = 0; i < decadesToSongs.length; i++) {
+      this.decadeBarChart.push({
+        name: decadesToSongs[i].year,
+        value: decadesToSongs[i].songCount,
+      });
+    }
+  }
+
   protected readonly right = right;
-  protected readonly LegendPosition = LegendPosition;
 }

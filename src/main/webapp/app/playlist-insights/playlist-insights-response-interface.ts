@@ -38,6 +38,7 @@ export interface SimpleSong {
 
 export interface GraphDataResponse {
   yearMaps: YearMapResponse[];
+  decadeMaps: YearMapResponse[];
   artistMaps: ArtistMapResponse[];
   genreMaps: GenreMapResponse[];
 }
