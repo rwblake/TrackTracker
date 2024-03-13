@@ -45,6 +45,7 @@
     font-size: 1.2rem;
     margin-right: 16px;
     text-align: left;
+    margin-bottom: 0;
   }
 }
 
@@ -78,6 +79,7 @@ ngx-charts-linear-gauge {
   padding: 8px 0;
 }
 
+// Container for all stats and graphs.
 .statBox {
   display: flex;
   flex-direction: column;
@@ -90,6 +92,26 @@ ngx-charts-linear-gauge {
   font-weight: 400;
 }
 
+.playlist-header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 64px;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: solid 1px rgb(255, 255, 255, 0.5);
+  }
+
+  h2 {
+    text-align: right;
+    margin-right: 16px;
+  }
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -97,7 +119,7 @@ form {
   align-items: center;
 }
 
-// div for search bar content to be aligned side-by-side
+// Container for search bar content to be aligned side-by-side
 .searchBar {
   display: flex;
   width: 100%;
