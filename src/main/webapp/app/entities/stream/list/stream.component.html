@@ -67,7 +67,8 @@
           <td>{{ stream.playedAt | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="stream.song">
-              <a [routerLink]="['/song', stream.song.id, 'view']">{{ stream.song.id }}</a>
+              <img [src]="stream.song.imageURL" alt="artist picture" style="max-height: 180px" />
+              <a [routerLink]="['/song', stream.song.id, 'view']">{{ stream.song.name }}</a>
             </div>
           </td>
           <td>
