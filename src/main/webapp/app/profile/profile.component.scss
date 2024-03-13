@@ -64,6 +64,11 @@ button {
   background-color: transparent;
   height: 48px;
 }
+button:focus {
+  outline: none; /* Remove the default outline */
+  box-shadow: 0 0 5px 2px white; /* Add a subtle box shadow for highlighting */
+  /* Add other styles as needed to indicate focus */
+}
 
 /* The Modal (background) */
 .modal {

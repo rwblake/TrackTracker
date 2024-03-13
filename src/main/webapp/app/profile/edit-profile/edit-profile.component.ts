@@ -1,17 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AccountService } from '../../core/auth/account.service';
 import { Account } from '../../core/auth/account.model';
 import { Observable, Subject } from 'rxjs';
 import { IAppUser } from '../../entities/app-user/app-user.model';
-import { IUser } from '../../entities/user/user.model';
 import { IUserPreferences } from '../../entities/user-preferences/user-preferences.model';
-import { ISpotifyToken } from '../../admin/spotify-token/spotify-token.model';
-import { IFeed } from '../../entities/feed/feed.model';
 import { AppUserService } from '../../entities/app-user/service/app-user.service';
 import { HttpResponse } from '@angular/common/http';
 import { VisibilityPreference } from '../../entities/enumerations/visibility-preference.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-edit-profile',
@@ -23,7 +21,7 @@ export class EditProfileComponent implements OnInit {
   isSaving = false;
   account: Account | null = null;
   user: IAppUser | null = null;
-  //background: string = 'black';
+  background: string = 'black';
   username: string | undefined;
   pic: string | null | undefined;
   bio: string | null | undefined;
@@ -31,11 +29,8 @@ export class EditProfileComponent implements OnInit {
   profilePriv2: VisibilityPreference | undefined;
   playlistPriv: number | undefined;
   playlistPriv2: VisibilityPreference | undefined;
-  darkMode: boolean | undefined;
-  highContrast: boolean | undefined;
 
   preferencesForm: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required]),
     pic: new FormControl('', [Validators.required]),
     bio: new FormControl('', [Validators.required]),
     profilePriv: new FormControl('', [Validators.required]),
@@ -44,7 +39,7 @@ export class EditProfileComponent implements OnInit {
     highContrast: new FormControl('', [Validators.required]),
   });
 
-  constructor(protected appUserService: AppUserService, private accountService: AccountService) {}
+  constructor(protected appUserService: AppUserService, private accountService: AccountService, private router: Router) {}
 
   ngOnInit(): void {
     this.accountService
@@ -61,10 +56,6 @@ export class EditProfileComponent implements OnInit {
     );
   }
   onSubmit(): void {
-    this.username = this.preferencesForm.get('username')?.value;
-    if (this.username == '') {
-      this.username = this.account?.login;
-    }
     this.pic = this.preferencesForm.get('pic')?.value;
     if (this.pic == '') {
       this.pic = this.user?.avatarURL;
@@ -75,30 +66,31 @@ export class EditProfileComponent implements OnInit {
     }
     this.profilePriv = this.preferencesForm.get('profilePriv')?.value;
     if (this.profilePriv == 0) {
-      this.profilePriv = 0;
+      this.profilePriv2 = VisibilityPreference.GLOBAL;
+    } else if (this.profilePriv == 1) {
+      this.profilePriv2 = VisibilityPreference.FRIENDS_OF_FRIENDS;
+    } else if (this.profilePriv == 2) {
+      this.profilePriv2 = VisibilityPreference.FRIENDS;
+    } else {
+      this.profilePriv2 = VisibilityPreference.PRIVATE;
     }
     this.playlistPriv = this.preferencesForm.get('playlistPriv')?.value;
     if (this.playlistPriv == 0) {
-      this.playlistPriv = 0;
-    }
-    this.darkMode = this.preferencesForm.get('darkMode')?.value;
-    // if (this.darkMode == false) {
-    //   this.background = 'white';
-    // }
-    if (this.darkMode == false) {
-      this.darkMode = false;
-    }
-    this.highContrast = this.preferencesForm.get('highContrast')?.value;
-    if (this.highContrast == false) {
-      this.highContrast = false;
+      this.playlistPriv2 = VisibilityPreference.GLOBAL;
+    } else if (this.playlistPriv == 1) {
+      this.playlistPriv2 = VisibilityPreference.FRIENDS_OF_FRIENDS;
+    } else if (this.playlistPriv == 2) {
+      this.playlistPriv2 = VisibilityPreference.FRIENDS;
+    } else {
+      this.playlistPriv2 = VisibilityPreference.PRIVATE;
     }
 
     const myPreferences: IUserPreferences = {
       // @ts-ignore
       id: this.user?.userPreferences?.id,
       visibility: this.profilePriv2,
-      isDarkMode: this.darkMode,
-      isHighContrast: this.highContrast,
+      isDarkMode: null,
+      isHighContrast: null,
       playlistPrivacy: this.playlistPriv2,
     };
 
@@ -111,24 +103,31 @@ export class EditProfileComponent implements OnInit {
       bio: this.bio,
       spotifyUsername: this.user?.spotifyUsername,
       internalUser: this.user?.internalUser,
-      userPreferences: this.user?.userPreferences,
+      userPreferences: myPreferences,
       spotifyToken: this.user?.spotifyToken,
       feed: this.user?.feed,
       blockedByUser: this.user?.blockedByUser,
     };
 
     this.isSaving = true;
-    this.subscribeToSaveResponse(this.appUserService.partialUpdate(myAppUser));
+    this.subscribeToSaveUser(this.appUserService.partialUpdate(myAppUser));
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IAppUser>>): void {
+  protected subscribeToSaveUser(result: Observable<HttpResponse<IAppUser>>): void {
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
+  }
+
+  protected subscribeToSaveAccount(result: Observable<{}>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
   }
   protected onSaveSuccess(): void {
-    this.previousState();
+    this.router.navigate(['/profile/:spotifyUsername']);
   }
 
   protected onSaveError(): void {
@@ -137,9 +136,5 @@ export class EditProfileComponent implements OnInit {
 
   protected onSaveFinalize(): void {
     this.isSaving = false;
-  }
-
-  previousState(): void {
-    window.history.back();
   }
 }
