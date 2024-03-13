@@ -1,9 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { AccountService } from '../../core/auth/account.service';
 import { Account } from '../../core/auth/account.model';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { IAppUser } from '../../entities/app-user/app-user.model';
+import { IUser } from '../../entities/user/user.model';
+import { IUserPreferences } from '../../entities/user-preferences/user-preferences.model';
+import { ISpotifyToken } from '../../admin/spotify-token/spotify-token.model';
+import { IFeed } from '../../entities/feed/feed.model';
+import { AppUserService } from '../../entities/app-user/service/app-user.service';
+import { HttpResponse } from '@angular/common/http';
+import { VisibilityPreference } from '../../entities/enumerations/visibility-preference.model';
 
 @Component({
   selector: 'jhi-edit-profile',
@@ -12,13 +20,17 @@ import { Subject } from 'rxjs';
 })
 export class EditProfileComponent implements OnInit {
   private readonly destroy$ = new Subject<void>();
+  isSaving = false;
   account: Account | null = null;
+  user: IAppUser | null = null;
   //background: string = 'black';
   username: string | undefined;
-  pic: string | undefined;
-  bio: string | undefined;
+  pic: string | null | undefined;
+  bio: string | null | undefined;
   profilePriv: number | undefined;
+  profilePriv2: VisibilityPreference | undefined;
   playlistPriv: number | undefined;
+  playlistPriv2: VisibilityPreference | undefined;
   darkMode: boolean | undefined;
   highContrast: boolean | undefined;
 
@@ -32,13 +44,21 @@ export class EditProfileComponent implements OnInit {
     highContrast: new FormControl('', [Validators.required]),
   });
 
-  constructor(private accountService: AccountService) {}
+  constructor(protected appUserService: AppUserService, private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => (this.account = account));
+    this.accountService.fetchUser().subscribe(
+      (data: IAppUser) => {
+        this.user = data;
+      },
+      error => {
+        console.error('Error fetching user bio:', error);
+      }
+    );
   }
   onSubmit(): void {
     this.username = this.preferencesForm.get('username')?.value;
@@ -47,11 +67,11 @@ export class EditProfileComponent implements OnInit {
     }
     this.pic = this.preferencesForm.get('pic')?.value;
     if (this.pic == '') {
-      this.pic = 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg';
+      this.pic = this.user?.avatarURL;
     }
     this.bio = this.preferencesForm.get('bio')?.value;
     if (this.bio == '') {
-      this.bio = '';
+      this.bio = this.user?.bio;
     }
     this.profilePriv = this.preferencesForm.get('profilePriv')?.value;
     if (this.profilePriv == 0) {
@@ -72,5 +92,54 @@ export class EditProfileComponent implements OnInit {
     if (this.highContrast == false) {
       this.highContrast = false;
     }
+
+    const myPreferences: IUserPreferences = {
+      // @ts-ignore
+      id: this.user?.userPreferences?.id,
+      visibility: this.profilePriv2,
+      isDarkMode: this.darkMode,
+      isHighContrast: this.highContrast,
+      playlistPrivacy: this.playlistPriv2,
+    };
+
+    const myAppUser: IAppUser = {
+      // @ts-ignore
+      id: this.user?.id,
+      spotifyID: this.user?.spotifyID,
+      name: this.user?.name,
+      avatarURL: this.pic,
+      bio: this.bio,
+      spotifyUsername: this.user?.spotifyUsername,
+      internalUser: this.user?.internalUser,
+      userPreferences: this.user?.userPreferences,
+      spotifyToken: this.user?.spotifyToken,
+      feed: this.user?.feed,
+      blockedByUser: this.user?.blockedByUser,
+    };
+
+    this.isSaving = true;
+    this.subscribeToSaveResponse(this.appUserService.partialUpdate(myAppUser));
+  }
+
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IAppUser>>): void {
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
+  }
+  protected onSaveSuccess(): void {
+    this.previousState();
+  }
+
+  protected onSaveError(): void {
+    // Api for inheritance.
+  }
+
+  protected onSaveFinalize(): void {
+    this.isSaving = false;
+  }
+
+  previousState(): void {
+    window.history.back();
   }
 }
