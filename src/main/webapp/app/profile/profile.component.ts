@@ -50,8 +50,12 @@ export class ProfileComponent implements OnInit {
   edit(): void {
     this.router.navigate(['./profile/edit-profile']);
   }
-  settings(): void {
-    this.router.navigate(['./profile/user-preferences']);
+  // settings(): void {
+  //   this.router.navigate(['./profile/user-preferences']);
+  // }
+
+  toFriends(): void {
+    this.router.navigate(['./friends']);
   }
   logout(): void {
     this.loginService.logout();
