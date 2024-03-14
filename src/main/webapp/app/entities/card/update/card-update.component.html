@@ -15,7 +15,7 @@
           <label class="form-label" for="field_metric">Metric</label>
           <select class="form-control" name="metric" formControlName="metric" id="field_metric" data-cy="metric">
             <option [ngValue]="null"></option>
-            <option *ngFor="let cardType of cardTypeValues" [value]="cardType">cardType</option>
+            <option *ngFor="let cardType of cardTypeValues" [value]="cardType">{{ cardType }}</option>
           </select>
           <div *ngIf="editForm.get('metric')!.invalid && (editForm.get('metric')!.dirty || editForm.get('metric')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('metric')?.errors?.required"> This field is required. </small>
