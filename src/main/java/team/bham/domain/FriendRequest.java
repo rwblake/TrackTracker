@@ -37,7 +37,6 @@ public class FriendRequest implements Serializable {
     @Schema(description = "Each FriendRequest is associated with a particular user, who initiated it.")
     @JsonIgnoreProperties(
         value = {
-            "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
@@ -65,7 +64,6 @@ public class FriendRequest implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(
         value = {
-            "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",

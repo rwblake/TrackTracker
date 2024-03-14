@@ -4,7 +4,7 @@ import { APP_NAME } from '../app.constants';
 import { IFriendship } from 'app/entities/friendship/friendship.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FriendsService } from './friends.service';
-import { PlaylistInsightsResponse } from '../playlist-insights/playlist-insights-response-interface';
+import { IFriendRequest } from '../entities/friend-request/friend-request.model';
 
 @Component({
   selector: 'jhi-friends',
@@ -15,56 +15,38 @@ export class FriendsComponent implements OnInit {
   friendRequestForm: FormGroup = new FormGroup({ name: new FormControl('', [Validators.required, Validators.min(0)]) });
 
   pulledData: boolean = false;
-  waitingForResponse: boolean = false;
-  showWaitingMessage: boolean = false;
   showErrorMessage: boolean = false;
 
   linkInput: string = '';
 
-  response: IFriendship | undefined;
+  createFriendRequestResponse: IFriendship | undefined;
+  friendRequests?: IFriendRequest[];
 
   constructor(private titleService: Title, private friendsService: FriendsService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
+    this.loadFriendRequests();
+  }
+
+  loadFriendRequests(): void {
+    this.friendsService.getFriendRequests().subscribe({
+      next: v => (this.friendRequests = v),
+    });
   }
 
   async sendLink() {
     // @ts-ignore
     const url: string = this.friendRequestForm.get('name').value;
-
-    this.waitingForResponse = true;
-    this.pulledData = false;
     this.showErrorMessage = false;
-
     this.friendsService.sendURL(parseInt(url)).subscribe({
-      next: v => this.onSuccessfulResponse(v),
-      error: e => this.onFailure(e),
+      next: v => this.onSuccessfulFriendRequestCreationResponse(v),
+      error: e => (this.showErrorMessage = true),
     });
-
-    await this.delay(750);
-    if (this.waitingForResponse) {
-      this.showWaitingMessage = true;
-    }
   }
 
-  delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  onFailure(error: any) {
-    this.waitingForResponse = false;
-    this.showWaitingMessage = false;
-    this.pulledData = false;
-    this.showErrorMessage = true;
-  }
-
-  onSuccessfulResponse(val: IFriendship) {
-    this.waitingForResponse = false;
-    this.showWaitingMessage = false;
-
-    this.response = val;
-
+  onSuccessfulFriendRequestCreationResponse(val: IFriendship) {
+    this.createFriendRequestResponse = val;
     // Reveal the lower section of the page.
     this.pulledData = true;
   }

@@ -4,8 +4,10 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Observable } from 'rxjs';
 import { IFriendship } from 'app/entities/friendship/friendship.model';
+import { IFriendRequest } from '../entities/friend-request/friend-request.model';
 
 export type EntityResponseType = HttpResponse<String>;
+export type EntityArrayResponseType = HttpResponse<IFriendRequest>;
 
 @Injectable({ providedIn: 'root' })
 export class FriendsService {
@@ -15,5 +17,9 @@ export class FriendsService {
 
   sendURL(id: number): Observable<IFriendship> {
     return this.http.post<IFriendship>(this.resourceUrl, id);
+  }
+
+  getFriendRequests(): Observable<IFriendRequest[]> {
+    return this.http.get<IFriendRequest[]>(this.resourceUrl);
   }
 }

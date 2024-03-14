@@ -9,10 +9,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import team.bham.domain.AppUser;
 import team.bham.domain.FriendRequest;
 import team.bham.domain.Friendship;
@@ -44,18 +41,77 @@ public class FriendsResource {
         this.friendshipRepository = friendshipRepository;
     }
 
-    @PostMapping("/friends")
-    public ResponseEntity<FriendRequest> createFriendRequest(@Valid @RequestBody Long otherAppUserId) throws Exception {
-        // Find the current user and check they have an associated AppUser entity
+    /** Find the current user and check they have an associated AppUser entity */
+    private AppUser getCurrentUser() throws Exception {
         Optional<User> userMaybe = this.userService.getUserWithAuthorities();
-        AppUser currentUser;
         if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
             // Logged in
-            currentUser = this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
+            return this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
         } else {
             // Not logged in
             throw new Exception("Current User is not related to an AppUser.");
         }
+    }
+
+    @GetMapping("/friends")
+    public List<FriendRequest> getFriendRequests() throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        // Get the friend requests from database
+        return friendRequestRepository.findAllByToAppUser(currentUser);
+    }
+
+    @PostMapping("/friends/accept")
+    public List<FriendRequest> acceptFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+
+        // Find the friend request
+        FriendRequest friendRequest = this.friendRequestRepository.getReferenceById(friendRequestId);
+        AppUser requestUser = friendRequest.getInitiatingAppUser();
+
+        // Check they are the recipient of the friend request
+        if (currentUser.getId() != friendRequest.getToAppUser().getId()) {
+            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
+        }
+
+        // Create the friendship
+        Friendship myFriendship = new Friendship();
+        myFriendship.setCreatedAt(Instant.now());
+        myFriendship.setFriendAccepting(currentUser);
+        myFriendship.setFriendInitiating(requestUser);
+        this.friendshipRepository.save(myFriendship);
+
+        // Delete the friend request
+        this.friendRequestRepository.delete(friendRequest);
+
+        return getFriendRequests();
+    }
+
+    @PostMapping("/friends/reject")
+    public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+
+        // Find the friend request
+        FriendRequest friendRequest = this.friendRequestRepository.getReferenceById(friendRequestId);
+        AppUser requestUser = friendRequest.getInitiatingAppUser();
+
+        // Check they are the recipient of the friend request
+        if (currentUser.getId() != friendRequest.getToAppUser().getId()) {
+            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
+        }
+
+        // Delete the friend request
+        this.friendRequestRepository.delete(friendRequest);
+
+        return getFriendRequests();
+    }
+
+    @PostMapping("/friends")
+    public ResponseEntity<FriendRequest> createFriendRequest(@Valid @RequestBody Long otherAppUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
 
         // Find the user they want to be friends with
         AppUser requestUser;
