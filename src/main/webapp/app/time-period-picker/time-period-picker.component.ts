@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 export interface TimePeriod {
   periodDays: number;
@@ -11,14 +11,14 @@ export interface TimePeriod {
   styleUrls: ['./time-period-picker.component.scss'],
 })
 export class TimePeriodPickerComponent implements OnInit {
-  timePeriods: TimePeriod[] = [
+  @Input() timePeriodSelections: TimePeriod[] = [
     { periodDays: 7, label: 'Week' },
     { periodDays: 28, label: '4 Weeks' },
     { periodDays: 365, label: 'Year' },
     { periodDays: -1, label: 'All Time' },
   ];
 
-  selectedTimePeriod: TimePeriod = this.timePeriods[0];
+  selectedTimePeriod!: TimePeriod;
   @Output() timePeriodChangeEvent = new EventEmitter<TimePeriod>();
 
   isNavbarCollapsed = true;
@@ -36,6 +36,7 @@ export class TimePeriodPickerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.selectedTimePeriod = this.timePeriodSelections[0];
     this.setTimePeriod(this.selectedTimePeriod);
   }
 }

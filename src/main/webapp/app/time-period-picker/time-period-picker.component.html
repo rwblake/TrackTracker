@@ -18,7 +18,7 @@
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed">
       <ul class="navbar-nav ms-auto">
         <li
-          *ngFor="let period of timePeriods"
+          *ngFor="let period of timePeriodSelections"
           class="nav-item ms-auto"
           [class.active]="selectedTimePeriod === period"
           (click)="setTimePeriod(period)"
