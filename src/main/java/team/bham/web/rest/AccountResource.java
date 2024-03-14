@@ -127,10 +127,18 @@ public class AccountResource {
         System.out.println("Created Spotify API object with Access Token: " + spotifyApi.getAccessToken());
 
         // once credentials generated, get SpotifyUserID using credentials
-        String spotifyUserID = spotifyApi.getCurrentUsersProfile().build().execute().getId();
+        se.michaelthelin.spotify.model_objects.specification.User spotifyUser = spotifyApi.getCurrentUsersProfile().build().execute();
+        String spotifyID = spotifyUser.getId();
+        String spotifyDisplayName = spotifyUser.getDisplayName();
 
         // Save user in database
-        AppUser appUser = appUserService.registerAppUser(managedAppUserVM, managedAppUserVM.getPassword(), spotifyUserID, credentials);
+        AppUser appUser = appUserService.registerAppUser(
+            managedAppUserVM,
+            managedAppUserVM.getPassword(),
+            spotifyID,
+            spotifyDisplayName,
+            credentials
+        );
         // Send email to verify account TODO: Uncomment this once authorisation via email works
         //        mailService.sendActivationEmail(appUser.getInternalUser());
     }

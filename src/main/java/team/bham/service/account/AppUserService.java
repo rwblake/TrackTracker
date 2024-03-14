@@ -68,7 +68,8 @@ public class AppUserService extends team.bham.service.UserService {
     public AppUser registerAppUser(
         ManagedAppUserVM appUserVM,
         String password,
-        String spotifyUserID,
+        String spotifyID,
+        String spotifyDisplayName,
         AuthorizationCodeCredentials spotifyCredentials
     ) {
         // Check that login isn't used by anyone else.
@@ -102,7 +103,7 @@ public class AppUserService extends team.bham.service.UserService {
 
         // Check that Spotify id isn't used by anyone else
         appUserRepository
-            .findOneBySpotifyID(spotifyUserID)
+            .findOneBySpotifyID(spotifyID)
             .ifPresent(appUser -> {
                 boolean removed = removeNonActivatedAppUser(appUser);
                 if (!removed) {
@@ -140,9 +141,9 @@ public class AppUserService extends team.bham.service.UserService {
 
         // Create an AppUser
         AppUser newAppUser = new AppUser();
-        newAppUser.setSpotifyID(spotifyUserID);
+        newAppUser.setSpotifyID(spotifyID);
         newAppUser.setBio(appUserVM.getBio());
-        newAppUser.setSpotifyUsername("UNUSED FIELD");
+        newAppUser.setSpotifyUsername(spotifyDisplayName);
         newAppUser.setName("UNUSED FIELD");
 
         // Create a Feed
@@ -165,13 +166,6 @@ public class AppUserService extends team.bham.service.UserService {
         feed.setAppUser(newAppUser);
         spotifyToken.setAppUser(newAppUser);
         userPreferences.setAppUser(newAppUser);
-
-        //        userRepository.save(newUser);
-        //        log.debug("Created Information for User: {}", newUser);
-        //        this.clearUserCaches(newUser);
-        //
-        //        spotifyTokenRepository.save(spotifyToken);
-        //        log.debug("Created Information for SpotifyToken: {}", spotifyToken);
 
         appUserRepository.save(newAppUser);
         log.debug("Created Information for AppUser: {}", newAppUser);
