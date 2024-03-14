@@ -71,6 +71,10 @@ public class PlaylistInsightCalculator {
         }
     }
 
+    private static String firstCharToUpper(String name) {
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+
     private static PlaylistInsightGraphData calculateGraphData(Playlist playlist) {
         // Dictionary mappings for each counted element of data.
         // Converted to our data types later.
@@ -153,7 +157,7 @@ public class PlaylistInsightCalculator {
         }
         index = 0;
         for (Map.Entry<Genre, Integer> entry : genreAndCountsList) {
-            genreMaps[index] = new GenreSongCountMap(entry.getKey().getName(), entry.getValue());
+            genreMaps[index] = new GenreSongCountMap(firstCharToUpper(entry.getKey().getName()), entry.getValue());
             index++;
         }
 

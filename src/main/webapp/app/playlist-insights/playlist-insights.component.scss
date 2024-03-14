@@ -12,16 +12,9 @@
   }
 }
 
-.buffer {
-  margin-top: 120px;
-}
-
-.small-buffer {
-  margin-top: 30px;
-}
-
-.top-buffer {
-  margin-top: 150px;
+.table {
+  border-radius: 8px;
+  border: solid 1px rgb(255, 255, 255, 0.5);
 }
 
 // "cards" that appear for selected songs
@@ -49,7 +42,15 @@
   }
 }
 
-// used for stat averages
+// Container for bars plus associated text
+.averageBar {
+  p {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+}
+
+// Bars used for stat averages
 .progressBarOutside {
   background: rgb(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -68,17 +69,6 @@
   width: 50%;
 }
 
-.averageBar {
-  p {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-}
-
-ngx-charts-linear-gauge {
-  padding: 8px 0;
-}
-
 // Container for all stats and graphs.
 .statBox {
   display: flex;
@@ -92,16 +82,18 @@ ngx-charts-linear-gauge {
   font-weight: 400;
 }
 
+// Container for title and playlist icon shown upon successful playlist pull
 .playlist-header {
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: center;
   margin-bottom: 64px;
+  align-items: center;
 
   img {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border-radius: 8px;
     border: solid 1px rgb(255, 255, 255, 0.5);
   }
@@ -110,13 +102,6 @@ ngx-charts-linear-gauge {
     text-align: right;
     margin-right: 16px;
   }
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  align-items: center;
 }
 
 // Container for search bar content to be aligned side-by-side
@@ -129,4 +114,11 @@ form {
     margin-left: 16px;
     width: 64px;
   }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
 }
