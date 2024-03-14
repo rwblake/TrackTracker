@@ -9,6 +9,7 @@ import { ApplicationConfigService } from '../config/application-config.service';
 import { Account } from 'app/core/auth/account.model';
 import { User } from '../../entities/user/user.model';
 import { IAppUser } from '../../entities/app-user/app-user.model';
+import { Account_Combined } from '../../account/account_combined.model';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -70,6 +71,12 @@ export class AccountService {
   private fetch(): Observable<Account> {
     return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   }
+
+  // This method returns the *new* account object which combines all details into one object
+  fetchAccountCombined(): Observable<Account_Combined> {
+    return this.http.get<Account_Combined>(this.applicationConfigService.getEndpointFor('api/account-combined'));
+  }
+
   fetchUser(): Observable<IAppUser> {
     return this.http.get<IAppUser>(this.applicationConfigService.getEndpointFor('api/account-user'));
   }

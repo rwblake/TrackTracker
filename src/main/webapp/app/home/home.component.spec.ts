@@ -57,19 +57,19 @@ describe('Home Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.account).toBeNull();
+      expect(comp.account_data).toBeNull();
 
       // WHEN
       authenticationState.next(account);
 
       // THEN
-      expect(comp.account).toEqual(account);
+      expect(comp.account_data).toEqual(account);
 
       // WHEN
       authenticationState.next(null);
 
       // THEN
-      expect(comp.account).toBeNull();
+      expect(comp.account_data).toBeNull();
     });
   });
 
@@ -93,20 +93,20 @@ describe('Home Component', () => {
       comp.ngOnInit();
 
       // THEN
-      expect(comp.account).toBeNull();
+      expect(comp.account_data).toBeNull();
 
       // WHEN
       authenticationState.next(account);
 
       // THEN
-      expect(comp.account).toEqual(account);
+      expect(comp.account_data).toEqual(account);
 
       // WHEN
       comp.ngOnDestroy();
       authenticationState.next(null);
 
       // THEN
-      expect(comp.account).toEqual(account);
+      expect(comp.account_data).toEqual(account);
     });
   });
 });

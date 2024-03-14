@@ -1,5 +1,6 @@
 package team.bham.web.rest;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +20,19 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
-import team.bham.domain.AppUser;
-import team.bham.domain.SpotifyToken;
-import team.bham.domain.User;
+import team.bham.domain.*;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.UserRepository;
 import team.bham.security.SecurityUtils;
-import team.bham.service.DeclinedSpotifyAccessException;
-import team.bham.service.MailService;
-import team.bham.service.UserService;
+import team.bham.service.*;
+import team.bham.service.account.AccountCombinedResponse;
 import team.bham.service.account.AppUserService;
 import team.bham.service.dto.AdminUserDTO;
 import team.bham.service.dto.PasswordChangeDTO;
 import team.bham.service.spotify.SpotifyAuthorisationService;
 import team.bham.web.rest.errors.*;
+import team.bham.web.rest.errors.EmailAlreadyUsedException;
+import team.bham.web.rest.errors.InvalidPasswordException;
 import team.bham.web.rest.vm.KeyAndPasswordVM;
 import team.bham.web.rest.vm.ManagedAppUserVM;
 import team.bham.web.rest.vm.ManagedUserVM;
@@ -56,6 +57,10 @@ public class AccountResource {
 
     private final AppUserService appUserService;
 
+    private final FriendsService friendsService;
+
+    private final FeedService feedService;
+
     private final UserService userService;
 
     private final MailService mailService;
@@ -66,12 +71,16 @@ public class AccountResource {
         UserRepository userRepository,
         UserService userService,
         AppUserService appUserService,
+        FriendsService friendsService,
+        FeedService feedService,
         MailService mailService,
         SpotifyAuthorisationService spotifyAuthorisationService
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.appUserService = appUserService;
+        this.friendsService = friendsService;
+        this.feedService = feedService;
         this.mailService = mailService;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
     }
@@ -177,13 +186,35 @@ public class AccountResource {
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 
+    /**
+     * {@code GET  /account-combined} : get the current user, with other account information.
+     *
+     * @return the current user as an AccountCombinedResponse object.
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
+     */
+    @GetMapping("/account-combined")
+    public String getAccountCombined() {
+        Optional<User> user = userService.getUserWithAuthorities();
+        if (user.isEmpty()) throw new AccountResourceException("User could not be found");
+
+        Optional<AppUser> appUser = appUserService.getAppUser(user.get());
+        if (appUser.isEmpty()) throw new AccountResourceException("Could not get AppUser given User");
+
+        Set<Friendship> friends = friendsService.getUsersFriends(appUser.get());
+        Set<FeedCard> feedCards = feedService.getCards(appUser.get().getFeed());
+
+        AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, feedCards);
+
+        Gson gson = new Gson();
+        return gson.toJson(response);
+    }
+
     @GetMapping("/account-user")
     public AppUser getAccountUser() {
         User internalAppUser = userService
             .getUserWithAuthorities()
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
-        AppUser appUser = appUserService.getAppUser(internalAppUser).get();
-        return appUser;
+        return appUserService.getAppUser(internalAppUser).get();
     }
 
     /**

@@ -66,6 +66,7 @@ p {
     justify-content: center;
   }
 
+  // PROFILES SECTION
   .profiles {
     overflow-x: scroll;
     gap: 32px;
@@ -150,6 +151,35 @@ p {
           color: rgb(var(--foreground), 0.75);
           white-space: nowrap;
         }
+      }
+    }
+  }
+
+  // FEED SECTION
+  .feed {
+    flex-direction: column;
+    gap: 32px;
+
+    align-self: stretch;
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .heading {
+      position: relative;
+      left: -4px;
+      gap: 16px;
+      align-items: center;
+
+      h2 {
+        margin: 0;
+      }
+
+      span {
+        font-size: 32px;
       }
     }
   }

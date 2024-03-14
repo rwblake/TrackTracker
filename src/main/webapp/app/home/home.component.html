@@ -1,54 +1,81 @@
 <!--LOGGED-IN--->
-<div *ngIf="account !== null" class="root">
-  <div class="greeting">
-    <h1>Welcome back, {{ customAccount.firstName }}!</h1>
-    <p class="lead">{{ getLastUpdateMessage() }}</p>
-  </div>
+<div *ngIf="account_data !== null" class="root">
+  <header class="greeting">
+    <h1>Welcome back, {{ getNames()[0] }}!</h1>
+    <!--    <p class="lead">{{ getLastUpdateMessage() }}</p>-->
+  </header>
 
   <div class="scroll-wrapper">
+    <!--CAN ONLY BE SHOWN IF THE ACCOUNT_DATA IS INITIALISED-->
     <section class="profiles">
       <button (click)="gotoProfile()" class="profile-card">
-        <img [src]="customAccount.avatarURL" alt="Your profile picture" height="80" width="80" />
+        <img [src]="account_data.avatarURL" alt="Your profile picture" height="80" width="80" />
 
         <div class="details">
-          <p class="name">{{ customAccount.firstName + ' ' + customAccount.lastName }}</p>
-          <p class="friends">{{ customAccount.friends.length }} friends</p>
+          <p class="name">{{ getNames().join(' ') }}</p>
+          <p class="friends">{{ account_data.friends.length }} friends</p>
           <p class="hint">Click to visit your profile</p>
         </div>
       </button>
 
-      <hr class="divider" />
+      <!--      <hr class="divider" />-->
 
-      <button *ngFor="let friend of customAccount.friends; index as i; trackBy: trackByIndex" class="friend-card">
-        <img
-          *ngIf="friend.pinned"
-          [src]="friend.avatarURL"
-          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
-          height="64"
-          width="64"
-        />
-        <p *ngIf="friend.pinned" class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>
-      </button>
+      <!--      <button *ngFor="let friend of account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">-->
+      <!--        <img-->
+      <!--          *ngIf="friend.pinned"-->
+      <!--          [src]="friend.avatarURL"-->
+      <!--          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"-->
+      <!--          height="64"-->
+      <!--          width="64"-->
+      <!--        />-->
+      <!--        <p *ngIf="friend.pinned" class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>-->
+      <!--      </button>-->
 
-      <button *ngIf="!hasMaxPinned()" class="friend-card">
-        <div class="circle-button">
-          <fa-icon icon="add" [fixedWidth]="true"></fa-icon>
-        </div>
+      <!--      <button *ngIf="!hasMaxPinned()" class="friend-card">-->
+      <!--        <div class="circle-button">-->
+      <!--          <fa-icon icon="add" [fixedWidth]="true"></fa-icon>-->
+      <!--        </div>-->
 
-        <p class="name">Pin friend</p>
-      </button>
+      <!--        <p class="name">Pin friend</p>-->
+      <!--      </button>-->
     </section>
   </div>
 
-  <div [ngSwitch]="account !== null">
-    <div class="alert alert-success" *ngSwitchCase="true">
-      <span id="home-logged-message" *ngIf="account">You are logged in as user "{{ account.login }}".</span>
+  <!--  <div [ngSwitch]="account_data !== null">-->
+  <!--    <div class="alert alert-success" *ngSwitchCase="true">-->
+  <!--      <span id="home-logged-message" *ngIf="account_data">You are logged in as user "{{ account_data.internalUser.login }}".</span>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <section class="feed">
+    <header>
+      <div class="heading">
+        <span class="material-symbols-outlined">dashboard</span>
+        <h2>My feed</h2>
+      </div>
+      <p class="subtitle">Updates on you and your friends listening trends, stats and milestones.</p>
+    </header>
+
+    <div class="card-list">
+      <jhi-card *ngFor="let card of account_data.feed.cards; let i = index; trackBy: trackByCardID" [card]="card" class="card"></jhi-card>
     </div>
+  </section>
+</div>
+
+<!--ACCOUNT HAS NO APP_USER-->
+<div *ngIf="account !== null && account_data === null" class="root">
+  <div class="alert alert-success">
+    <span id="home-logged-message">You are logged in as user "{{ account.login }}".</span>
+  </div>
+
+  <div class="alert alert-warning">
+    <strong>Account not set up properly!</strong>
+    This account does not have its AppUser entity properly set up in the database. Please ask an admin to fix this.
   </div>
 </div>
 
 <!--LOGGED-OUT-->
-<div *ngIf="account === null" class="root">
+<div *ngIf="account == null" class="root">
   <div class="greeting">
     <h1>Welcome to {{ APP_NAME }}</h1>
     <p class="lead">Your music tastes, <em>connected</em></p>
