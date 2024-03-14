@@ -1,3 +1,6 @@
+$translucent-border: rgb(255, 255, 255, 0.5);
+$translucent-bg: rgb(255, 255, 255, 0.1);
+
 .root {
   gap: 36px;
 }
@@ -14,16 +17,16 @@
 
 .table {
   border-radius: 8px;
-  border: solid 1px rgb(255, 255, 255, 0.5);
+  border: solid 1px $translucent-border;
 }
 
 // "cards" that appear for selected songs
 .songCard {
   display: flex;
   align-items: center;
-  background: rgb(255, 255, 255, 0.1);
+  background: $translucent-bg;
   border-radius: 8px;
-  border: solid 1px rgb(255, 255, 255, 0.5);
+  border: solid 1px $translucent-border;
   gap: 16px;
   width: 100%;
   overflow: clip;
@@ -52,9 +55,9 @@
 
 // Bars used for stat averages
 .progressBarOutside {
-  background: rgb(255, 255, 255, 0.1);
+  background: $translucent-bg;
   border-radius: 8px;
-  border: solid 1px rgb(255, 255, 255, 0.5);
+  border: solid 1px $translucent-border;
   height: 20px;
   margin-bottom: 16px;
 
@@ -63,7 +66,6 @@
 
 .progressBarInside {
   border-radius: 8px;
-  border: solid 1px rgb(255, 255, 255, 0);
 
   height: 100%;
   width: 50%;
@@ -95,7 +97,7 @@
     width: 150px;
     height: 150px;
     border-radius: 8px;
-    border: solid 1px rgb(255, 255, 255, 0.5);
+    border: solid 1px $translucent-border;
   }
 
   h2 {

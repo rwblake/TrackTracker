@@ -178,7 +178,15 @@
           </div>
         </div>
 
-        <div #yearChart class="statBox">
+        <jhi-time-period-picker
+          [timePeriodSelections]="[
+            { periodDays: 10 * 365, label: 'Decade' },
+            { periodDays: 365, label: 'Year' }
+          ]"
+          (timePeriodChangeEvent)="onTimeFormatChange($event)"
+        ></jhi-time-period-picker>
+
+        <div #yearChart *ngIf="!showByDecade" class="statBox">
           <ngx-charts-bar-vertical
             [results]="yearBarChart"
             [view]="[yearChart.offsetWidth, 300]"
@@ -194,7 +202,7 @@
           >
           </ngx-charts-bar-vertical>
         </div>
-        <div #decadeChart class="statBox">
+        <div #decadeChart *ngIf="showByDecade" class="statBox">
           <ngx-charts-bar-vertical
             [results]="decadeBarChart"
             [view]="[decadeChart.offsetWidth, 300]"

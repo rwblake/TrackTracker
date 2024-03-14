@@ -16,6 +16,7 @@ import { InsightsRoutingModule } from '../insights/insights-routing.module';
 import { Color, LegendPosition, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
 import { SharedModule } from '../shared/shared.module';
 import { right } from '@popperjs/core';
+import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -52,6 +53,8 @@ export class PlaylistInsightsComponent implements OnInit {
   waitingForResponse: boolean = false;
   showWaitingMessage: boolean = false;
   showErrorMessage: boolean = false;
+
+  showByDecade: boolean = true;
 
   valenceValue: number = 0;
   energyValue: number = 0;
@@ -166,6 +169,10 @@ export class PlaylistInsightsComponent implements OnInit {
         value: decadesToSongs[i].songCount,
       });
     }
+  }
+
+  onTimeFormatChange(period: TimePeriod) {
+    this.showByDecade = period.label !== 'Year';
   }
 
   protected readonly right = right;
