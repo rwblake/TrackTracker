@@ -9,6 +9,7 @@ import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.enums.Modality;
+import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.enums.ReleaseDatePrecision;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
@@ -53,6 +54,12 @@ public class SongService {
         // Query the songs which don't already exist in the database
         List<Track> querySongs = new ArrayList<>(tracks.size());
         for (Track track : tracks) {
+            if (track == null) {
+                continue; // Skip podcast episodes
+            }
+            if (track.getAvailableMarkets() == null || track.getAvailableMarkets().length == 0) {
+                continue; // Skip local files as they don't have reliable information e.g. audio features
+            }
             if (this.songRepository.existsBySpotifyID(track.getId())) {
                 mySongs.add(this.songRepository.findSongBySpotifyID(track.getId()));
             } else {
