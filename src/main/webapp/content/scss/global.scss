@@ -2,6 +2,9 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/bootstrap';
 
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
 //@import '~bootswatch/dist/darkly/variables';
 //@import '~bootswatch/dist/darkly/bootswatch';
 
@@ -9,7 +12,10 @@
 Globals for standard layout and formatting
 ========================================================================== */
 
-h2,
+* {
+  font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
 h3,
 h4,
 .lead {
@@ -21,10 +27,13 @@ h1 {
   font-size: 2.2em;
   font-weight: 400;
   text-align: center;
+  letter-spacing: 0.01em;
 }
 
 h2 {
   font-size: 2em;
+  font-weight: 400;
+  text-align: center;
 }
 
 p,
@@ -34,6 +43,27 @@ p,
 
 .lead {
   font-size: 1rem;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.material-symbols-outlined.large {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+}
+
+.material-symbols-outlined.large.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 48;
 }
 
 // The top level div of each page
