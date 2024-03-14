@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.destroy$))
             .subscribe({
               next: appUser => (this.account_data = appUser),
-              error: error => (this.account_data = null),
+              error: () => (this.account_data = null),
             });
         }
       });

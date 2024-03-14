@@ -1,4 +1,4 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md">
+<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-lg">
   <div class="container-fluid">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
       <span class="logo-img"></span>
@@ -6,7 +6,7 @@
       <span class="navbar-version">{{ version }}</span>
     </a>
     <a
-      class="navbar-toggler d-md-none"
+      class="navbar-toggler d-lg-none"
       href="javascript:void(0);"
       data-toggle="collapse"
       data-target="#navbarResponsive"
@@ -19,22 +19,22 @@
     </a>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="account !== null">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-            <span>
-              <fa-icon icon="home"></fa-icon>
-              <span>Home</span>
-            </span>
-          </a>
-        </li>
-        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" routerLink="/friends" (click)="collapseNavbar()">
-            <span>
-              <fa-icon icon="user-group" [fixedWidth]="true"></fa-icon>
-              <span>Friends</span>
-            </span>
-          </a>
-        </li>
+        <!--        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">-->
+        <!--          <a class="nav-link" routerLink="/" (click)="collapseNavbar()">-->
+        <!--            <span>-->
+        <!--              <fa-icon icon="home"></fa-icon>-->
+        <!--              <span>Home</span>-->
+        <!--            </span>-->
+        <!--          </a>-->
+        <!--        </li>-->
+        <!--        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">-->
+        <!--          <a class="nav-link" routerLink="/friends" (click)="collapseNavbar()">-->
+        <!--            <span>-->
+        <!--              <fa-icon icon="user-group" [fixedWidth]="true"></fa-icon>-->
+        <!--              <span>Friends</span>-->
+        <!--            </span>-->
+        <!--          </a>-->
+        <!--        </li>-->
         <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/insights" (click)="collapseNavbar()">
             <span>
@@ -47,7 +47,7 @@
           <a class="nav-link" routerLink="/insights/friends" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="chart-pie" [fixedWidth]="true"></fa-icon>
-              <span>Friend Insights</span>
+              <span>Friend Activity</span>
             </span>
           </a>
         </li>
@@ -55,7 +55,7 @@
           <a class="nav-link" routerLink="/insights/playlist" (click)="collapseNavbar()">
             <span>
               <fa-icon icon="record-vinyl" [fixedWidth]="true"></fa-icon>
-              <span>Playlist Insights</span>
+              <span>Playlist Analyser</span>
             </span>
           </a>
         </li>
@@ -67,7 +67,7 @@
             </span>
           </a>
         </li>
-        <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+
         <li
           *jhiHasAnyAuthority="'ROLE_ADMIN'"
           ngbDropdown
@@ -374,86 +374,117 @@
             </li>
           </ul>
         </li>
-        <li
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
-            <span *ngIf="!account?.imageUrl">
-              <fa-icon icon="user"></fa-icon>
-              <span>Account</span>
-            </span>
-            <span *ngIf="account?.imageUrl">
-              <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
-            </span>
+
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
+          <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
+          <a
+            class="nav-link"
+            [routerLink]="['/profile', account?.firstName]"
+            routerLinkActive="active"
+            (click)="collapseNavbar()"
+            data-cy="profile"
+          >
+            <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
+            <!--            <span>Profile</span>-->
           </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-            <li *ngSwitchCase="true">
-              <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
-              <a
-                class="dropdown-item"
-                [routerLink]="['/profile', account?.firstName]"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="profile"
-              >
-                <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
-                <span>Profile</span>
-              </a>
-            </li>
-            <li *ngSwitchCase="true">
-              <a
-                class="dropdown-item"
-                routerLink="account/settings"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="settings"
-              >
-                <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
-                <span>Settings</span>
-              </a>
-            </li>
-            <li *ngSwitchCase="true">
-              <a
-                class="dropdown-item"
-                routerLink="account/password"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="passwordItem"
-              >
-                <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
-                <span>Password</span>
-              </a>
-            </li>
-            <li *ngSwitchCase="true">
-              <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
-                <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
-                <span>Sign out</span>
-              </a>
-            </li>
-            <li *ngSwitchCase="false">
-              <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
-                <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
-                <span>Sign in</span>
-              </a>
-            </li>
-            <li *ngSwitchCase="false">
-              <a
-                class="dropdown-item"
-                routerLink="account/register"
-                routerLinkActive="active"
-                (click)="collapseNavbar()"
-                data-cy="register"
-              >
-                <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
-                <span>Register</span>
-              </a>
-            </li>
-          </ul>
         </li>
+
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="false" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" (click)="login()" id="login" data-cy="login">
+            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
+            <span>Log in</span>
+          </a>
+        </li>
+
+        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="false" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()" data-cy="register">
+            <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
+            <span>Register</span>
+          </a>
+        </li>
+
+        <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+        <!--        <li-->
+        <!--          *ngSwitchCase="false"-->
+        <!--          ngbDropdown-->
+        <!--          class="nav-item dropdown pointer"-->
+        <!--          display="dynamic"-->
+        <!--          routerLinkActive="active"-->
+        <!--          [routerLinkActiveOptions]="{ exact: true }"-->
+        <!--        >-->
+        <!--          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">-->
+        <!--            <span *ngIf="!account?.imageUrl">-->
+        <!--              <fa-icon icon="user"></fa-icon>-->
+        <!--              <span>Account</span>-->
+        <!--            </span>-->
+        <!--            <span *ngIf="account?.imageUrl">-->
+        <!--              <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />-->
+        <!--            </span>-->
+        <!--          </a>-->
+        <!--          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="true">&ndash;&gt;-->
+        <!--&lt;!&ndash;              &lt;!&ndash; profile routerLink will need to be changed when the model for spotifyUsername is available &ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a&ndash;&gt;-->
+        <!--&lt;!&ndash;                class="dropdown-item"&ndash;&gt;-->
+        <!--&lt;!&ndash;                [routerLink]="['/profile', account?.firstName]"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLinkActive="active"&ndash;&gt;-->
+        <!--&lt;!&ndash;                (click)="collapseNavbar()"&ndash;&gt;-->
+        <!--&lt;!&ndash;                data-cy="profile"&ndash;&gt;-->
+        <!--&lt;!&ndash;              >&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="user" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Profile</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="true">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a&ndash;&gt;-->
+        <!--&lt;!&ndash;                class="dropdown-item"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLink="account/settings"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLinkActive="active"&ndash;&gt;-->
+        <!--&lt;!&ndash;                (click)="collapseNavbar()"&ndash;&gt;-->
+        <!--&lt;!&ndash;                data-cy="settings"&ndash;&gt;-->
+        <!--&lt;!&ndash;              >&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Settings</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="true">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a&ndash;&gt;-->
+        <!--&lt;!&ndash;                class="dropdown-item"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLink="account/password"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLinkActive="active"&ndash;&gt;-->
+        <!--&lt;!&ndash;                (click)="collapseNavbar()"&ndash;&gt;-->
+        <!--&lt;!&ndash;                data-cy="passwordItem"&ndash;&gt;-->
+        <!--&lt;!&ndash;              >&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Password</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="true">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Sign out</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="false">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a class="dropdown-item" (click)="login()" id="login" data-cy="login">&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Sign in</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--&lt;!&ndash;            <li *ngSwitchCase="false">&ndash;&gt;-->
+        <!--&lt;!&ndash;              <a&ndash;&gt;-->
+        <!--&lt;!&ndash;                class="dropdown-item"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLink="account/register"&ndash;&gt;-->
+        <!--&lt;!&ndash;                routerLinkActive="active"&ndash;&gt;-->
+        <!--&lt;!&ndash;                (click)="collapseNavbar()"&ndash;&gt;-->
+        <!--&lt;!&ndash;                data-cy="register"&ndash;&gt;-->
+        <!--&lt;!&ndash;              >&ndash;&gt;-->
+        <!--&lt;!&ndash;                <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>&ndash;&gt;-->
+        <!--&lt;!&ndash;                <span>Register</span>&ndash;&gt;-->
+        <!--&lt;!&ndash;              </a>&ndash;&gt;-->
+        <!--&lt;!&ndash;            </li>&ndash;&gt;-->
+        <!--          </ul>-->
+        <!--        </li>-->
       </ul>
     </div>
   </div>

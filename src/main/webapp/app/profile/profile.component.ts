@@ -80,4 +80,12 @@ export class ProfileComponent implements OnInit {
   navigateToGDPR() {
     this.router.navigate(['/gdpr-policy']);
   }
+
+  toSettings() {
+    this.router.navigate(['/account/settings']);
+  }
+
+  toChangePassword() {
+    this.router.navigate(['/account/password']);
+  }
 }

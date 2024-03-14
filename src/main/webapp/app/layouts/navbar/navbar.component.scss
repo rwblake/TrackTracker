@@ -82,7 +82,7 @@ $foreground: rgb(200, 200, 200);
 
       &::before {
         transform: scaleX(0.8);
-        @media (max-width: 767px) {
+        @media (max-width: 992px) {
           transform: none;
           width: 50%;
         }
@@ -126,7 +126,7 @@ $foreground: rgb(200, 200, 200);
       transform: scaleX(0);
       transition: transform 0.2s ease;
 
-      @media (max-width: 767px) {
+      @media (max-width: 992px) {
         margin: 0;
         transform: none;
         transition: width 0.2s ease;
@@ -140,7 +140,7 @@ $foreground: rgb(200, 200, 200);
 
       &::before {
         transform: scaleX(1);
-        @media (max-width: 767px) {
+        @media (max-width: 992px) {
           transform: none;
           width: 100%;
         }
