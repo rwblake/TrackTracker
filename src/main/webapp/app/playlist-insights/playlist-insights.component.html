@@ -61,7 +61,7 @@
           <div class="progressBarOutside">
             <div
               class="progressBarInside"
-              style="background: rgb(178, 55, 236, 1)"
+              style="background: rgb(120, 37, 188, 1)"
               [ngStyle]="{
                 'width.%': valenceValue
               }"
@@ -71,7 +71,7 @@
           <div class="progressBarOutside">
             <div
               class="progressBarInside"
-              style="background: rgb(255, 178, 25, 1)"
+              style="background: rgb(234, 58, 193, 1)"
               [ngStyle]="{
                 'width.%': energyValue
               }"
@@ -81,7 +81,7 @@
           <div class="progressBarOutside">
             <div
               class="progressBarInside"
-              style="background: rgb(75, 163, 195, 1)"
+              style="background: rgb(234, 0, 43, 1)"
               [ngStyle]="{
                 'width.%': acousticnessValue
               }"
@@ -91,7 +91,7 @@
           <div class="progressBarOutside">
             <div
               class="progressBarInside"
-              style="background: rgb(234, 0, 43, 1)"
+              style="background: rgb(255, 178, 25, 1)"
               [ngStyle]="{
                 'width.%': danceabilityValue
               }"
@@ -142,7 +142,7 @@
                 <tbody>
                   <tr *ngFor="let artist of artistsPieChart | slice: 0:3; let i = index">
                     <td>{{ artist.name }}</td>
-                    <td>{{ artist.value }}</td>
+                    <td style="width: 15%">{{ artist.value }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -170,7 +170,7 @@
                 <tbody>
                   <tr *ngFor="let genre of genrePieChart | slice: 0:3; let i = index">
                     <td>{{ genre.name }}</td>
-                    <td>{{ genre.value }}</td>
+                    <td style="width: 15%">{{ genre.value }}</td>
                   </tr>
                 </tbody>
               </table>
