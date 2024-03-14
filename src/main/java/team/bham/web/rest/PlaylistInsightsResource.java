@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.hc.core5.http.ParseException;
@@ -19,13 +20,12 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.PlaylistStats;
+import team.bham.repository.AppUserRepository;
 import team.bham.repository.PlaylistRepository;
 import team.bham.service.PlaylistService;
 import team.bham.service.PlaylistStatsService;
-import team.bham.service.spotify.CredentialsParser;
-import team.bham.service.spotify.PlaylistInsightCalculator;
-import team.bham.service.spotify.PlaylistInsightsHTTPResponse;
-import team.bham.service.spotify.PlaylistRetriever;
+import team.bham.service.UserService;
+import team.bham.service.spotify.*;
 
 @RestController
 @RequestMapping("/api")
@@ -36,10 +36,16 @@ public class PlaylistInsightsResource {
 
     private final PlaylistService playlistService;
     private final PlaylistRepository playlistRepository;
+    private final SpotifyAuthorisationService spotifyAuthorisationService;
 
-    public PlaylistInsightsResource(PlaylistService playlistService, PlaylistRepository playlistRepository) {
+    public PlaylistInsightsResource(
+        PlaylistService playlistService,
+        PlaylistRepository playlistRepository,
+        SpotifyAuthorisationService spotifyAuthorisationService
+    ) {
         this.playlistService = playlistService;
         this.playlistRepository = playlistRepository;
+        this.spotifyAuthorisationService = spotifyAuthorisationService;
     }
 
     @PostMapping("/playlist-insights")
@@ -51,18 +57,10 @@ public class PlaylistInsightsResource {
         if (playlistRepository.existsBySpotifyID(spotifyID)) {
             myPlaylist = playlistRepository.findPlaylistBySpotifyID(spotifyID);
         } else {
-            String[] credentials = CredentialsParser.parseCredentials();
-            SpotifyApi spotifyApi = PlaylistRetriever.clientCredentials(credentials[0], credentials[1]);
+            SpotifyApi spotifyApi = this.spotifyAuthorisationService.getSpotifyApiForCurrentUser();
             Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
-            List<Track> tracks = PlaylistRetriever.getTracks(spotifyApi, spotifyID);
-            List<ArtistSimplified> artists = new ArrayList<>(tracks.size());
-            for (Track track : tracks) {
-                artists.addAll(List.of(track.getArtists()));
-            }
-            Artist[] myArtists = PlaylistRetriever.getArtists(spotifyApi, artists);
 
-            List<AudioFeatures> audioFeaturesList = PlaylistRetriever.getAudioFeatures(spotifyApi, tracks);
-            myPlaylist = playlistService.createPlaylist(playlist, tracks, audioFeaturesList, myArtists);
+            myPlaylist = playlistService.createPlaylist(playlist, spotifyApi);
         }
 
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);

@@ -86,6 +86,7 @@ public class PlaylistRetriever {
         return features;
     }
 
+    /** Get an array of full Artist objects from a list of ArtistSimplified objcets*/
     public static Artist[] getArtists(SpotifyApi spotifyApi, List<ArtistSimplified> artists)
         throws IOException, ParseException, SpotifyWebApiException {
         List<String> artistIDs = artists.stream().map(ArtistSimplified::getId).collect(Collectors.toList());

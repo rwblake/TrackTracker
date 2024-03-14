@@ -15,4 +15,8 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findOneBySpotifyID(String spotifyID);
 
     Optional<AppUser> findOneByInternalUser(User internalUser);
+
+    public boolean existsByInternalUser(User user);
+
+    public AppUser getAppUserByInternalUser(User user);
 }

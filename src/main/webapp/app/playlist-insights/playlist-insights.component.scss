@@ -1,25 +1,8 @@
-@media screen and (max-width: 600px) {
-}
-
 .root {
   gap: 36px;
 }
 
 .row {
-  display: flex;
-}
-
-.columnA {
-  display: flex;
-  flex-direction: column;
-  flex: 40%;
-  align-items: center;
-}
-
-.columnB {
-  display: flex;
-  flex-direction: column;
-  flex: 60%;
   align-items: center;
 }
 
@@ -44,12 +27,12 @@
 // "cards" that appear for selected songs
 .songCard {
   display: flex;
-  max-width: 500px;
   align-items: center;
   background: rgb(255, 255, 255, 0.1);
   border-radius: 8px;
   border: solid 1px rgb(255, 255, 255, 0.5);
   gap: 16px;
+  width: 100%;
   overflow: clip;
   margin-bottom: 8px;
 
@@ -62,6 +45,7 @@
     font-size: 1.2rem;
     margin-right: 16px;
     text-align: left;
+    margin-bottom: 0;
   }
 }
 
@@ -70,10 +54,10 @@
   background: rgb(255, 255, 255, 0.1);
   border-radius: 8px;
   border: solid 1px rgb(255, 255, 255, 0.5);
-  width: 100vh;
   height: 20px;
-  max-width: 500px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+
+  width: 100%;
 }
 
 .progressBarInside {
@@ -95,47 +79,54 @@ ngx-charts-linear-gauge {
   padding: 8px 0;
 }
 
+// Container for all stats and graphs.
 .statBox {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 50px;
+  margin-bottom: 64px;
   align-items: center;
-  min-width: 500px;
-  max-width: 700px;
-
-  h3 {
-    text-align: left;
-  }
+  width: 100%;
 }
 
 .lead {
   font-weight: 400;
 }
 
+.playlist-header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 64px;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    border: solid 1px rgb(255, 255, 255, 0.5);
+  }
+
+  h2 {
+    text-align: right;
+    margin-right: 16px;
+  }
+}
+
 form {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  align-items: center;
 }
 
-// div for search bar content to be aligned side-by-side
+// Container for search bar content to be aligned side-by-side
 .searchBar {
   display: flex;
+  width: 100%;
+  max-width: 800px;
 
   button {
     margin-left: 16px;
     width: 64px;
-  }
-
-  input {
-    width: 70vw;
-    max-width: 700px;
-    min-width: 100px;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .column {
-    flex: 100%;
   }
 }

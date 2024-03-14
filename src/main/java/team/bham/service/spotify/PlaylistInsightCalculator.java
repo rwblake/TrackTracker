@@ -2,8 +2,8 @@ package team.bham.service.spotify;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.Artist;
+import team.bham.domain.Genre;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
 
@@ -56,80 +56,108 @@ public class PlaylistInsightCalculator {
         return simpleSongs;
     }
 
-    /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static YearSongCountMap[] calculateYears(Playlist playlist) {
-        // Dictionary map to store years with the corresponding number of song occurrences
-        Map<String, Integer> yearsAndCounts = new HashMap<String, Integer>();
-
-        for (Song song : playlist.getSongs().toArray(new Song[0])) {
-            String year = song.getReleaseDate().toString().substring(0, 3) + "0s";
-            if (yearsAndCounts.containsKey(year)) {
-                yearsAndCounts.replace(year, yearsAndCounts.get(year) + 1);
-            } else {
-                yearsAndCounts.put(year, 1);
-            }
-        }
-
-        // Sorts the year-count map by year value
-        List<Map.Entry<String, Integer>> yearsAndCountsList = yearsAndCounts
-            .entrySet()
-            .stream()
-            .sorted(Comparator.comparing(Map.Entry::getKey))
-            .collect(Collectors.toList());
-
-        // Convert Java hashmap to our data type, for JSON conversion
-        YearSongCountMap[] map = new YearSongCountMap[yearsAndCounts.size()];
-        int index = 0;
-        for (Map.Entry<String, Integer> entry : yearsAndCountsList) {
-            map[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
-            index++;
-        }
-
-        return map;
+    public static <K> void incrementIfPresent(Map<K, Integer> map, K key) {
+        int currentValue = map.getOrDefault(key, 0);
+        map.put(key, currentValue + 1);
     }
 
-    /** Returns an array of mappings of artist IDs mapped to the proportion of tracks they're on*/
-    private static ArtistProportionMap[] calculateArtistProportions(Playlist playlist) {
-        // Dictionary map to store years with the corresponding number of song occurrences
+    /** Adds missing years to the map*/
+    public static void addMissingKeys(Map<String, Integer> map, String lowest, String highest) {
+        for (int i = Integer.parseInt(lowest); i < Integer.parseInt(highest); i++) {
+            String key = Integer.toString(i);
+            System.out.println(key);
+            int currentValue = map.getOrDefault(key, 0);
+            map.put(key, currentValue);
+        }
+    }
+
+    private static PlaylistInsightGraphData calculateGraphData(Playlist playlist) {
+        // Dictionary mappings for each counted element of data.
+        // Converted to our data types later.
+        Map<String, Integer> yearsAndCounts = new HashMap<>();
+        Map<String, Integer> decadesAndCounts = new HashMap<>();
         Map<Artist, Integer> artistsAndCounts = new HashMap<>();
+        Map<Genre, Integer> genresAndCounts = new HashMap<>();
+
+        String[] yearBounds = { "9999", "0000" };
 
         for (Song song : playlist.getSongs().toArray(new Song[0])) {
             // Each track has multiple artists
-            Artist[] artists = song.getArtists().toArray(new Artist[0]);
+            String year = song.getReleaseDate().toString().substring(0, 4);
+            incrementIfPresent(yearsAndCounts, year);
+            if (year.compareTo(yearBounds[0]) < 0) {
+                yearBounds[0] = year;
+            }
+            if (year.compareTo(yearBounds[1]) > 0) {
+                yearBounds[1] = year;
+            }
+            incrementIfPresent(decadesAndCounts, year.substring(0, 3) + "0s"); // get decade from year
 
             // Iterate through all artists and update their dictionary entries accordingly
-            for (Artist artist : artists) {
-                if (artistsAndCounts.containsKey(artist)) {
-                    artistsAndCounts.replace(artist, artistsAndCounts.get(artist) + 1);
-                } else {
-                    artistsAndCounts.put(artist, 1);
+            for (Artist artist : song.getArtists()) {
+                incrementIfPresent(artistsAndCounts, artist);
+                for (Genre genre : artist.getGenres()) {
+                    incrementIfPresent(genresAndCounts, genre);
                 }
             }
         }
 
-        // sort by count for the pie chart
+        addMissingKeys(yearsAndCounts, yearBounds[0], yearBounds[1]);
+
+        // Sorting the various maps
+        List<Map.Entry<String, Integer>> yearsAndCountsList = yearsAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByKey())
+            .collect(Collectors.toList());
+
+        List<Map.Entry<String, Integer>> decadesAndCountsList = decadesAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByKey())
+            .collect(Collectors.toList());
+
         List<Map.Entry<Artist, Integer>> artistAndCountsList = artistsAndCounts
             .entrySet()
             .stream()
-            .sorted(Comparator.comparing(Map.Entry::getValue))
+            .sorted(Map.Entry.comparingByValue())
+            .collect(Collectors.toList());
+
+        List<Map.Entry<Genre, Integer>> genreAndCountsList = genresAndCounts
+            .entrySet()
+            .stream()
+            .sorted(Map.Entry.comparingByValue())
             .collect(Collectors.toList());
 
         // Convert Java hashmap to our data type, for JSON conversion
         // We also need to divide by the total number of artists here
-        ArtistProportionMap[] map = new ArtistProportionMap[artistsAndCounts.size()];
+        YearSongCountMap[] yearMaps = new YearSongCountMap[yearsAndCounts.size()];
+        YearSongCountMap[] decadeMaps = new YearSongCountMap[decadesAndCounts.size()];
+        ArtistSongCountMap[] artistMaps = new ArtistSongCountMap[artistsAndCounts.size()];
+        GenreSongCountMap[] genreMaps = new GenreSongCountMap[genresAndCounts.size()];
+
         int index = 0;
+        for (Map.Entry<String, Integer> entry : yearsAndCountsList) {
+            yearMaps[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
+            index++;
+        }
+        index = 0;
+        for (Map.Entry<String, Integer> entry : decadesAndCountsList) {
+            decadeMaps[index] = new YearSongCountMap(entry.getKey(), entry.getValue());
+            index++;
+        }
+        index = 0;
         for (Map.Entry<Artist, Integer> entry : artistAndCountsList) {
-            map[index] =
-                new ArtistProportionMap(
-                    entry.getKey().getSpotifyID(),
-                    entry.getKey().getName(),
-                    entry.getKey().getImageURL(),
-                    entry.getValue()
-                );
+            artistMaps[index] = new ArtistSongCountMap(entry.getKey().getName(), entry.getValue());
+            index++;
+        }
+        index = 0;
+        for (Map.Entry<Genre, Integer> entry : genreAndCountsList) {
+            genreMaps[index] = new GenreSongCountMap(entry.getKey().getName(), entry.getValue());
             index++;
         }
 
-        return map;
+        return new PlaylistInsightGraphData(yearMaps, decadeMaps, artistMaps, genreMaps);
     }
 
     /** Selects the relevant averages from a playlist to be shown on the frontend*/
@@ -144,18 +172,10 @@ public class PlaylistInsightCalculator {
         // Calculate stats
         SimpleSong[] highlightedIDs = selectHighlightedSongs(playlist, stats);
         float[] averages = getRelevantAverages(stats);
-        YearSongCountMap[] yearSongs = calculateYears(playlist);
-        ArtistProportionMap[] artistProportions = calculateArtistProportions(playlist);
+        PlaylistInsightGraphData graphData = calculateGraphData(playlist);
 
         // Package it
-        return new PlaylistInsightsHTTPResponse(
-            playlist.getName(),
-            playlist.getImageURL(),
-            highlightedIDs,
-            averages,
-            yearSongs,
-            artistProportions
-        );
+        return new PlaylistInsightsHTTPResponse(playlist.getName(), playlist.getImageURL(), highlightedIDs, averages, graphData);
     }
 
     /** Stores statistical features of each audio feature, for normalising the distances between them*/
