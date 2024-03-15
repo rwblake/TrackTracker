@@ -5,6 +5,7 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { Observable } from 'rxjs';
 import { IFriendship } from 'app/entities/friendship/friendship.model';
 import { IFriendRequest } from '../entities/friend-request/friend-request.model';
+import { IFriend } from './friend.model';
 
 export type EntityResponseType = HttpResponse<String>;
 export type EntityArrayResponseType = HttpResponse<IFriendRequest>;
@@ -20,7 +21,11 @@ export class FriendsService {
   }
 
   getFriendRequests(): Observable<IFriendRequest[]> {
-    return this.http.get<IFriendRequest[]>(this.resourceUrl);
+    return this.http.get<IFriendRequest[]>(this.resourceUrl + '/requests');
+  }
+
+  getFriends(): Observable<IFriend[]> {
+    return this.http.get<IFriend[]>(this.resourceUrl);
   }
 
   acceptFriendRequest(id: number): Observable<IFriendRequest[]> {

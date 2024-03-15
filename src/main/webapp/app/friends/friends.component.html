@@ -50,3 +50,27 @@
 <div class="container-fluid px-5" *ngIf="pulledData">
   <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
 </div>
+
+<!-- List friends requests -->
+<div *ngIf="friends && friends.length > 0">
+  <h2>Friends</h2>
+  <table class="table table-striped" aria-describedby="page-heading">
+    <thead>
+      <th scope="col">
+        <span>Name</span>
+      </th>
+      <th scope="col">
+        <span>Created</span>
+      </th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let friend of friends">
+        <td>
+          <img [src]="friend.friendAppUser?.avatarURL" width="64px" height="64px" />
+          {{ friend.friendAppUser?.internalUser?.login }}
+        </td>
+        <td>{{ friend?.createdAt?.toString() }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
