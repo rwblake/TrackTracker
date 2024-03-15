@@ -22,4 +22,12 @@ export class FriendsService {
   getFriendRequests(): Observable<IFriendRequest[]> {
     return this.http.get<IFriendRequest[]>(this.resourceUrl);
   }
+
+  acceptFriendRequest(id: number): Observable<IFriendRequest[]> {
+    return this.http.post<IFriendRequest[]>(this.resourceUrl + '/accept', id);
+  }
+
+  rejectFriendRequest(id: number): Observable<IFriendRequest[]> {
+    return this.http.post<IFriendRequest[]>(this.resourceUrl + '/reject', id);
+  }
 }

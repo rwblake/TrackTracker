@@ -50,4 +50,18 @@ export class FriendsComponent implements OnInit {
     // Reveal the lower section of the page.
     this.pulledData = true;
   }
+
+  // Accept a friend request by id
+  accept(id: number) {
+    this.friendsService.acceptFriendRequest(id).subscribe({
+      next: v => (this.friendRequests = v),
+    });
+  }
+
+  // Reject a friend request by id
+  reject(id: number) {
+    this.friendsService.rejectFriendRequest(id).subscribe({
+      next: v => (this.friendRequests = v),
+    });
+  }
 }

@@ -16,6 +16,17 @@
       <tr *ngFor="let friendRequest of friendRequests">
         <td>{{ friendRequest.initiatingAppUser?.internalUser?.login }}</td>
         <td>{{ friendRequest.createdAt?.toString() }}</td>
+
+        <td>
+          <div>
+            <button type="submit" (click)="accept(friendRequest.id)">
+              <fa-icon icon="check"></fa-icon>
+            </button>
+            <button type="submit" (click)="reject(friendRequest.id)">
+              <fa-icon icon="xmark"></fa-icon>
+            </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
