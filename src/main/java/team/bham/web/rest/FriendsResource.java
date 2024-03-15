@@ -2,6 +2,7 @@ package team.bham.web.rest;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,10 +11,7 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import team.bham.domain.AppUser;
-import team.bham.domain.FriendRequest;
-import team.bham.domain.Friendship;
-import team.bham.domain.User;
+import team.bham.domain.*;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.FriendRequestRepository;
 import team.bham.repository.FriendshipRepository;
@@ -54,6 +52,27 @@ public class FriendsResource {
     }
 
     @GetMapping("/friends")
+    public List<Friend> getFriendships() throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        // Get the friendships
+        List<Friendship> myFriendShips = friendshipRepository.findAllByFriendAcceptingOrFriendInitiating(currentUser, currentUser);
+        // Convert into Friend objects, so that we only deal with the other person in the friendship,
+        // rather than initiating and accepting AppUsers
+        List<Friend> myFriends = new ArrayList<>(myFriendShips.size());
+        Friend tmpFriend;
+        for (Friendship myFriendship : myFriendShips) {
+            if (myFriendship.getFriendInitiating().getId() == currentUser.getId()) {
+                tmpFriend = new Friend(myFriendship.getCreatedAt(), true, myFriendship.getFriendAccepting(), myFriendship.getId());
+            } else {
+                tmpFriend = new Friend(myFriendship.getCreatedAt(), false, myFriendship.getFriendInitiating(), myFriendship.getId());
+            }
+            myFriends.add(tmpFriend);
+        }
+        return myFriends;
+    }
+
+    @GetMapping("/friends/requests")
     public List<FriendRequest> getFriendRequests() throws Exception {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = getCurrentUser();

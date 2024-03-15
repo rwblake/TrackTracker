@@ -5,6 +5,7 @@ import { IFriendship } from 'app/entities/friendship/friendship.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FriendsService } from './friends.service';
 import { IFriendRequest } from '../entities/friend-request/friend-request.model';
+import { IFriend } from './friend.model';
 
 @Component({
   selector: 'jhi-friends',
@@ -21,17 +22,25 @@ export class FriendsComponent implements OnInit {
 
   createFriendRequestResponse: IFriendship | undefined;
   friendRequests?: IFriendRequest[];
+  friends?: IFriend[];
 
   constructor(private titleService: Title, private friendsService: FriendsService) {}
 
   ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
     this.loadFriendRequests();
+    this.loadFriends();
   }
 
   loadFriendRequests(): void {
     this.friendsService.getFriendRequests().subscribe({
       next: v => (this.friendRequests = v),
+    });
+  }
+
+  loadFriends(): void {
+    this.friendsService.getFriends().subscribe({
+      next: v => (this.friends = v),
     });
   }
 
@@ -49,6 +58,7 @@ export class FriendsComponent implements OnInit {
     this.createFriendRequestResponse = val;
     // Reveal the lower section of the page.
     this.pulledData = true;
+    this.loadFriends();
   }
 
   // Accept a friend request by id
