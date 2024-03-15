@@ -154,8 +154,8 @@ public class FriendsResource {
         // Check that they aren't already friends
         Long currentId = currentUser.getId();
         if (
-            this.friendshipRepository.existsByFriendInitiatingOrFriendAcceptingId(currentUser, currentId) ||
-            this.friendshipRepository.existsByFriendAcceptingOrFriendInitiatingId(currentUser, currentId)
+            this.friendshipRepository.existsByFriendInitiatingAndFriendAccepting(currentUser, requestUser) ||
+            this.friendshipRepository.existsByFriendInitiatingAndFriendAccepting(requestUser, currentUser)
         ) {
             throw new Exception("Users are already friends.");
         }
