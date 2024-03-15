@@ -3,6 +3,8 @@ package team.bham.web.rest;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,17 +56,17 @@ public class PlaylistInsightsResource {
         String spotifyID = PlaylistRetriever.parsePlaylistIDfromURL(url);
 
         team.bham.domain.Playlist myPlaylist;
-        if (playlistRepository.existsBySpotifyID(spotifyID)) {
-            myPlaylist = playlistRepository.findPlaylistBySpotifyID(spotifyID);
-        } else {
-            SpotifyApi spotifyApi = this.spotifyAuthorisationService.getSpotifyApiForCurrentUser();
-            Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
-
-            myPlaylist = playlistService.createPlaylist(playlist, spotifyApi);
-        }
+        myPlaylist = createPlaylistEntity(spotifyID);
 
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);
         Gson gson = new Gson();
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(reply));
+    }
+
+    private team.bham.domain.Playlist createPlaylistEntity(String spotifyID) throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyApi spotifyApi = this.spotifyAuthorisationService.getSpotifyApiForCurrentUser();
+        Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
+
+        return playlistService.createPlaylist(playlist, spotifyApi);
     }
 }

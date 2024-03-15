@@ -1,6 +1,8 @@
 package team.bham.service;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
@@ -28,15 +30,27 @@ public class PlaylistService {
 
     public Playlist createPlaylist(se.michaelthelin.spotify.model_objects.specification.Playlist playlist, SpotifyApi spotifyApi)
         throws IOException, ParseException, SpotifyWebApiException {
+        boolean playlistExists = false;
+        Playlist myPlaylist = null;
+
         // Check if playlist is already in the database
         String spotifyID = playlist.getId();
         if (playlistRepository.existsBySpotifyID(spotifyID)) {
-            // If yes: return that song
-            return playlistRepository.findPlaylistBySpotifyID(spotifyID);
+            // If yes, check if its data is outdated.
+            myPlaylist = playlistRepository.findPlaylistBySpotifyID(spotifyID);
+            long daysOld = Duration.between(myPlaylist.getPlaylistStats().getLastUpdated(), Instant.now()).toMinutes();
+            if (daysOld < 60) {
+                return myPlaylist;
+            } else {
+                playlistExists = true;
+            }
         }
 
         // Create new playlist object
-        Playlist myPlaylist = new Playlist();
+        if (!playlistExists) {
+            myPlaylist = new Playlist();
+        }
+
         myPlaylist.setSpotifyID(playlist.getId());
         myPlaylist.setName(playlist.getName());
         myPlaylist.setImageURL(playlist.getImages()[0].getUrl());
@@ -47,7 +61,7 @@ public class PlaylistService {
             myPlaylist.addSong(mySong);
         }
 
-        playlistStatsService.createPlaylistStats(myPlaylist);
+        playlistStatsService.createPlaylistStats(myPlaylist, playlistExists);
         playlistRepository.save(myPlaylist);
 
         return myPlaylist;

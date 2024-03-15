@@ -20,15 +20,16 @@ public class PlaylistStatsService {
         this.songRepository = songRepository;
     }
 
-    public PlaylistStats createPlaylistStats(Playlist playlist) {
+    public PlaylistStats createPlaylistStats(Playlist playlist, boolean refresh) {
         // Check if playlist stats have already been generated
         PlaylistStats myPlaylistStats = playlist.getPlaylistStats();
         if (myPlaylistStats != null) {
-            return myPlaylistStats;
+            if (!refresh) {
+                return myPlaylistStats;
+            }
+        } else { // Create new playlist stats object as it doesn't exist
+            myPlaylistStats = new PlaylistStats();
         }
-
-        // Create new playlist stats object
-        myPlaylistStats = new PlaylistStats();
 
         // Calculate stats
         PlaylistInsightCalculator.AllFeaturesStats stats = new PlaylistInsightCalculator.AllFeaturesStats(playlist);
