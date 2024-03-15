@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,8 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
+import team.bham.domain.User;
+import team.bham.repository.AppUserRepository;
 import team.bham.repository.PlaylistRepository;
 import team.bham.service.spotify.PlaylistRetriever;
 
@@ -22,10 +25,22 @@ public class PlaylistService {
     private final SongService songService;
     private final PlaylistStatsService playlistStatsService;
 
-    public PlaylistService(PlaylistRepository playlistRepository, SongService songService, PlaylistStatsService playlistStatsService) {
+    private final UserService userService;
+
+    private final AppUserRepository appUserRepository;
+
+    public PlaylistService(
+        PlaylistRepository playlistRepository,
+        SongService songService,
+        PlaylistStatsService playlistStatsService,
+        UserService userService,
+        AppUserRepository appUserRepository
+    ) {
         this.playlistRepository = playlistRepository;
         this.songService = songService;
         this.playlistStatsService = playlistStatsService;
+        this.userService = userService;
+        this.appUserRepository = appUserRepository;
     }
 
     public Playlist createPlaylist(se.michaelthelin.spotify.model_objects.specification.Playlist playlist, SpotifyApi spotifyApi)
@@ -38,8 +53,8 @@ public class PlaylistService {
         if (playlistRepository.existsBySpotifyID(spotifyID)) {
             // If yes, check if its data is outdated.
             myPlaylist = playlistRepository.findPlaylistBySpotifyID(spotifyID);
-            long daysOld = Duration.between(myPlaylist.getPlaylistStats().getLastUpdated(), Instant.now()).toMinutes();
-            if (daysOld < 60) {
+            long minutesOld = Duration.between(myPlaylist.getPlaylistStats().getLastUpdated(), Instant.now()).toMinutes();
+            if (minutesOld < 60) {
                 return myPlaylist;
             } else {
                 playlistExists = true;
@@ -51,6 +66,11 @@ public class PlaylistService {
             myPlaylist = new Playlist();
         }
 
+        // If there's a user logged in, make them the owner of the playlist!
+        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
+            myPlaylist.setAppUser(this.appUserRepository.getAppUserByInternalUser(userMaybe.get()));
+        }
         myPlaylist.setSpotifyID(playlist.getId());
         myPlaylist.setName(playlist.getName());
         myPlaylist.setImageURL(playlist.getImages()[0].getUrl());
