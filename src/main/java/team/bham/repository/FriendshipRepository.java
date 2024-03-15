@@ -18,7 +18,7 @@ import team.bham.domain.User;
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     public boolean existsByFriendInitiatingAndFriendAccepting(@NotNull AppUser friendInitiating, @NotNull AppUser friendAccepting);
 
-    public List<Friendship> findAllByFriendAcceptingOrFriendInitiating(@NotNull AppUser friendAccepting, @NotNull AppUser friendInitiating);
+    public Set<Friendship> findAllByFriendAcceptingOrFriendInitiating(@NotNull AppUser friendAccepting, @NotNull AppUser friendInitiating);
 
     Set<Friendship> findAllByAppUser(AppUser appUser);
 }

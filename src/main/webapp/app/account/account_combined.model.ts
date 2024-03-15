@@ -24,6 +24,7 @@ export interface Card {
   id: number;
   liked: boolean;
   metric?: CardType | null;
+  inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update';
   timeFrame?: string | null;
   metricValue?: number | null;
   timeGenerated?: dayjs.Dayjs;

@@ -32,7 +32,7 @@ import team.bham.repository.CardMetricRepository;
 class CardMetricResourceIT {
 
     private static final CardType DEFAULT_METRIC = CardType.LISTENING_DURATION;
-    private static final CardType UPDATED_METRIC = CardType.GENRE;
+    private static final CardType UPDATED_METRIC = CardType.TOP_GENRE;
 
     private static final String ENTITY_API_URL = "/api/card-metrics";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
