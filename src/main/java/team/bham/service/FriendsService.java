@@ -1,6 +1,7 @@
 package team.bham.service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import team.bham.domain.AppUser;
@@ -23,6 +24,6 @@ public class FriendsService {
     }
 
     public Set<Friendship> getUsersFriends(AppUser appUser) {
-        return friendshipRepository.findAllByAppUser(appUser);
+        return friendshipRepository.findAllByFriendAcceptingOrFriendInitiating(appUser, appUser);
     }
 }

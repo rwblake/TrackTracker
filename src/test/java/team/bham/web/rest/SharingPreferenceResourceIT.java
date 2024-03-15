@@ -33,7 +33,7 @@ import team.bham.repository.SharingPreferenceRepository;
 class SharingPreferenceResourceIT {
 
     private static final CardType DEFAULT_METRIC = CardType.LISTENING_DURATION;
-    private static final CardType UPDATED_METRIC = CardType.GENRE;
+    private static final CardType UPDATED_METRIC = CardType.TOP_GENRE;
 
     private static final VisibilityPreference DEFAULT_VISIBILITY = VisibilityPreference.GLOBAL;
     private static final VisibilityPreference UPDATED_VISIBILITY = VisibilityPreference.FRIENDS_OF_FRIENDS;

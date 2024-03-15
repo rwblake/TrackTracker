@@ -35,7 +35,7 @@ import team.bham.repository.CardRepository;
 class CardResourceIT {
 
     private static final CardType DEFAULT_METRIC = CardType.LISTENING_DURATION;
-    private static final CardType UPDATED_METRIC = CardType.GENRE;
+    private static final CardType UPDATED_METRIC = CardType.TOP_GENRE;
 
     private static final Duration DEFAULT_TIME_FRAME = Duration.ofHours(6);
     private static final Duration UPDATED_TIME_FRAME = Duration.ofHours(12);

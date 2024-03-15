@@ -56,13 +56,13 @@ public class FriendsResource {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = getCurrentUser();
         // Get the friendships
-        List<Friendship> myFriendShips = friendshipRepository.findAllByFriendAcceptingOrFriendInitiating(currentUser, currentUser);
+        Set<Friendship> myFriendShips = friendshipRepository.findAllByFriendAcceptingOrFriendInitiating(currentUser, currentUser);
         // Convert into Friend objects, so that we only deal with the other person in the friendship,
         // rather than initiating and accepting AppUsers
         List<Friend> myFriends = new ArrayList<>(myFriendShips.size());
         Friend tmpFriend;
         for (Friendship myFriendship : myFriendShips) {
-            if (myFriendship.getFriendInitiating().getId() == currentUser.getId()) {
+            if (myFriendship.getFriendInitiating().getId().longValue() == currentUser.getId().longValue()) {
                 tmpFriend = new Friend(myFriendship.getCreatedAt(), true, myFriendship.getFriendAccepting(), myFriendship.getId());
             } else {
                 tmpFriend = new Friend(myFriendship.getCreatedAt(), false, myFriendship.getFriendInitiating(), myFriendship.getId());
