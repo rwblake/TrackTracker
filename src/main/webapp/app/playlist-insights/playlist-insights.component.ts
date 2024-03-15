@@ -61,6 +61,14 @@ export class PlaylistInsightsComponent implements OnInit {
   acousticnessValue: number = 0;
   danceabilityValue: number = 0;
 
+  playlistURLStart: string = 'https://open.spotify.com/playlist/';
+  trackURLStart: string = 'https://open.spotify.com/track/';
+
+  happiestSongURL: string = '';
+  energeticSongURL: string = '';
+  sumsUpSongURL: string = '';
+  anomalousSongURL: string = '';
+
   constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
   response: PlaylistInsightsResponse | undefined;
 
@@ -107,6 +115,8 @@ export class PlaylistInsightsComponent implements OnInit {
     this.showWaitingMessage = false;
 
     this.response = val;
+
+    this.setCardURLs(this.response);
     this.addArtistsToChart(this.response.graphData.artistMaps);
     this.addYearsToChart(this.response.graphData.yearMaps);
     this.addDecadesToChart(this.response.graphData.decadeMaps);
@@ -119,6 +129,13 @@ export class PlaylistInsightsComponent implements OnInit {
 
     // Reveal the lower section of the page.
     this.pulledData = true;
+  }
+
+  setCardURLs(response: PlaylistInsightsResponse) {
+    this.happiestSongURL = this.trackURLStart + response.happiestSong.songSpotifyID;
+    this.energeticSongURL = this.trackURLStart + response.energeticSong.songSpotifyID;
+    this.sumsUpSongURL = this.trackURLStart + response.sumsUpSong.songSpotifyID;
+    this.anomalousSongURL = this.trackURLStart + response.anomalousSong.songSpotifyID;
   }
 
   addArtistsToChart(artistsToProportions: ArtistMapResponse[]) {

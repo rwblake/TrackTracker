@@ -100,22 +100,30 @@
         </div>
 
         <div class="statBox">
-          <div class="songCard">
-            <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
-            <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
-          </div>
-          <div class="songCard">
-            <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
-            <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
-          </div>
-          <div class="songCard">
-            <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
-            <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
-          </div>
-          <div class="songCard">
-            <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
-            <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
-          </div>
+          <a [href]="happiestSongURL" target="_blank">
+            <div class="songCard">
+              <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
+              <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+            </div>
+          </a>
+          <a [href]="energeticSongURL" target="_blank">
+            <div class="songCard">
+              <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
+              <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+            </div>
+          </a>
+          <a [href]="sumsUpSongURL" target="_blank">
+            <div class="songCard">
+              <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
+              <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
+            </div>
+          </a>
+          <a [href]="anomalousSongURL" target="_blank">
+            <div class="songCard">
+              <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
+              <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
+            </div>
+          </a>
         </div>
       </div>
 
@@ -196,7 +204,7 @@
             [xAxis]="true"
             [yAxis]="true"
             [showGridLines]="false"
-            [xAxisLabel]="'Decade'"
+            [xAxisLabel]="'Year'"
             [yAxisLabel]="'Number of Songs'"
             [scheme]="chartScheme"
           >
@@ -208,7 +216,7 @@
             [view]="[decadeChart.offsetWidth, 300]"
             [showXAxisLabel]="true"
             [showYAxisLabel]="true"
-            [rotateXAxisTicks]="true"
+            [rotateXAxisTicks]="false"
             [xAxis]="true"
             [yAxis]="true"
             [showGridLines]="false"

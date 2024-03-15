@@ -5,6 +5,15 @@ $translucent-bg: rgb(255, 255, 255, 0.1);
   gap: 36px;
 }
 
+// Adjustments for links on the selected song cards
+a {
+  color: white;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 .row {
   align-items: center;
 }
@@ -42,6 +51,10 @@ $translucent-bg: rgb(255, 255, 255, 0.1);
     margin-right: 16px;
     text-align: left;
     margin-bottom: 0;
+  }
+
+  a {
+    target: '_blank';
   }
 }
 
