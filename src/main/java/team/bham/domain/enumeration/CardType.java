@@ -41,4 +41,6 @@ public enum CardType {
     PLAYLIST_SUMS_UP,
 
     GENRE,
+
+    PINNED_FRIEND,
 }

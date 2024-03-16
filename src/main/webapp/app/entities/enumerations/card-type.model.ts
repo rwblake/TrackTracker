@@ -34,4 +34,7 @@ export enum CardType {
 
   // The card displays the song which best sums up a given playlist
   PLAYLIST_SUMS_UP = 'PLAYLIST_SUMS_UP',
+
+  // For pinned friends
+  PINNED_FRIEND = 'PINNED_FRIEND',
 }

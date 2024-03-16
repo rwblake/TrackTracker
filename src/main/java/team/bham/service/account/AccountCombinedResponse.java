@@ -21,7 +21,14 @@ public class AccountCombinedResponse implements Serializable {
     FeedResponse feed;
     List<FriendshipResponse> friends;
 
-    public AccountCombinedResponse(AppUser appUser, Set<team.bham.domain.Friendship> friends, Set<team.bham.domain.FeedCard> feedCards) {
+    List<AppUser> pinnedFriends;
+
+    public AccountCombinedResponse(
+        AppUser appUser,
+        Set<team.bham.domain.Friendship> friends,
+        Set<team.bham.domain.FeedCard> feedCards,
+        List<AppUser> pinnedFriends
+    ) {
         id = appUser.getId();
         spotifyID = appUser.getSpotifyID();
         avatarURL = appUser.getAvatarURL();
@@ -32,6 +39,7 @@ public class AccountCombinedResponse implements Serializable {
         feed = new FeedResponse(appUser.getFeed()); // TODO
         feed.cards = feedCards.stream().map(feedCard -> new FeedCardResponse(feedCard, appUser.getId())).collect(Collectors.toList());
         this.friends = friends.stream().map(friend -> new FriendshipResponse(friend, appUser.getId())).collect(Collectors.toList());
+        this.pinnedFriends = pinnedFriends;
     }
 
     static class FeedResponse implements Serializable {

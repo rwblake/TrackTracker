@@ -18,6 +18,8 @@
         </div>
       </button>
 
+      <div *ngIf="account_data.pinnedFriends == null || account_data.pinnedFriends.length == 0">You have no pinned friends.</div>
+
       <!--      <hr class="divider" />-->
 
       <!--      <button *ngFor="let friend of account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">-->

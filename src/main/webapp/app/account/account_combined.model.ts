@@ -1,5 +1,6 @@
 import dayjs from 'dayjs/esm';
 import { CardType } from '../entities/enumerations/card-type.model';
+import { IAppUser } from '../entities/app-user/app-user.model';
 
 // This interface combines all the relevant data for an account
 export interface Account_Combined {
@@ -12,6 +13,7 @@ export interface Account_Combined {
   userPreferencesID: number;
   feed: Feed;
   friends: Friendship[];
+  pinnedFriends: Pick<IAppUser, 'id' | 'internalUser' | 'avatarURL' | 'spotifyUsername'>[] | null;
 }
 
 interface Feed {
