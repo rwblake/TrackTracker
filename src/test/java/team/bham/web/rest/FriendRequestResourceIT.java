@@ -70,6 +70,8 @@ class FriendRequestResourceIT {
             appUser = TestUtil.findAll(em, AppUser.class).get(0);
         }
         friendRequest.setInitiatingAppUser(appUser);
+        // Add required entity
+        friendRequest.setToAppUser(appUser);
         return friendRequest;
     }
 
@@ -91,6 +93,8 @@ class FriendRequestResourceIT {
             appUser = TestUtil.findAll(em, AppUser.class).get(0);
         }
         friendRequest.setInitiatingAppUser(appUser);
+        // Add required entity
+        friendRequest.setToAppUser(appUser);
         return friendRequest;
     }
 

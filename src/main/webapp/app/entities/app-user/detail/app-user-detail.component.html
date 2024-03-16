@@ -56,11 +56,12 @@
             <a [routerLink]="['/feed', appUser.feed.id, 'view']">{{ appUser.feed.id }}</a>
           </div>
         </dd>
-        <dt><span>Blocked By User</span></dt>
+        <dt><span>Blocked User</span></dt>
         <dd>
-          <div *ngIf="appUser.blockedByUser">
-            <a [routerLink]="['/app-user', appUser.blockedByUser.id, 'view']">{{ appUser.blockedByUser.id }}</a>
-          </div>
+          <span *ngFor="let blockedUser of appUser.blockedUsers; let last = last">
+            <a [routerLink]="['/app-user', blockedUser.id, 'view']">{{ blockedUser.id }}</a
+            >{{ last ? '' : ', ' }}
+          </span>
         </dd>
       </dl>
 

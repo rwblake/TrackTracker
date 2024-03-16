@@ -19,11 +19,5 @@
                                  constraintName="fk_friendship__friend_accepting_id"
                                  referencedColumnNames="id"
                                  referencedTableName="app_user"/>
-
-        <addForeignKeyConstraint baseColumnNames="app_user_id"
-                                 baseTableName="friendship"
-                                 constraintName="fk_friendship__app_user_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="app_user"/>
     </changeSet>
 </databaseChangeLog>

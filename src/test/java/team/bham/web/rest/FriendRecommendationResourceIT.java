@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,8 +35,8 @@ class FriendRecommendationResourceIT {
     private static final Float DEFAULT_SIMILARITY = 0.0F;
     private static final Float UPDATED_SIMILARITY = 1F;
 
-    private static final LocalDate DEFAULT_CREATED_AT = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_CREATED_AT = LocalDate.now(ZoneId.systemDefault());
+    private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/friend-recommendations";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -73,6 +73,8 @@ class FriendRecommendationResourceIT {
             appUser = TestUtil.findAll(em, AppUser.class).get(0);
         }
         friendRecommendation.setAboutAppUser(appUser);
+        // Add required entity
+        friendRecommendation.setForAppUser(appUser);
         return friendRecommendation;
     }
 
@@ -94,6 +96,8 @@ class FriendRecommendationResourceIT {
             appUser = TestUtil.findAll(em, AppUser.class).get(0);
         }
         friendRecommendation.setAboutAppUser(appUser);
+        // Add required entity
+        friendRecommendation.setForAppUser(appUser);
         return friendRecommendation;
     }
 

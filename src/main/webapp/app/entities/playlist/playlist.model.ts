@@ -8,7 +8,7 @@ export interface IPlaylist {
   name?: string | null;
   imageURL?: string | null;
   playlistStats?: Pick<IPlaylistStats, 'id'> | null;
-  songs?: Pick<ISong, 'id' | 'name'>[] | null;
+  songs?: Pick<ISong, 'id'>[] | null;
   appUser?: Pick<IAppUser, 'id'> | null;
 }
 

@@ -14,8 +14,8 @@ import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/user.service';
 import { IUserPreferences } from 'app/entities/user-preferences/user-preferences.model';
 import { UserPreferencesService } from 'app/entities/user-preferences/service/user-preferences.service';
-import { ISpotifyToken } from 'app/admin/spotify-token/spotify-token.model';
-import { SpotifyTokenService } from 'app/admin/spotify-token/service/spotify-token.service';
+import { ISpotifyToken } from 'app/entities/spotify-token/spotify-token.model';
+import { SpotifyTokenService } from 'app/entities/spotify-token/service/spotify-token.service';
 import { IFeed } from 'app/entities/feed/feed.model';
 import { FeedService } from 'app/entities/feed/service/feed.service';
 
@@ -134,7 +134,7 @@ export class AppUserUpdateComponent implements OnInit {
     this.feedsCollection = this.feedService.addFeedToCollectionIfMissing<IFeed>(this.feedsCollection, appUser.feed);
     this.appUsersSharedCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
       this.appUsersSharedCollection,
-      appUser.blockedByUser
+      ...(appUser.blockedUsers ?? [])
     );
   }
 
@@ -178,7 +178,9 @@ export class AppUserUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
       .pipe(
-        map((appUsers: IAppUser[]) => this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.appUser?.blockedByUser))
+        map((appUsers: IAppUser[]) =>
+          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, ...(this.appUser?.blockedUsers ?? []))
+        )
       )
       .subscribe((appUsers: IAppUser[]) => (this.appUsersSharedCollection = appUsers));
   }

@@ -92,6 +92,12 @@ public class CacheConfiguration {
             createCache(cm, team.bham.domain.CardTemplate.class.getName() + ".metrics");
             createCache(cm, team.bham.domain.CardMetric.class.getName());
             createCache(cm, team.bham.domain.FeedCard.class.getName());
+            createCache(cm, team.bham.domain.Album.class.getName() + ".songs");
+            createCache(cm, team.bham.domain.AppUser.class.getName() + ".aboutFriendRecommendations");
+            createCache(cm, team.bham.domain.AppUser.class.getName() + ".intitiatingFriendRequests");
+            createCache(cm, team.bham.domain.AppUser.class.getName() + ".friendshipInitiateds");
+            createCache(cm, team.bham.domain.AppUser.class.getName() + ".friendshipAccepteds");
+            createCache(cm, team.bham.domain.AppUser.class.getName() + ".blockedByUsers");
             // jhipster-needle-ehcache-add-entry
         };
     }

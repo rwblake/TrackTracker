@@ -51,12 +51,14 @@ describe('Friendship Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call AppUser query and add missing value', () => {
       const friendship: IFriendship = { id: 456 };
-      const appUser: IAppUser = { id: 87140 };
-      friendship.appUser = appUser;
+      const friendInitiating: IAppUser = { id: 87140 };
+      friendship.friendInitiating = friendInitiating;
+      const friendAccepting: IAppUser = { id: 69504 };
+      friendship.friendAccepting = friendAccepting;
 
-      const appUserCollection: IAppUser[] = [{ id: 69504 }];
+      const appUserCollection: IAppUser[] = [{ id: 79501 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
-      const additionalAppUsers = [appUser];
+      const additionalAppUsers = [friendInitiating, friendAccepting];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
       jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -71,57 +73,18 @@ describe('Friendship Management Update Component', () => {
       expect(comp.appUsersSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call friendInitiating query and add missing value', () => {
+    it('Should update editForm', () => {
       const friendship: IFriendship = { id: 456 };
-      const friendInitiating: IAppUser = { id: 79501 };
+      const friendInitiating: IAppUser = { id: 66539 };
       friendship.friendInitiating = friendInitiating;
-
-      const friendInitiatingCollection: IAppUser[] = [{ id: 66539 }];
-      jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: friendInitiatingCollection })));
-      const expectedCollection: IAppUser[] = [friendInitiating, ...friendInitiatingCollection];
-      jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ friendship });
-      comp.ngOnInit();
-
-      expect(appUserService.query).toHaveBeenCalled();
-      expect(appUserService.addAppUserToCollectionIfMissing).toHaveBeenCalledWith(friendInitiatingCollection, friendInitiating);
-      expect(comp.friendInitiatingsCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call friendAccepting query and add missing value', () => {
-      const friendship: IFriendship = { id: 456 };
       const friendAccepting: IAppUser = { id: 21681 };
       friendship.friendAccepting = friendAccepting;
 
-      const friendAcceptingCollection: IAppUser[] = [{ id: 8040 }];
-      jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: friendAcceptingCollection })));
-      const expectedCollection: IAppUser[] = [friendAccepting, ...friendAcceptingCollection];
-      jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
-
       activatedRoute.data = of({ friendship });
       comp.ngOnInit();
 
-      expect(appUserService.query).toHaveBeenCalled();
-      expect(appUserService.addAppUserToCollectionIfMissing).toHaveBeenCalledWith(friendAcceptingCollection, friendAccepting);
-      expect(comp.friendAcceptingsCollection).toEqual(expectedCollection);
-    });
-
-    it('Should update editForm', () => {
-      const friendship: IFriendship = { id: 456 };
-      const friendInitiating: IAppUser = { id: 39840 };
-      friendship.friendInitiating = friendInitiating;
-      const friendAccepting: IAppUser = { id: 76003 };
-      friendship.friendAccepting = friendAccepting;
-      const appUser: IAppUser = { id: 23050 };
-      friendship.appUser = appUser;
-
-      activatedRoute.data = of({ friendship });
-      comp.ngOnInit();
-
-      expect(comp.friendInitiatingsCollection).toContain(friendInitiating);
-      expect(comp.friendAcceptingsCollection).toContain(friendAccepting);
-      expect(comp.appUsersSharedCollection).toContain(appUser);
+      expect(comp.appUsersSharedCollection).toContain(friendInitiating);
+      expect(comp.appUsersSharedCollection).toContain(friendAccepting);
       expect(comp.friendship).toEqual(friendship);
     });
   });

@@ -51,12 +51,14 @@ describe('FriendRequest Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call AppUser query and add missing value', () => {
       const friendRequest: IFriendRequest = { id: 456 };
-      const toAppUser: IAppUser = { id: 81259 };
+      const initiatingAppUser: IAppUser = { id: 81259 };
+      friendRequest.initiatingAppUser = initiatingAppUser;
+      const toAppUser: IAppUser = { id: 95423 };
       friendRequest.toAppUser = toAppUser;
 
-      const appUserCollection: IAppUser[] = [{ id: 95423 }];
+      const appUserCollection: IAppUser[] = [{ id: 78794 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
-      const additionalAppUsers = [toAppUser];
+      const additionalAppUsers = [initiatingAppUser, toAppUser];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
       jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -71,35 +73,17 @@ describe('FriendRequest Management Update Component', () => {
       expect(comp.appUsersSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call initiatingAppUser query and add missing value', () => {
-      const friendRequest: IFriendRequest = { id: 456 };
-      const initiatingAppUser: IAppUser = { id: 78794 };
-      friendRequest.initiatingAppUser = initiatingAppUser;
-
-      const initiatingAppUserCollection: IAppUser[] = [{ id: 47694 }];
-      jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: initiatingAppUserCollection })));
-      const expectedCollection: IAppUser[] = [initiatingAppUser, ...initiatingAppUserCollection];
-      jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ friendRequest });
-      comp.ngOnInit();
-
-      expect(appUserService.query).toHaveBeenCalled();
-      expect(appUserService.addAppUserToCollectionIfMissing).toHaveBeenCalledWith(initiatingAppUserCollection, initiatingAppUser);
-      expect(comp.initiatingAppUsersCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const friendRequest: IFriendRequest = { id: 456 };
-      const initiatingAppUser: IAppUser = { id: 8621 };
+      const initiatingAppUser: IAppUser = { id: 47694 };
       friendRequest.initiatingAppUser = initiatingAppUser;
-      const toAppUser: IAppUser = { id: 30103 };
+      const toAppUser: IAppUser = { id: 8621 };
       friendRequest.toAppUser = toAppUser;
 
       activatedRoute.data = of({ friendRequest });
       comp.ngOnInit();
 
-      expect(comp.initiatingAppUsersCollection).toContain(initiatingAppUser);
+      expect(comp.appUsersSharedCollection).toContain(initiatingAppUser);
       expect(comp.appUsersSharedCollection).toContain(toAppUser);
       expect(comp.friendRequest).toEqual(friendRequest);
     });

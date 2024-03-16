@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IFriendRecommendation, NewFriendRecommendation } from '../friend-recommendation.model';
 
 /**
@@ -14,14 +16,25 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type FriendRecommendationFormGroupInput = IFriendRecommendation | PartialWithRequiredKeyOf<NewFriendRecommendation>;
 
-type FriendRecommendationFormDefaults = Pick<NewFriendRecommendation, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IFriendRecommendation | NewFriendRecommendation> = Omit<T, 'createdAt'> & {
+  createdAt?: string | null;
+};
+
+type FriendRecommendationFormRawValue = FormValueOf<IFriendRecommendation>;
+
+type NewFriendRecommendationFormRawValue = FormValueOf<NewFriendRecommendation>;
+
+type FriendRecommendationFormDefaults = Pick<NewFriendRecommendation, 'id' | 'createdAt'>;
 
 type FriendRecommendationFormGroupContent = {
-  id: FormControl<IFriendRecommendation['id'] | NewFriendRecommendation['id']>;
-  similarity: FormControl<IFriendRecommendation['similarity']>;
-  createdAt: FormControl<IFriendRecommendation['createdAt']>;
-  aboutAppUser: FormControl<IFriendRecommendation['aboutAppUser']>;
-  forAppUser: FormControl<IFriendRecommendation['forAppUser']>;
+  id: FormControl<FriendRecommendationFormRawValue['id'] | NewFriendRecommendation['id']>;
+  similarity: FormControl<FriendRecommendationFormRawValue['similarity']>;
+  createdAt: FormControl<FriendRecommendationFormRawValue['createdAt']>;
+  aboutAppUser: FormControl<FriendRecommendationFormRawValue['aboutAppUser']>;
+  forAppUser: FormControl<FriendRecommendationFormRawValue['forAppUser']>;
 };
 
 export type FriendRecommendationFormGroup = FormGroup<FriendRecommendationFormGroupContent>;
@@ -31,10 +44,10 @@ export class FriendRecommendationFormService {
   createFriendRecommendationFormGroup(
     friendRecommendation: FriendRecommendationFormGroupInput = { id: null }
   ): FriendRecommendationFormGroup {
-    const friendRecommendationRawValue = {
+    const friendRecommendationRawValue = this.convertFriendRecommendationToFriendRecommendationRawValue({
       ...this.getFormDefaults(),
       ...friendRecommendation,
-    };
+    });
     return new FormGroup<FriendRecommendationFormGroupContent>({
       id: new FormControl(
         { value: friendRecommendationRawValue.id, disabled: true },
@@ -52,16 +65,23 @@ export class FriendRecommendationFormService {
       aboutAppUser: new FormControl(friendRecommendationRawValue.aboutAppUser, {
         validators: [Validators.required],
       }),
-      forAppUser: new FormControl(friendRecommendationRawValue.forAppUser),
+      forAppUser: new FormControl(friendRecommendationRawValue.forAppUser, {
+        validators: [Validators.required],
+      }),
     });
   }
 
   getFriendRecommendation(form: FriendRecommendationFormGroup): IFriendRecommendation | NewFriendRecommendation {
-    return form.getRawValue() as IFriendRecommendation | NewFriendRecommendation;
+    return this.convertFriendRecommendationRawValueToFriendRecommendation(
+      form.getRawValue() as FriendRecommendationFormRawValue | NewFriendRecommendationFormRawValue
+    );
   }
 
   resetForm(form: FriendRecommendationFormGroup, friendRecommendation: FriendRecommendationFormGroupInput): void {
-    const friendRecommendationRawValue = { ...this.getFormDefaults(), ...friendRecommendation };
+    const friendRecommendationRawValue = this.convertFriendRecommendationToFriendRecommendationRawValue({
+      ...this.getFormDefaults(),
+      ...friendRecommendation,
+    });
     form.reset(
       {
         ...friendRecommendationRawValue,
@@ -71,8 +91,29 @@ export class FriendRecommendationFormService {
   }
 
   private getFormDefaults(): FriendRecommendationFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdAt: currentTime,
+    };
+  }
+
+  private convertFriendRecommendationRawValueToFriendRecommendation(
+    rawFriendRecommendation: FriendRecommendationFormRawValue | NewFriendRecommendationFormRawValue
+  ): IFriendRecommendation | NewFriendRecommendation {
+    return {
+      ...rawFriendRecommendation,
+      createdAt: dayjs(rawFriendRecommendation.createdAt, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertFriendRecommendationToFriendRecommendationRawValue(
+    friendRecommendation: IFriendRecommendation | (Partial<NewFriendRecommendation> & FriendRecommendationFormDefaults)
+  ): FriendRecommendationFormRawValue | PartialWithRequiredKeyOf<NewFriendRecommendationFormRawValue> {
+    return {
+      ...friendRecommendation,
+      createdAt: friendRecommendation.createdAt ? friendRecommendation.createdAt.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

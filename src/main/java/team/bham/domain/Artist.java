@@ -62,7 +62,7 @@ public class Artist implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "album_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "artists" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "songs", "artists" }, allowSetters = true)
     private Set<Album> albums = new HashSet<>();
 
     @ManyToMany

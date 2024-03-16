@@ -92,9 +92,9 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="blockedByUser.id">
+          <th scope="col" jhiSortBy="blockedUser.id">
             <div class="d-flex">
-              <span>Blocked By User</span>
+              <span>Blocked User</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -121,7 +121,7 @@
           </td>
           <td>
             <div *ngIf="appUser.spotifyToken">
-              <a [routerLink]="['/admin/spotify-token', appUser.spotifyToken.id, 'view']">{{ appUser.spotifyToken.id }}</a>
+              <a [routerLink]="['/spotify-token', appUser.spotifyToken.id, 'view']">{{ appUser.spotifyToken.id }}</a>
             </div>
           </td>
           <td>
@@ -130,9 +130,10 @@
             </div>
           </td>
           <td>
-            <div *ngIf="appUser.blockedByUser">
-              <a [routerLink]="['/app-user', appUser.blockedByUser.id, 'view']">{{ appUser.blockedByUser.id }}</a>
-            </div>
+            <span *ngFor="let blockedUser of appUser.blockedUsers; let last = last">
+              <a class="form-control-static" [routerLink]="['/app-user', blockedUser.id, 'view']">{{ blockedUser.id }}</a
+              >{{ last ? '' : ', ' }}
+            </span>
           </td>
           <td class="text-end">
             <div class="btn-group">

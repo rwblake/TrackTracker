@@ -46,7 +46,24 @@ public class Album implements Serializable {
     @Column(name = "album_type")
     private AlbumType albumType;
 
-    @ManyToMany(mappedBy = "albums", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "album")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = {
+            "album",
+            "streams",
+            "happiestPlaylistStats",
+            "energeticPlaylistStats",
+            "sumsUpPlaylistStats",
+            "anomalousPlaylistStats",
+            "playlists",
+            "artists",
+        },
+        allowSetters = true
+    )
+    private Set<Song> songs = new HashSet<>();
+
+    @ManyToMany(mappedBy = "albums")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();
@@ -129,6 +146,37 @@ public class Album implements Serializable {
 
     public void setAlbumType(AlbumType albumType) {
         this.albumType = albumType;
+    }
+
+    public Set<Song> getSongs() {
+        return this.songs;
+    }
+
+    public void setSongs(Set<Song> songs) {
+        if (this.songs != null) {
+            this.songs.forEach(i -> i.setAlbum(null));
+        }
+        if (songs != null) {
+            songs.forEach(i -> i.setAlbum(this));
+        }
+        this.songs = songs;
+    }
+
+    public Album songs(Set<Song> songs) {
+        this.setSongs(songs);
+        return this;
+    }
+
+    public Album addSong(Song song) {
+        this.songs.add(song);
+        song.setAlbum(this);
+        return this;
+    }
+
+    public Album removeSong(Song song) {
+        this.songs.remove(song);
+        song.setAlbum(null);
+        return this;
     }
 
     public Set<Artist> getArtists() {

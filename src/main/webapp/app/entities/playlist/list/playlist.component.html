@@ -84,7 +84,7 @@
           </td>
           <td>{{ playlist.spotifyID }}</td>
           <td>{{ playlist.name }}</td>
-          <td><img [src]="playlist.imageURL" alt="playlist picture" style="max-height: 180px" /></td>
+          <td>{{ playlist.imageURL }}</td>
           <td>
             <div *ngIf="playlist.playlistStats">
               <a [routerLink]="['/playlist-stats', playlist.playlistStats.id, 'view']">{{ playlist.playlistStats.id }}</a>
@@ -92,7 +92,7 @@
           </td>
           <td>
             <span *ngFor="let song of playlist.songs; let last = last">
-              <a class="form-control-static" [routerLink]="['/song', song.id, 'view']">{{ song.name }}</a
+              <a class="form-control-static" [routerLink]="['/song', song.id, 'view']">{{ song.id }}</a
               >{{ last ? '' : ', ' }}
             </span>
           </td>

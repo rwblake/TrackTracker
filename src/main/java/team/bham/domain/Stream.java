@@ -29,7 +29,7 @@ public class Stream implements Serializable {
     @Column(name = "played_at", nullable = false)
     private Instant playedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(
         value = {
@@ -46,26 +46,25 @@ public class Stream implements Serializable {
     )
     private Song song;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )

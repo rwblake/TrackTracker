@@ -14,7 +14,7 @@
     },
     {
       "fieldName": "createdAt",
-      "fieldType": "LocalDate",
+      "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     }
   ],
@@ -29,16 +29,16 @@
       "javadoc": "Each FriendRecommendation relates to the AppUser recommended.",
       "otherEntityName": "appUser",
       "otherEntityRelationshipName": "aboutFriendRecommendation",
-      "ownerSide": true,
       "relationshipName": "aboutAppUser",
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
     },
     {
       "otherEntityName": "appUser",
       "otherEntityRelationshipName": "forFriendRecommendation",
       "relationshipName": "forAppUser",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "service": "no"

@@ -9,8 +9,4 @@ import team.bham.domain.Album;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AlbumRepository extends JpaRepository<Album, Long> {
-    public Boolean existsBySpotifyID(String spotifyID);
-
-    public Album findAlbumBySpotifyID(String spotifyID);
-}
+public interface AlbumRepository extends JpaRepository<Album, Long> {}

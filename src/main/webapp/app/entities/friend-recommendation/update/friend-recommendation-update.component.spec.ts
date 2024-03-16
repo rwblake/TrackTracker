@@ -51,12 +51,14 @@ describe('FriendRecommendation Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call AppUser query and add missing value', () => {
       const friendRecommendation: IFriendRecommendation = { id: 456 };
-      const forAppUser: IAppUser = { id: 19197 };
+      const aboutAppUser: IAppUser = { id: 19197 };
+      friendRecommendation.aboutAppUser = aboutAppUser;
+      const forAppUser: IAppUser = { id: 68485 };
       friendRecommendation.forAppUser = forAppUser;
 
-      const appUserCollection: IAppUser[] = [{ id: 68485 }];
+      const appUserCollection: IAppUser[] = [{ id: 13361 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
-      const additionalAppUsers = [forAppUser];
+      const additionalAppUsers = [aboutAppUser, forAppUser];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
       jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -71,35 +73,17 @@ describe('FriendRecommendation Management Update Component', () => {
       expect(comp.appUsersSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call aboutAppUser query and add missing value', () => {
-      const friendRecommendation: IFriendRecommendation = { id: 456 };
-      const aboutAppUser: IAppUser = { id: 13361 };
-      friendRecommendation.aboutAppUser = aboutAppUser;
-
-      const aboutAppUserCollection: IAppUser[] = [{ id: 38674 }];
-      jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: aboutAppUserCollection })));
-      const expectedCollection: IAppUser[] = [aboutAppUser, ...aboutAppUserCollection];
-      jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ friendRecommendation });
-      comp.ngOnInit();
-
-      expect(appUserService.query).toHaveBeenCalled();
-      expect(appUserService.addAppUserToCollectionIfMissing).toHaveBeenCalledWith(aboutAppUserCollection, aboutAppUser);
-      expect(comp.aboutAppUsersCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const friendRecommendation: IFriendRecommendation = { id: 456 };
-      const aboutAppUser: IAppUser = { id: 7362 };
+      const aboutAppUser: IAppUser = { id: 38674 };
       friendRecommendation.aboutAppUser = aboutAppUser;
-      const forAppUser: IAppUser = { id: 42575 };
+      const forAppUser: IAppUser = { id: 7362 };
       friendRecommendation.forAppUser = forAppUser;
 
       activatedRoute.data = of({ friendRecommendation });
       comp.ngOnInit();
 
-      expect(comp.aboutAppUsersCollection).toContain(aboutAppUser);
+      expect(comp.appUsersSharedCollection).toContain(aboutAppUser);
       expect(comp.appUsersSharedCollection).toContain(forAppUser);
       expect(comp.friendRecommendation).toEqual(friendRecommendation);
     });

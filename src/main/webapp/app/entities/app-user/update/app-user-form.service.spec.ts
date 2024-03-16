@@ -29,7 +29,8 @@ describe('AppUser Form Service', () => {
             userPreferences: expect.any(Object),
             spotifyToken: expect.any(Object),
             feed: expect.any(Object),
-            blockedByUser: expect.any(Object),
+            blockedUsers: expect.any(Object),
+            blockedByUsers: expect.any(Object),
           })
         );
       });
@@ -49,7 +50,8 @@ describe('AppUser Form Service', () => {
             userPreferences: expect.any(Object),
             spotifyToken: expect.any(Object),
             feed: expect.any(Object),
-            blockedByUser: expect.any(Object),
+            blockedUsers: expect.any(Object),
+            blockedByUsers: expect.any(Object),
           })
         );
       });

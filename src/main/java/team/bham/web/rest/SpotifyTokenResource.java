@@ -13,12 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.SpotifyToken;
 import team.bham.repository.SpotifyTokenRepository;
-import team.bham.security.AuthoritiesConstants;
 import team.bham.web.rest.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -27,7 +25,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * REST controller for managing {@link team.bham.domain.SpotifyToken}.
  */
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
 @Transactional
 public class SpotifyTokenResource {
 
@@ -52,7 +50,6 @@ public class SpotifyTokenResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/spotify-tokens")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<SpotifyToken> createSpotifyToken(@Valid @RequestBody SpotifyToken spotifyToken) throws URISyntaxException {
         log.debug("REST request to save SpotifyToken : {}", spotifyToken);
         if (spotifyToken.getId() != null) {
@@ -76,7 +73,6 @@ public class SpotifyTokenResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/spotify-tokens/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<SpotifyToken> updateSpotifyToken(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody SpotifyToken spotifyToken
@@ -112,7 +108,6 @@ public class SpotifyTokenResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/spotify-tokens/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<SpotifyToken> partialUpdateSpotifyToken(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody SpotifyToken spotifyToken
@@ -165,7 +160,6 @@ public class SpotifyTokenResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of spotifyTokens in body.
      */
     @GetMapping("/spotify-tokens")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public List<SpotifyToken> getAllSpotifyTokens(@RequestParam(required = false) String filter) {
         if ("appuser-is-null".equals(filter)) {
             log.debug("REST request to get all SpotifyTokens where appUser is null");
@@ -185,7 +179,6 @@ public class SpotifyTokenResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the spotifyToken, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/spotify-tokens/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<SpotifyToken> getSpotifyToken(@PathVariable Long id) {
         log.debug("REST request to get SpotifyToken : {}", id);
         Optional<SpotifyToken> spotifyToken = spotifyTokenRepository.findById(id);
@@ -199,7 +192,6 @@ public class SpotifyTokenResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/spotify-tokens/{id}")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSpotifyToken(@PathVariable Long id) {
         log.debug("REST request to delete SpotifyToken : {}", id);
         spotifyTokenRepository.deleteById(id);

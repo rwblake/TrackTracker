@@ -9,8 +9,4 @@ import team.bham.domain.Song;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface SongRepository extends JpaRepository<Song, Long> {
-    public boolean existsBySpotifyID(String spotifyID);
-
-    public Song findSongBySpotifyID(String spotifyID);
-}
+public interface SongRepository extends JpaRepository<Song, Long> {}

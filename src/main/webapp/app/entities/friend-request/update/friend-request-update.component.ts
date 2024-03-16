@@ -19,7 +19,6 @@ export class FriendRequestUpdateComponent implements OnInit {
   friendRequest: IFriendRequest | null = null;
 
   appUsersSharedCollection: IAppUser[] = [];
-  initiatingAppUsersCollection: IAppUser[] = [];
 
   editForm: FriendRequestFormGroup = this.friendRequestFormService.createFriendRequestFormGroup();
 
@@ -82,11 +81,8 @@ export class FriendRequestUpdateComponent implements OnInit {
 
     this.appUsersSharedCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
       this.appUsersSharedCollection,
+      friendRequest.initiatingAppUser,
       friendRequest.toAppUser
-    );
-    this.initiatingAppUsersCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
-      this.initiatingAppUsersCollection,
-      friendRequest.initiatingAppUser
     );
   }
 
@@ -96,19 +92,13 @@ export class FriendRequestUpdateComponent implements OnInit {
       .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
       .pipe(
         map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendRequest?.toAppUser)
+          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
+            appUsers,
+            this.friendRequest?.initiatingAppUser,
+            this.friendRequest?.toAppUser
+          )
         )
       )
       .subscribe((appUsers: IAppUser[]) => (this.appUsersSharedCollection = appUsers));
-
-    this.appUserService
-      .query({ filter: 'intitiatingfriendrequest-is-null' })
-      .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
-      .pipe(
-        map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendRequest?.initiatingAppUser)
-        )
-      )
-      .subscribe((appUsers: IAppUser[]) => (this.initiatingAppUsersCollection = appUsers));
   }
 }

@@ -65,8 +65,8 @@ class SongResourceIT {
     private static final Float DEFAULT_LIVENESS = 0.0F;
     private static final Float UPDATED_LIVENESS = 1F;
 
-    private static final Float DEFAULT_LOUDNESS = 0.0F;
-    private static final Float UPDATED_LOUDNESS = 1F;
+    private static final Float DEFAULT_LOUDNESS = 1F;
+    private static final Float UPDATED_LOUDNESS = 2F;
 
     private static final Boolean DEFAULT_MODE = false;
     private static final Boolean UPDATED_MODE = true;

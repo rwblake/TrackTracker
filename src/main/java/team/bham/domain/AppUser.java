@@ -49,73 +49,28 @@ public class AppUser implements Serializable {
     @Column(name = "spotify_username", nullable = false)
     private String spotifyUsername;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
     private User internalUser;
 
     @JsonIgnoreProperties(value = { "sharingPreferences", "appUser" }, allowSetters = true)
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
     private UserPreferences userPreferences;
 
     @JsonIgnoreProperties(value = { "appUser" }, allowSetters = true)
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
     private SpotifyToken spotifyToken;
 
     @JsonIgnoreProperties(value = { "cards", "appUser" }, allowSetters = true)
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
     private Feed feed;
-
-    @OneToMany(mappedBy = "appUser")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting", "appUser" }, allowSetters = true)
-    private Set<Friendship> friends = new HashSet<>();
-
-    @OneToMany(mappedBy = "toAppUser")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
-    private Set<FriendRequest> toFriendRequests = new HashSet<>();
-
-    @OneToMany(mappedBy = "forAppUser")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
-    private Set<FriendRecommendation> forFriendRecommendations = new HashSet<>();
-
-    /**
-     * Blocked users are related to the user who blocked them.
-     */
-    @Schema(description = "Blocked users are related to the user who blocked them.")
-    @OneToMany(mappedBy = "blockedByUser")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(
-        value = {
-            "internalUser",
-            "userPreferences",
-            "spotifyToken",
-            "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
-            "playlists",
-            "streams",
-            "cards",
-            "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
-        },
-        allowSetters = true
-    )
-    private Set<AppUser> blockedUsers = new HashSet<>();
 
     @OneToMany(mappedBy = "appUser")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -137,56 +92,94 @@ public class AppUser implements Serializable {
     @JsonIgnoreProperties(value = { "metrics", "appUser" }, allowSetters = true)
     private Set<CardTemplate> cardTemplates = new HashSet<>();
 
-    @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
-    @OneToOne(mappedBy = "aboutAppUser")
-    private FriendRecommendation aboutFriendRecommendation;
-
-    @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
-    @OneToOne(mappedBy = "initiatingAppUser")
-    private FriendRequest intitiatingFriendRequest;
-
-    @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting", "appUser" }, allowSetters = true)
-    @OneToOne(mappedBy = "friendInitiating")
-    private Friendship friendshipInitiated;
-
-    @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting", "appUser" }, allowSetters = true)
-    @OneToOne(mappedBy = "friendAccepting")
-    private Friendship friendshipAccepted;
-
-    @ManyToOne
+    /**
+     * Blocked users are related to the user who blocked them.
+     */
+    @Schema(description = "Blocked users are related to the user who blocked them.")
+    @ManyToMany
+    @JoinTable(
+        name = "rel_app_user__blocked_user",
+        joinColumns = @JoinColumn(name = "app_user_id"),
+        inverseJoinColumns = @JoinColumn(name = "blocked_user_id")
+    )
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
-    private AppUser blockedByUser;
+    private Set<AppUser> blockedUsers = new HashSet<>();
 
-    /** @deprecated Prefer the new constructor which initialises required fields of the entity */
-    @Deprecated
-    public AppUser() {}
+    @OneToMany(mappedBy = "aboutAppUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
+    private Set<FriendRecommendation> aboutFriendRecommendations = new HashSet<>();
 
-    /** Used to establish initial required variables */
-    public AppUser(String spotifyID, SpotifyToken spotifyToken) {
-        this.spotifyID = spotifyID;
-        this.spotifyToken = spotifyToken;
-    }
+    @OneToMany(mappedBy = "forAppUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
+    private Set<FriendRecommendation> forFriendRecommendations = new HashSet<>();
+
+    @OneToMany(mappedBy = "initiatingAppUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
+    private Set<FriendRequest> intitiatingFriendRequests = new HashSet<>();
+
+    @OneToMany(mappedBy = "toAppUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
+    private Set<FriendRequest> toFriendRequests = new HashSet<>();
+
+    @OneToMany(mappedBy = "friendInitiating")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting" }, allowSetters = true)
+    private Set<Friendship> friendshipInitiateds = new HashSet<>();
+
+    @OneToMany(mappedBy = "friendAccepting")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting" }, allowSetters = true)
+    private Set<Friendship> friendshipAccepteds = new HashSet<>();
+
+    @ManyToMany(mappedBy = "blockedUsers")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = {
+            "internalUser",
+            "userPreferences",
+            "spotifyToken",
+            "feed",
+            "playlists",
+            "streams",
+            "cards",
+            "cardTemplates",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
+        },
+        allowSetters = true
+    )
+    private Set<AppUser> blockedByUsers = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -320,130 +313,6 @@ public class AppUser implements Serializable {
         return this;
     }
 
-    public Set<Friendship> getFriends() {
-        return this.friends;
-    }
-
-    public void setFriends(Set<Friendship> friendships) {
-        if (this.friends != null) {
-            this.friends.forEach(i -> i.setAppUser(null));
-        }
-        if (friendships != null) {
-            friendships.forEach(i -> i.setAppUser(this));
-        }
-        this.friends = friendships;
-    }
-
-    public AppUser friends(Set<Friendship> friendships) {
-        this.setFriends(friendships);
-        return this;
-    }
-
-    public AppUser addFriend(Friendship friendship) {
-        this.friends.add(friendship);
-        friendship.setAppUser(this);
-        return this;
-    }
-
-    public AppUser removeFriend(Friendship friendship) {
-        this.friends.remove(friendship);
-        friendship.setAppUser(null);
-        return this;
-    }
-
-    public Set<FriendRequest> getToFriendRequests() {
-        return this.toFriendRequests;
-    }
-
-    public void setToFriendRequests(Set<FriendRequest> friendRequests) {
-        if (this.toFriendRequests != null) {
-            this.toFriendRequests.forEach(i -> i.setToAppUser(null));
-        }
-        if (friendRequests != null) {
-            friendRequests.forEach(i -> i.setToAppUser(this));
-        }
-        this.toFriendRequests = friendRequests;
-    }
-
-    public AppUser toFriendRequests(Set<FriendRequest> friendRequests) {
-        this.setToFriendRequests(friendRequests);
-        return this;
-    }
-
-    public AppUser addToFriendRequest(FriendRequest friendRequest) {
-        this.toFriendRequests.add(friendRequest);
-        friendRequest.setToAppUser(this);
-        return this;
-    }
-
-    public AppUser removeToFriendRequest(FriendRequest friendRequest) {
-        this.toFriendRequests.remove(friendRequest);
-        friendRequest.setToAppUser(null);
-        return this;
-    }
-
-    public Set<FriendRecommendation> getForFriendRecommendations() {
-        return this.forFriendRecommendations;
-    }
-
-    public void setForFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
-        if (this.forFriendRecommendations != null) {
-            this.forFriendRecommendations.forEach(i -> i.setForAppUser(null));
-        }
-        if (friendRecommendations != null) {
-            friendRecommendations.forEach(i -> i.setForAppUser(this));
-        }
-        this.forFriendRecommendations = friendRecommendations;
-    }
-
-    public AppUser forFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
-        this.setForFriendRecommendations(friendRecommendations);
-        return this;
-    }
-
-    public AppUser addForFriendRecommendation(FriendRecommendation friendRecommendation) {
-        this.forFriendRecommendations.add(friendRecommendation);
-        friendRecommendation.setForAppUser(this);
-        return this;
-    }
-
-    public AppUser removeForFriendRecommendation(FriendRecommendation friendRecommendation) {
-        this.forFriendRecommendations.remove(friendRecommendation);
-        friendRecommendation.setForAppUser(null);
-        return this;
-    }
-
-    public Set<AppUser> getBlockedUsers() {
-        return this.blockedUsers;
-    }
-
-    public void setBlockedUsers(Set<AppUser> appUsers) {
-        if (this.blockedUsers != null) {
-            this.blockedUsers.forEach(i -> i.setBlockedByUser(null));
-        }
-        if (appUsers != null) {
-            appUsers.forEach(i -> i.setBlockedByUser(this));
-        }
-        this.blockedUsers = appUsers;
-    }
-
-    public AppUser blockedUsers(Set<AppUser> appUsers) {
-        this.setBlockedUsers(appUsers);
-        return this;
-    }
-
-    public AppUser addBlockedUser(AppUser appUser) {
-        this.blockedUsers.add(appUser);
-        appUser.setBlockedByUser(this);
-        return this;
-    }
-
-    public AppUser removeBlockedUser(AppUser appUser) {
-        this.blockedUsers.remove(appUser);
-        appUser.setBlockedByUser(null);
-        return this;
-    }
-
     public Set<Playlist> getPlaylists() {
         return this.playlists;
     }
@@ -568,92 +437,245 @@ public class AppUser implements Serializable {
         return this;
     }
 
-    public FriendRecommendation getAboutFriendRecommendation() {
-        return this.aboutFriendRecommendation;
+    public Set<AppUser> getBlockedUsers() {
+        return this.blockedUsers;
     }
 
-    public void setAboutFriendRecommendation(FriendRecommendation friendRecommendation) {
-        if (this.aboutFriendRecommendation != null) {
-            this.aboutFriendRecommendation.setAboutAppUser(null);
-        }
-        if (friendRecommendation != null) {
-            friendRecommendation.setAboutAppUser(this);
-        }
-        this.aboutFriendRecommendation = friendRecommendation;
+    public void setBlockedUsers(Set<AppUser> appUsers) {
+        this.blockedUsers = appUsers;
     }
 
-    public AppUser aboutFriendRecommendation(FriendRecommendation friendRecommendation) {
-        this.setAboutFriendRecommendation(friendRecommendation);
+    public AppUser blockedUsers(Set<AppUser> appUsers) {
+        this.setBlockedUsers(appUsers);
         return this;
     }
 
-    public FriendRequest getIntitiatingFriendRequest() {
-        return this.intitiatingFriendRequest;
-    }
-
-    public void setIntitiatingFriendRequest(FriendRequest friendRequest) {
-        if (this.intitiatingFriendRequest != null) {
-            this.intitiatingFriendRequest.setInitiatingAppUser(null);
-        }
-        if (friendRequest != null) {
-            friendRequest.setInitiatingAppUser(this);
-        }
-        this.intitiatingFriendRequest = friendRequest;
-    }
-
-    public AppUser intitiatingFriendRequest(FriendRequest friendRequest) {
-        this.setIntitiatingFriendRequest(friendRequest);
+    public AppUser addBlockedUser(AppUser appUser) {
+        this.blockedUsers.add(appUser);
+        appUser.getBlockedByUsers().add(this);
         return this;
     }
 
-    public Friendship getFriendshipInitiated() {
-        return this.friendshipInitiated;
-    }
-
-    public void setFriendshipInitiated(Friendship friendship) {
-        if (this.friendshipInitiated != null) {
-            this.friendshipInitiated.setFriendInitiating(null);
-        }
-        if (friendship != null) {
-            friendship.setFriendInitiating(this);
-        }
-        this.friendshipInitiated = friendship;
-    }
-
-    public AppUser friendshipInitiated(Friendship friendship) {
-        this.setFriendshipInitiated(friendship);
+    public AppUser removeBlockedUser(AppUser appUser) {
+        this.blockedUsers.remove(appUser);
+        appUser.getBlockedByUsers().remove(this);
         return this;
     }
 
-    public Friendship getFriendshipAccepted() {
-        return this.friendshipAccepted;
+    public Set<FriendRecommendation> getAboutFriendRecommendations() {
+        return this.aboutFriendRecommendations;
     }
 
-    public void setFriendshipAccepted(Friendship friendship) {
-        if (this.friendshipAccepted != null) {
-            this.friendshipAccepted.setFriendAccepting(null);
+    public void setAboutFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
+        if (this.aboutFriendRecommendations != null) {
+            this.aboutFriendRecommendations.forEach(i -> i.setAboutAppUser(null));
         }
-        if (friendship != null) {
-            friendship.setFriendAccepting(this);
+        if (friendRecommendations != null) {
+            friendRecommendations.forEach(i -> i.setAboutAppUser(this));
         }
-        this.friendshipAccepted = friendship;
+        this.aboutFriendRecommendations = friendRecommendations;
     }
 
-    public AppUser friendshipAccepted(Friendship friendship) {
-        this.setFriendshipAccepted(friendship);
+    public AppUser aboutFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
+        this.setAboutFriendRecommendations(friendRecommendations);
         return this;
     }
 
-    public AppUser getBlockedByUser() {
-        return this.blockedByUser;
+    public AppUser addAboutFriendRecommendation(FriendRecommendation friendRecommendation) {
+        this.aboutFriendRecommendations.add(friendRecommendation);
+        friendRecommendation.setAboutAppUser(this);
+        return this;
     }
 
-    public void setBlockedByUser(AppUser appUser) {
-        this.blockedByUser = appUser;
+    public AppUser removeAboutFriendRecommendation(FriendRecommendation friendRecommendation) {
+        this.aboutFriendRecommendations.remove(friendRecommendation);
+        friendRecommendation.setAboutAppUser(null);
+        return this;
     }
 
-    public AppUser blockedByUser(AppUser appUser) {
-        this.setBlockedByUser(appUser);
+    public Set<FriendRecommendation> getForFriendRecommendations() {
+        return this.forFriendRecommendations;
+    }
+
+    public void setForFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
+        if (this.forFriendRecommendations != null) {
+            this.forFriendRecommendations.forEach(i -> i.setForAppUser(null));
+        }
+        if (friendRecommendations != null) {
+            friendRecommendations.forEach(i -> i.setForAppUser(this));
+        }
+        this.forFriendRecommendations = friendRecommendations;
+    }
+
+    public AppUser forFriendRecommendations(Set<FriendRecommendation> friendRecommendations) {
+        this.setForFriendRecommendations(friendRecommendations);
+        return this;
+    }
+
+    public AppUser addForFriendRecommendation(FriendRecommendation friendRecommendation) {
+        this.forFriendRecommendations.add(friendRecommendation);
+        friendRecommendation.setForAppUser(this);
+        return this;
+    }
+
+    public AppUser removeForFriendRecommendation(FriendRecommendation friendRecommendation) {
+        this.forFriendRecommendations.remove(friendRecommendation);
+        friendRecommendation.setForAppUser(null);
+        return this;
+    }
+
+    public Set<FriendRequest> getIntitiatingFriendRequests() {
+        return this.intitiatingFriendRequests;
+    }
+
+    public void setIntitiatingFriendRequests(Set<FriendRequest> friendRequests) {
+        if (this.intitiatingFriendRequests != null) {
+            this.intitiatingFriendRequests.forEach(i -> i.setInitiatingAppUser(null));
+        }
+        if (friendRequests != null) {
+            friendRequests.forEach(i -> i.setInitiatingAppUser(this));
+        }
+        this.intitiatingFriendRequests = friendRequests;
+    }
+
+    public AppUser intitiatingFriendRequests(Set<FriendRequest> friendRequests) {
+        this.setIntitiatingFriendRequests(friendRequests);
+        return this;
+    }
+
+    public AppUser addIntitiatingFriendRequest(FriendRequest friendRequest) {
+        this.intitiatingFriendRequests.add(friendRequest);
+        friendRequest.setInitiatingAppUser(this);
+        return this;
+    }
+
+    public AppUser removeIntitiatingFriendRequest(FriendRequest friendRequest) {
+        this.intitiatingFriendRequests.remove(friendRequest);
+        friendRequest.setInitiatingAppUser(null);
+        return this;
+    }
+
+    public Set<FriendRequest> getToFriendRequests() {
+        return this.toFriendRequests;
+    }
+
+    public void setToFriendRequests(Set<FriendRequest> friendRequests) {
+        if (this.toFriendRequests != null) {
+            this.toFriendRequests.forEach(i -> i.setToAppUser(null));
+        }
+        if (friendRequests != null) {
+            friendRequests.forEach(i -> i.setToAppUser(this));
+        }
+        this.toFriendRequests = friendRequests;
+    }
+
+    public AppUser toFriendRequests(Set<FriendRequest> friendRequests) {
+        this.setToFriendRequests(friendRequests);
+        return this;
+    }
+
+    public AppUser addToFriendRequest(FriendRequest friendRequest) {
+        this.toFriendRequests.add(friendRequest);
+        friendRequest.setToAppUser(this);
+        return this;
+    }
+
+    public AppUser removeToFriendRequest(FriendRequest friendRequest) {
+        this.toFriendRequests.remove(friendRequest);
+        friendRequest.setToAppUser(null);
+        return this;
+    }
+
+    public Set<Friendship> getFriendshipInitiateds() {
+        return this.friendshipInitiateds;
+    }
+
+    public void setFriendshipInitiateds(Set<Friendship> friendships) {
+        if (this.friendshipInitiateds != null) {
+            this.friendshipInitiateds.forEach(i -> i.setFriendInitiating(null));
+        }
+        if (friendships != null) {
+            friendships.forEach(i -> i.setFriendInitiating(this));
+        }
+        this.friendshipInitiateds = friendships;
+    }
+
+    public AppUser friendshipInitiateds(Set<Friendship> friendships) {
+        this.setFriendshipInitiateds(friendships);
+        return this;
+    }
+
+    public AppUser addFriendshipInitiated(Friendship friendship) {
+        this.friendshipInitiateds.add(friendship);
+        friendship.setFriendInitiating(this);
+        return this;
+    }
+
+    public AppUser removeFriendshipInitiated(Friendship friendship) {
+        this.friendshipInitiateds.remove(friendship);
+        friendship.setFriendInitiating(null);
+        return this;
+    }
+
+    public Set<Friendship> getFriendshipAccepteds() {
+        return this.friendshipAccepteds;
+    }
+
+    public void setFriendshipAccepteds(Set<Friendship> friendships) {
+        if (this.friendshipAccepteds != null) {
+            this.friendshipAccepteds.forEach(i -> i.setFriendAccepting(null));
+        }
+        if (friendships != null) {
+            friendships.forEach(i -> i.setFriendAccepting(this));
+        }
+        this.friendshipAccepteds = friendships;
+    }
+
+    public AppUser friendshipAccepteds(Set<Friendship> friendships) {
+        this.setFriendshipAccepteds(friendships);
+        return this;
+    }
+
+    public AppUser addFriendshipAccepted(Friendship friendship) {
+        this.friendshipAccepteds.add(friendship);
+        friendship.setFriendAccepting(this);
+        return this;
+    }
+
+    public AppUser removeFriendshipAccepted(Friendship friendship) {
+        this.friendshipAccepteds.remove(friendship);
+        friendship.setFriendAccepting(null);
+        return this;
+    }
+
+    public Set<AppUser> getBlockedByUsers() {
+        return this.blockedByUsers;
+    }
+
+    public void setBlockedByUsers(Set<AppUser> appUsers) {
+        if (this.blockedByUsers != null) {
+            this.blockedByUsers.forEach(i -> i.removeBlockedUser(this));
+        }
+        if (appUsers != null) {
+            appUsers.forEach(i -> i.addBlockedUser(this));
+        }
+        this.blockedByUsers = appUsers;
+    }
+
+    public AppUser blockedByUsers(Set<AppUser> appUsers) {
+        this.setBlockedByUsers(appUsers);
+        return this;
+    }
+
+    public AppUser addBlockedByUser(AppUser appUser) {
+        this.blockedByUsers.add(appUser);
+        appUser.getBlockedUsers().add(this);
+        return this;
+    }
+
+    public AppUser removeBlockedByUser(AppUser appUser) {
+        this.blockedByUsers.remove(appUser);
+        appUser.getBlockedUsers().remove(this);
         return this;
     }
 

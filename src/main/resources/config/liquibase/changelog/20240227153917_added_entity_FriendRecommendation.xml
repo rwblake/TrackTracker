@@ -17,17 +17,18 @@
             <column name="similarity" type="${floatType}">
                 <constraints nullable="false" />
             </column>
-            <column name="created_at" type="date">
+            <column name="created_at" type="${datetimeType}">
                 <constraints nullable="false" />
             </column>
             <column name="about_app_user_id" type="bigint">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_friend_recommendation__about_app_user_id" />
+                <constraints nullable="false" />
             </column>
             <column name="for_app_user_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="friend_recommendation" columnName="created_at" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -50,6 +51,7 @@
             <column name="similarity" type="numeric"/>
             <column name="created_at" type="date"/>
             <column name="about_app_user_id" type="numeric"/>
+            <column name="for_app_user_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

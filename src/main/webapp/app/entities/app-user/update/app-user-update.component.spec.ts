@@ -143,12 +143,12 @@ describe('AppUser Management Update Component', () => {
 
     it('Should call AppUser query and add missing value', () => {
       const appUser: IAppUser = { id: 456 };
-      const blockedByUser: IAppUser = { id: 68676 };
-      appUser.blockedByUser = blockedByUser;
+      const blockedUsers: IAppUser[] = [{ id: 68676 }];
+      appUser.blockedUsers = blockedUsers;
 
       const appUserCollection: IAppUser[] = [{ id: 50702 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
-      const additionalAppUsers = [blockedByUser];
+      const additionalAppUsers = [...blockedUsers];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
       jest.spyOn(appUserService, 'addAppUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -173,8 +173,8 @@ describe('AppUser Management Update Component', () => {
       appUser.spotifyToken = spotifyToken;
       const feed: IFeed = { id: 98528 };
       appUser.feed = feed;
-      const blockedByUser: IAppUser = { id: 26769 };
-      appUser.blockedByUser = blockedByUser;
+      const blockedUser: IAppUser = { id: 26769 };
+      appUser.blockedUsers = [blockedUser];
 
       activatedRoute.data = of({ appUser });
       comp.ngOnInit();
@@ -183,7 +183,7 @@ describe('AppUser Management Update Component', () => {
       expect(comp.userPreferencesCollection).toContain(userPreferences);
       expect(comp.spotifyTokensCollection).toContain(spotifyToken);
       expect(comp.feedsCollection).toContain(feed);
-      expect(comp.appUsersSharedCollection).toContain(blockedByUser);
+      expect(comp.appUsersSharedCollection).toContain(blockedUser);
       expect(comp.appUser).toEqual(appUser);
     });
   });

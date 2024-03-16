@@ -5,8 +5,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -156,44 +154,17 @@ public class AppUserResource {
     /**
      * {@code GET  /app-users} : get all the appUsers.
      *
-     * @param filter the filter of the request.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of appUsers in body.
      */
     @GetMapping("/app-users")
-    public List<AppUser> getAllAppUsers(@RequestParam(required = false) String filter) {
-        if ("aboutfriendrecommendation-is-null".equals(filter)) {
-            log.debug("REST request to get all AppUsers where aboutFriendRecommendation is null");
-            return StreamSupport
-                .stream(appUserRepository.findAll().spliterator(), false)
-                .filter(appUser -> appUser.getAboutFriendRecommendation() == null)
-                .collect(Collectors.toList());
-        }
-
-        if ("intitiatingfriendrequest-is-null".equals(filter)) {
-            log.debug("REST request to get all AppUsers where intitiatingFriendRequest is null");
-            return StreamSupport
-                .stream(appUserRepository.findAll().spliterator(), false)
-                .filter(appUser -> appUser.getIntitiatingFriendRequest() == null)
-                .collect(Collectors.toList());
-        }
-
-        if ("friendshipinitiated-is-null".equals(filter)) {
-            log.debug("REST request to get all AppUsers where friendshipInitiated is null");
-            return StreamSupport
-                .stream(appUserRepository.findAll().spliterator(), false)
-                .filter(appUser -> appUser.getFriendshipInitiated() == null)
-                .collect(Collectors.toList());
-        }
-
-        if ("friendshipaccepted-is-null".equals(filter)) {
-            log.debug("REST request to get all AppUsers where friendshipAccepted is null");
-            return StreamSupport
-                .stream(appUserRepository.findAll().spliterator(), false)
-                .filter(appUser -> appUser.getFriendshipAccepted() == null)
-                .collect(Collectors.toList());
-        }
+    public List<AppUser> getAllAppUsers(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         log.debug("REST request to get all AppUsers");
-        return appUserRepository.findAll();
+        if (eagerload) {
+            return appUserRepository.findAllWithEagerRelationships();
+        } else {
+            return appUserRepository.findAll();
+        }
     }
 
     /**
@@ -205,7 +176,7 @@ public class AppUserResource {
     @GetMapping("/app-users/{id}")
     public ResponseEntity<AppUser> getAppUser(@PathVariable Long id) {
         log.debug("REST request to get AppUser : {}", id);
-        Optional<AppUser> appUser = appUserRepository.findById(id);
+        Optional<AppUser> appUser = appUserRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(appUser);
     }
 

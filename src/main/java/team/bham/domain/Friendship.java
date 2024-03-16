@@ -35,88 +35,55 @@ public class Friendship implements Serializable {
      * Friendships relate to two AppUsers: initiating, and accepting users
      */
     @Schema(description = "Friendships relate to two AppUsers: initiating, and accepting users")
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
     private AppUser friendInitiating;
 
-    /**
-     * Friendships relate to two AppUsers: initiating, and accepting users
-     */
-    @Schema(description = "Friendships relate to two AppUsers: initiating, and accepting users")
-    @JsonIgnoreProperties(
-        value = {
-            "internalUser",
-            "userPreferences",
-            "spotifyToken",
-            "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
-            "playlists",
-            "streams",
-            "cards",
-            "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
-        },
-        allowSetters = true
-    )
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @NotNull
-    @JoinColumn(unique = true)
-    private AppUser friendAccepting;
-
-    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
-    private AppUser appUser;
+    private AppUser friendAccepting;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -169,19 +136,6 @@ public class Friendship implements Serializable {
 
     public Friendship friendAccepting(AppUser appUser) {
         this.setFriendAccepting(appUser);
-        return this;
-    }
-
-    public AppUser getAppUser() {
-        return this.appUser;
-    }
-
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
-
-    public Friendship appUser(AppUser appUser) {
-        this.setAppUser(appUser);
         return this;
     }
 

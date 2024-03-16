@@ -30,12 +30,6 @@
             <a [routerLink]="['/app-user', friendship.friendAccepting.id, 'view']">{{ friendship.friendAccepting.id }}</a>
           </div>
         </dd>
-        <dt><span>App User</span></dt>
-        <dd>
-          <div *ngIf="friendship.appUser">
-            <a [routerLink]="['/app-user', friendship.appUser.id, 'view']">{{ friendship.appUser.id }}</a>
-          </div>
-        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

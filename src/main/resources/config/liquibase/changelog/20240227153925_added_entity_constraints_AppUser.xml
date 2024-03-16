@@ -32,9 +32,15 @@
                                  referencedColumnNames="id"
                                  referencedTableName="feed"/>
 
-        <addForeignKeyConstraint baseColumnNames="blocked_by_user_id"
-                                 baseTableName="app_user"
-                                 constraintName="fk_app_user__blocked_by_user_id"
+        <addForeignKeyConstraint baseColumnNames="app_user_id"
+                                 baseTableName="rel_app_user__blocked_user"
+                                 constraintName="fk_rel_app_user__blocked_user__app_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="app_user"/>
+
+        <addForeignKeyConstraint baseColumnNames="blocked_user_id"
+                                 baseTableName="rel_app_user__blocked_user"
+                                 constraintName="fk_rel_app_user__blocked_user__blocked_user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="app_user"/>
     </changeSet>

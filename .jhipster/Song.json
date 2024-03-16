@@ -69,10 +69,7 @@
     },
     {
       "fieldName": "loudness",
-      "fieldType": "Float",
-      "fieldValidateRules": ["min", "max"],
-      "fieldValidateRulesMax": "1.0",
-      "fieldValidateRulesMin": "0.0"
+      "fieldType": "Float"
     },
     {
       "fieldName": "mode",
@@ -109,6 +106,7 @@
   "relationships": [
     {
       "otherEntityName": "album",
+      "otherEntityRelationshipName": "song",
       "relationshipName": "album",
       "relationshipType": "many-to-one"
     },

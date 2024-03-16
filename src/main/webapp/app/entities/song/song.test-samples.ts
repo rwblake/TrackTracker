@@ -35,7 +35,7 @@ export const sampleWithFullData: ISong = {
   instrumentalness: 0,
   musicalKey: 34975,
   liveness: 0,
-  loudness: 0,
+  loudness: 1675,
   mode: true,
   speechiness: 0,
   tempo: 15632,

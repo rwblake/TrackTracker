@@ -31,7 +31,7 @@ public class PlaylistStats implements Serializable {
     @Column(name = "last_updated")
     private Instant lastUpdated;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "album",
@@ -47,7 +47,7 @@ public class PlaylistStats implements Serializable {
     )
     private Song happiestSong;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "album",
@@ -63,7 +63,7 @@ public class PlaylistStats implements Serializable {
     )
     private Song energeticSong;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "album",
@@ -79,7 +79,7 @@ public class PlaylistStats implements Serializable {
     )
     private Song sumsUpSong;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JsonIgnoreProperties(
         value = {
             "album",

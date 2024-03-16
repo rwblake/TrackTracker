@@ -71,7 +71,7 @@
             <a [routerLink]="['/friend-recommendation', friendRecommendation.id, 'view']">{{ friendRecommendation.id }}</a>
           </td>
           <td>{{ friendRecommendation.similarity }}</td>
-          <td>{{ friendRecommendation.createdAt | formatMediumDate }}</td>
+          <td>{{ friendRecommendation.createdAt | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="friendRecommendation.aboutAppUser">
               <a [routerLink]="['/app-user', friendRecommendation.aboutAppUser.id, 'view']">{{ friendRecommendation.aboutAppUser.id }}</a>

@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
-import { DATE_FORMAT } from 'app/config/input.constants';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IFriendRecommendation, NewFriendRecommendation } from '../friend-recommendation.model';
@@ -108,7 +107,7 @@ export class FriendRecommendationService {
   ): RestOf<T> {
     return {
       ...friendRecommendation,
-      createdAt: friendRecommendation.createdAt?.format(DATE_FORMAT) ?? null,
+      createdAt: friendRecommendation.createdAt?.toJSON() ?? null,
     };
   }
 

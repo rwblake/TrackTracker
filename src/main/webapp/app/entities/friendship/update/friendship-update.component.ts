@@ -19,8 +19,6 @@ export class FriendshipUpdateComponent implements OnInit {
   friendship: IFriendship | null = null;
 
   appUsersSharedCollection: IAppUser[] = [];
-  friendInitiatingsCollection: IAppUser[] = [];
-  friendAcceptingsCollection: IAppUser[] = [];
 
   editForm: FriendshipFormGroup = this.friendshipFormService.createFriendshipFormGroup();
 
@@ -83,14 +81,7 @@ export class FriendshipUpdateComponent implements OnInit {
 
     this.appUsersSharedCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
       this.appUsersSharedCollection,
-      friendship.appUser
-    );
-    this.friendInitiatingsCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
-      this.friendInitiatingsCollection,
-      friendship.friendInitiating
-    );
-    this.friendAcceptingsCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
-      this.friendAcceptingsCollection,
+      friendship.friendInitiating,
       friendship.friendAccepting
     );
   }
@@ -100,28 +91,14 @@ export class FriendshipUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
       .pipe(
-        map((appUsers: IAppUser[]) => this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendship?.appUser))
+        map((appUsers: IAppUser[]) =>
+          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
+            appUsers,
+            this.friendship?.friendInitiating,
+            this.friendship?.friendAccepting
+          )
+        )
       )
       .subscribe((appUsers: IAppUser[]) => (this.appUsersSharedCollection = appUsers));
-
-    this.appUserService
-      .query({ filter: 'friendshipinitiated-is-null' })
-      .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
-      .pipe(
-        map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendship?.friendInitiating)
-        )
-      )
-      .subscribe((appUsers: IAppUser[]) => (this.friendInitiatingsCollection = appUsers));
-
-    this.appUserService
-      .query({ filter: 'friendshipaccepted-is-null' })
-      .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
-      .pipe(
-        map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendship?.friendAccepting)
-        )
-      )
-      .subscribe((appUsers: IAppUser[]) => (this.friendAcceptingsCollection = appUsers));
   }
 }

@@ -28,8 +28,4 @@ public interface ArtistRepository extends ArtistRepositoryWithBagRelationships, 
     default Page<Artist> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
-
-    public Boolean existsBySpotifyID(String spotifyID);
-
-    public Artist findArtistBySpotifyID(String spotifyID);
 }

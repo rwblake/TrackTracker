@@ -36,6 +36,12 @@
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityName": "song",
+      "otherEntityRelationshipName": "album",
+      "relationshipName": "song",
+      "relationshipType": "one-to-many"
+    },
+    {
       "otherEntityName": "artist",
       "otherEntityRelationshipName": "album",
       "ownerSide": false,

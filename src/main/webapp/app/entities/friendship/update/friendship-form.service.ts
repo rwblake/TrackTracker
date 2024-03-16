@@ -34,7 +34,6 @@ type FriendshipFormGroupContent = {
   createdAt: FormControl<FriendshipFormRawValue['createdAt']>;
   friendInitiating: FormControl<FriendshipFormRawValue['friendInitiating']>;
   friendAccepting: FormControl<FriendshipFormRawValue['friendAccepting']>;
-  appUser: FormControl<FriendshipFormRawValue['appUser']>;
 };
 
 export type FriendshipFormGroup = FormGroup<FriendshipFormGroupContent>;
@@ -63,7 +62,6 @@ export class FriendshipFormService {
       friendAccepting: new FormControl(friendshipRawValue.friendAccepting, {
         validators: [Validators.required],
       }),
-      appUser: new FormControl(friendshipRawValue.appUser),
     });
   }
 

@@ -59,7 +59,9 @@ export class FriendRequestFormService {
       initiatingAppUser: new FormControl(friendRequestRawValue.initiatingAppUser, {
         validators: [Validators.required],
       }),
-      toAppUser: new FormControl(friendRequestRawValue.toAppUser),
+      toAppUser: new FormControl(friendRequestRawValue.toAppUser, {
+        validators: [Validators.required],
+      }),
     });
   }
 

@@ -2,17 +2,25 @@ package team.bham.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +38,7 @@ import team.bham.repository.AppUserRepository;
  * Integration tests for the {@link AppUserResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class AppUserResourceIT {
@@ -57,6 +66,9 @@ class AppUserResourceIT {
 
     @Autowired
     private AppUserRepository appUserRepository;
+
+    @Mock
+    private AppUserRepository appUserRepositoryMock;
 
     @Autowired
     private EntityManager em;
@@ -279,6 +291,23 @@ class AppUserResourceIT {
             .andExpect(jsonPath("$.[*].avatarURL").value(hasItem(DEFAULT_AVATAR_URL)))
             .andExpect(jsonPath("$.[*].bio").value(hasItem(DEFAULT_BIO.toString())))
             .andExpect(jsonPath("$.[*].spotifyUsername").value(hasItem(DEFAULT_SPOTIFY_USERNAME)));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllAppUsersWithEagerRelationshipsIsEnabled() throws Exception {
+        when(appUserRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restAppUserMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(appUserRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllAppUsersWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(appUserRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restAppUserMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(appUserRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

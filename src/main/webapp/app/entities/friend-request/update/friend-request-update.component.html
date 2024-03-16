@@ -43,7 +43,7 @@
             [compareWith]="compareAppUser"
           >
             <option *ngIf="editForm.get(['initiatingAppUser'])!.value == null" [ngValue]="null" selected></option>
-            <option [ngValue]="appUserOption" *ngFor="let appUserOption of initiatingAppUsersCollection">{{ appUserOption.id }}</option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
           </select>
         </div>
         <div
@@ -67,9 +67,12 @@
             formControlName="toAppUser"
             [compareWith]="compareAppUser"
           >
-            <option [ngValue]="null"></option>
+            <option *ngIf="editForm.get(['toAppUser'])!.value == null" [ngValue]="null" selected></option>
             <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
           </select>
+        </div>
+        <div *ngIf="editForm.get(['toAppUser'])!.invalid && (editForm.get(['toAppUser'])!.dirty || editForm.get(['toAppUser'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['toAppUser'])?.errors?.required"> This field is required. </small>
         </div>
       </div>
 

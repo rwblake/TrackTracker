@@ -3,7 +3,7 @@ package team.bham.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -37,59 +37,57 @@ public class FriendRecommendation implements Serializable {
 
     @NotNull
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private Instant createdAt;
 
     /**
      * Each FriendRecommendation relates to the AppUser recommended.
      */
     @Schema(description = "Each FriendRecommendation relates to the AppUser recommended.")
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
     private AppUser aboutAppUser;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
             "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
@@ -123,16 +121,16 @@ public class FriendRecommendation implements Serializable {
         this.similarity = similarity;
     }
 
-    public LocalDate getCreatedAt() {
+    public Instant getCreatedAt() {
         return this.createdAt;
     }
 
-    public FriendRecommendation createdAt(LocalDate createdAt) {
+    public FriendRecommendation createdAt(Instant createdAt) {
         this.setCreatedAt(createdAt);
         return this;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 

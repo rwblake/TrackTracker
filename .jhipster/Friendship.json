@@ -22,25 +22,16 @@
       "javadoc": "Friendships relate to two AppUsers: initiating, and accepting users",
       "otherEntityName": "appUser",
       "otherEntityRelationshipName": "friendshipInitiated",
-      "ownerSide": true,
       "relationshipName": "friendInitiating",
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
     },
     {
-      "javadoc": "Friendships relate to two AppUsers: initiating, and accepting users",
       "otherEntityName": "appUser",
       "otherEntityRelationshipName": "friendshipAccepted",
-      "ownerSide": true,
       "relationshipName": "friendAccepting",
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "relationshipValidateRules": "required"
-    },
-    {
-      "otherEntityName": "appUser",
-      "otherEntityRelationshipName": "friend",
-      "relationshipName": "appUser",
-      "relationshipType": "many-to-one"
     }
   ],
   "service": "no"

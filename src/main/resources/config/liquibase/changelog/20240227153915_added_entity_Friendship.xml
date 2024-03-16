@@ -18,13 +18,10 @@
                 <constraints nullable="false" />
             </column>
             <column name="friend_initiating_id" type="bigint">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_friendship__friend_initiating_id" />
+                <constraints nullable="false" />
             </column>
             <column name="friend_accepting_id" type="bigint">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_friendship__friend_accepting_id" />
-            </column>
-            <column name="app_user_id" type="bigint">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>

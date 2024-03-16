@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-import { DATE_FORMAT } from 'app/config/input.constants';
 import { IFriendRecommendation } from '../friend-recommendation.model';
 import {
   sampleWithRequiredData,
@@ -14,7 +13,7 @@ import { FriendRecommendationService, RestFriendRecommendation } from './friend-
 
 const requireRestSample: RestFriendRecommendation = {
   ...sampleWithRequiredData,
-  createdAt: sampleWithRequiredData.createdAt?.format(DATE_FORMAT),
+  createdAt: sampleWithRequiredData.createdAt?.toJSON(),
 };
 
 describe('FriendRecommendation Service', () => {

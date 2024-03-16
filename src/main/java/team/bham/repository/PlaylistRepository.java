@@ -28,8 +28,4 @@ public interface PlaylistRepository extends PlaylistRepositoryWithBagRelationshi
     default Page<Playlist> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
-
-    public Boolean existsBySpotifyID(String spotifyID);
-
-    public Playlist findPlaylistBySpotifyID(String spotifyID);
 }

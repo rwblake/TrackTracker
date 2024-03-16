@@ -96,8 +96,8 @@ public class Song implements Serializable {
     @Column(name = "valence")
     private Float valence;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnoreProperties(value = { "artists" }, allowSetters = true)
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "songs", "artists" }, allowSetters = true)
     private Album album;
 
     @OneToMany(mappedBy = "song")
@@ -130,7 +130,7 @@ public class Song implements Serializable {
     @JsonIgnoreProperties(value = { "playlistStats", "songs", "appUser" }, allowSetters = true)
     private Set<Playlist> playlists = new HashSet<>();
 
-    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "songs")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();

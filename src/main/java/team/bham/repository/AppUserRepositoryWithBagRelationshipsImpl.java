@@ -22,7 +22,7 @@ public class AppUserRepositoryWithBagRelationshipsImpl implements AppUserReposit
 
     @Override
     public Optional<AppUser> fetchBagRelationships(Optional<AppUser> appUser) {
-        return appUser.map(this::fetchFeedCards);
+        return appUser.map(this::fetchBlockedUsers);
     }
 
     @Override
@@ -32,23 +32,26 @@ public class AppUserRepositoryWithBagRelationshipsImpl implements AppUserReposit
 
     @Override
     public List<AppUser> fetchBagRelationships(List<AppUser> appUsers) {
-        return Optional.of(appUsers).map(this::fetchFeedCards).orElse(Collections.emptyList());
+        return Optional.of(appUsers).map(this::fetchBlockedUsers).orElse(Collections.emptyList());
     }
 
-    AppUser fetchFeedCards(AppUser result) {
+    AppUser fetchBlockedUsers(AppUser result) {
         return entityManager
-            .createQuery("select appUser from AppUser appUser left join fetch appUser.feedCards where appUser is :appUser", AppUser.class)
+            .createQuery(
+                "select appUser from AppUser appUser left join fetch appUser.blockedUsers where appUser is :appUser",
+                AppUser.class
+            )
             .setParameter("appUser", result)
             .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
             .getSingleResult();
     }
 
-    List<AppUser> fetchFeedCards(List<AppUser> appUsers) {
+    List<AppUser> fetchBlockedUsers(List<AppUser> appUsers) {
         HashMap<Object, Integer> order = new HashMap<>();
         IntStream.range(0, appUsers.size()).forEach(index -> order.put(appUsers.get(index).getId(), index));
         List<AppUser> result = entityManager
             .createQuery(
-                "select distinct appUser from AppUser appUser left join fetch appUser.feedCards where appUser in :appUsers",
+                "select distinct appUser from AppUser appUser left join fetch appUser.blockedUsers where appUser in :appUsers",
                 AppUser.class
             )
             .setParameter("appUsers", appUsers)

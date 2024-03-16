@@ -140,16 +140,16 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" for="field_blockedByUser">Blocked By User</label>
+          <label for="field_blockedUsers">Blocked User</label>
           <select
             class="form-control"
-            id="field_blockedByUser"
-            data-cy="blockedByUser"
-            name="blockedByUser"
-            formControlName="blockedByUser"
+            id="field_blockedUsers"
+            data-cy="blockedUser"
+            multiple
+            name="blockedUsers"
+            formControlName="blockedUsers"
             [compareWith]="compareAppUser"
           >
-            <option [ngValue]="null"></option>
             <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
           </select>
         </div>

@@ -35,51 +35,51 @@ public class FriendRequest implements Serializable {
      * Each FriendRequest is associated with a particular user, who initiated it.
      */
     @Schema(description = "Each FriendRequest is associated with a particular user, who initiated it.")
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
+            "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
     private AppUser initiatingAppUser;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(
         value = {
+            "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
-            "friends",
-            "toFriendRequests",
-            "forFriendRecommendations",
-            "blockedUsers",
             "playlists",
             "streams",
             "cards",
             "cardTemplates",
-            "aboutFriendRecommendation",
-            "intitiatingFriendRequest",
-            "friendshipInitiated",
-            "friendshipAccepted",
-            "blockedByUser",
+            "blockedUsers",
+            "aboutFriendRecommendations",
+            "forFriendRecommendations",
+            "intitiatingFriendRequests",
+            "toFriendRequests",
+            "friendshipInitiateds",
+            "friendshipAccepteds",
+            "blockedByUsers",
         },
         allowSetters = true
     )

@@ -1,12 +1,7 @@
 package team.bham.repository;
 
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
-import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-import team.bham.domain.AppUser;
 import team.bham.domain.Stream;
 
 /**
@@ -14,6 +9,4 @@ import team.bham.domain.Stream;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface StreamRepository extends JpaRepository<Stream, Long> {
-    public List<Stream> findAllByPlayedAtAfterAndAppUserOrderByPlayedAt(Instant playedAt, AppUser appUser);
-}
+public interface StreamRepository extends JpaRepository<Stream, Long> {}

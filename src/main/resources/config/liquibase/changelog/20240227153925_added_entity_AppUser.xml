@@ -41,11 +41,22 @@
             <column name="feed_id" type="bigint">
                 <constraints nullable="false" unique="true" uniqueConstraintName="ux_app_user__feed_id" />
             </column>
-            <column name="blocked_by_user_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+    </changeSet>
+
+    <changeSet id="20240227153925-1-relations" author="jhipster">
+
+        <createTable tableName="rel_app_user__blocked_user">
+            <column name="blocked_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="app_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="app_user_id, blocked_user_id" tableName="rel_app_user__blocked_user"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->

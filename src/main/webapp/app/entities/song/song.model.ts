@@ -22,9 +22,9 @@ export interface ISong {
   tempo?: number | null;
   timeSignature?: number | null;
   valence?: number | null;
-  album?: Pick<IAlbum, 'id' | 'name'> | null;
-  playlists?: Pick<IPlaylist, 'id' | 'name'>[] | null;
-  artists?: Pick<IArtist, 'id' | 'name'>[] | null;
+  album?: Pick<IAlbum, 'id'> | null;
+  playlists?: Pick<IPlaylist, 'id'>[] | null;
+  artists?: Pick<IArtist, 'id'>[] | null;
 }
 
 export type NewSong = Omit<ISong, 'id'> & { id: null };

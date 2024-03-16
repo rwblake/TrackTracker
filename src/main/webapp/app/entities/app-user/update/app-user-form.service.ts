@@ -14,7 +14,7 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type AppUserFormGroupInput = IAppUser | PartialWithRequiredKeyOf<NewAppUser>;
 
-type AppUserFormDefaults = Pick<NewAppUser, 'id'>;
+type AppUserFormDefaults = Pick<NewAppUser, 'id' | 'blockedUsers' | 'blockedByUsers'>;
 
 type AppUserFormGroupContent = {
   id: FormControl<IAppUser['id'] | NewAppUser['id']>;
@@ -27,7 +27,8 @@ type AppUserFormGroupContent = {
   userPreferences: FormControl<IAppUser['userPreferences']>;
   spotifyToken: FormControl<IAppUser['spotifyToken']>;
   feed: FormControl<IAppUser['feed']>;
-  blockedByUser: FormControl<IAppUser['blockedByUser']>;
+  blockedUsers: FormControl<IAppUser['blockedUsers']>;
+  blockedByUsers: FormControl<IAppUser['blockedByUsers']>;
 };
 
 export type AppUserFormGroup = FormGroup<AppUserFormGroupContent>;
@@ -70,7 +71,8 @@ export class AppUserFormService {
       feed: new FormControl(appUserRawValue.feed, {
         validators: [Validators.required],
       }),
-      blockedByUser: new FormControl(appUserRawValue.blockedByUser),
+      blockedUsers: new FormControl(appUserRawValue.blockedUsers ?? []),
+      blockedByUsers: new FormControl(appUserRawValue.blockedByUsers ?? []),
     });
   }
 
@@ -91,6 +93,8 @@ export class AppUserFormService {
   private getFormDefaults(): AppUserFormDefaults {
     return {
       id: null,
+      blockedUsers: [],
+      blockedByUsers: [],
     };
   }
 }

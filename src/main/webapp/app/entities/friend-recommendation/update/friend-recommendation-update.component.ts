@@ -19,7 +19,6 @@ export class FriendRecommendationUpdateComponent implements OnInit {
   friendRecommendation: IFriendRecommendation | null = null;
 
   appUsersSharedCollection: IAppUser[] = [];
-  aboutAppUsersCollection: IAppUser[] = [];
 
   editForm: FriendRecommendationFormGroup = this.friendRecommendationFormService.createFriendRecommendationFormGroup();
 
@@ -82,11 +81,8 @@ export class FriendRecommendationUpdateComponent implements OnInit {
 
     this.appUsersSharedCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
       this.appUsersSharedCollection,
+      friendRecommendation.aboutAppUser,
       friendRecommendation.forAppUser
-    );
-    this.aboutAppUsersCollection = this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
-      this.aboutAppUsersCollection,
-      friendRecommendation.aboutAppUser
     );
   }
 
@@ -96,19 +92,13 @@ export class FriendRecommendationUpdateComponent implements OnInit {
       .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
       .pipe(
         map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendRecommendation?.forAppUser)
+          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(
+            appUsers,
+            this.friendRecommendation?.aboutAppUser,
+            this.friendRecommendation?.forAppUser
+          )
         )
       )
       .subscribe((appUsers: IAppUser[]) => (this.appUsersSharedCollection = appUsers));
-
-    this.appUserService
-      .query({ filter: 'aboutfriendrecommendation-is-null' })
-      .pipe(map((res: HttpResponse<IAppUser[]>) => res.body ?? []))
-      .pipe(
-        map((appUsers: IAppUser[]) =>
-          this.appUserService.addAppUserToCollectionIfMissing<IAppUser>(appUsers, this.friendRecommendation?.aboutAppUser)
-        )
-      )
-      .subscribe((appUsers: IAppUser[]) => (this.aboutAppUsersCollection = appUsers));
   }
 }

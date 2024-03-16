@@ -9,6 +9,5 @@ import { CardRoutingModule } from './route/card-routing.module';
 @NgModule({
   imports: [SharedModule, CardRoutingModule],
   declarations: [CardComponent, CardDetailComponent, CardUpdateComponent, CardDeleteDialogComponent],
-  exports: [CardComponent],
 })
 export class CardModule {}

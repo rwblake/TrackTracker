@@ -23,7 +23,6 @@ describe('Friendship Form Service', () => {
             createdAt: expect.any(Object),
             friendInitiating: expect.any(Object),
             friendAccepting: expect.any(Object),
-            appUser: expect.any(Object),
           })
         );
       });
@@ -37,7 +36,6 @@ describe('Friendship Form Service', () => {
             createdAt: expect.any(Object),
             friendInitiating: expect.any(Object),
             friendAccepting: expect.any(Object),
-            appUser: expect.any(Object),
           })
         );
       });

@@ -84,22 +84,22 @@
           </td>
           <td>{{ artist.spotifyID }}</td>
           <td>{{ artist.name }}</td>
-          <td><img [src]="artist.imageURL" alt="artist picture" style="max-height: 180px" /></td>
+          <td>{{ artist.imageURL }}</td>
           <td>
             <span *ngFor="let song of artist.songs; let last = last">
-              <a class="form-control-static" [routerLink]="['/song', song.id, 'view']">{{ song.name }}</a
+              <a class="form-control-static" [routerLink]="['/song', song.id, 'view']">{{ song.id }}</a
               >{{ last ? '' : ', ' }}
             </span>
           </td>
           <td>
             <span *ngFor="let album of artist.albums; let last = last">
-              <a class="form-control-static" [routerLink]="['/album', album.id, 'view']">{{ album.name }}</a
+              <a class="form-control-static" [routerLink]="['/album', album.id, 'view']">{{ album.id }}</a
               >{{ last ? '' : ', ' }}
             </span>
           </td>
           <td>
             <span *ngFor="let genre of artist.genres; let last = last">
-              <a class="form-control-static" [routerLink]="['/genre', genre.id, 'view']">{{ genre.name }}</a
+              <a class="form-control-static" [routerLink]="['/genre', genre.id, 'view']">{{ genre.id }}</a
               >{{ last ? '' : ', ' }}
             </span>
           </td>

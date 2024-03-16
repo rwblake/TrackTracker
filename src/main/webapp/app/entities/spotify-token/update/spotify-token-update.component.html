@@ -1,0 +1,101 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-spotify-token-heading" data-cy="SpotifyTokenCreateUpdateHeading">Create or edit a Spotify Token</h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_accessToken">Access Token</label>
+          <input
+            type="text"
+            class="form-control"
+            name="accessToken"
+            id="field_accessToken"
+            data-cy="accessToken"
+            formControlName="accessToken"
+          />
+          <div *ngIf="editForm.get('accessToken')!.invalid && (editForm.get('accessToken')!.dirty || editForm.get('accessToken')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('accessToken')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_tokenType">Token Type</label>
+          <input type="text" class="form-control" name="tokenType" id="field_tokenType" data-cy="tokenType" formControlName="tokenType" />
+          <div *ngIf="editForm.get('tokenType')!.invalid && (editForm.get('tokenType')!.dirty || editForm.get('tokenType')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('tokenType')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_userScope">User Scope</label>
+          <input type="text" class="form-control" name="userScope" id="field_userScope" data-cy="userScope" formControlName="userScope" />
+          <div *ngIf="editForm.get('userScope')!.invalid && (editForm.get('userScope')!.dirty || editForm.get('userScope')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('userScope')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_expires">Expires</label>
+          <div class="d-flex">
+            <input
+              id="field_expires"
+              data-cy="expires"
+              type="datetime-local"
+              class="form-control"
+              name="expires"
+              formControlName="expires"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('expires')!.invalid && (editForm.get('expires')!.dirty || editForm.get('expires')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('expires')?.errors?.required"> This field is required. </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('expires')?.errors?.datetimelocal">
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" for="field_refreshToken">Refresh Token</label>
+          <input
+            type="text"
+            class="form-control"
+            name="refreshToken"
+            id="field_refreshToken"
+            data-cy="refreshToken"
+            formControlName="refreshToken"
+          />
+          <div
+            *ngIf="editForm.get('refreshToken')!.invalid && (editForm.get('refreshToken')!.dirty || editForm.get('refreshToken')!.touched)"
+          >
+            <small class="form-text text-danger" *ngIf="editForm.get('refreshToken')?.errors?.required"> This field is required. </small>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

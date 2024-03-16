@@ -43,7 +43,7 @@
             [compareWith]="compareAppUser"
           >
             <option *ngIf="editForm.get(['friendInitiating'])!.value == null" [ngValue]="null" selected></option>
-            <option [ngValue]="appUserOption" *ngFor="let appUserOption of friendInitiatingsCollection">{{ appUserOption.id }}</option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
           </select>
         </div>
         <div
@@ -68,7 +68,7 @@
             [compareWith]="compareAppUser"
           >
             <option *ngIf="editForm.get(['friendAccepting'])!.value == null" [ngValue]="null" selected></option>
-            <option [ngValue]="appUserOption" *ngFor="let appUserOption of friendAcceptingsCollection">{{ appUserOption.id }}</option>
+            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
           </select>
         </div>
         <div
@@ -78,21 +78,6 @@
           "
         >
           <small class="form-text text-danger" *ngIf="editForm.get(['friendAccepting'])?.errors?.required"> This field is required. </small>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" for="field_appUser">App User</label>
-          <select
-            class="form-control"
-            id="field_appUser"
-            data-cy="appUser"
-            name="appUser"
-            formControlName="appUser"
-            [compareWith]="compareAppUser"
-          >
-            <option [ngValue]="null"></option>
-            <option [ngValue]="appUserOption" *ngFor="let appUserOption of appUsersSharedCollection">{{ appUserOption.id }}</option>
-          </select>
         </div>
       </div>
 
