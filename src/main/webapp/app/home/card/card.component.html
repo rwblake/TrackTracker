@@ -1,4 +1,6 @@
-<div class="card">
-  <p>{{ card.metric }}</p>
-  <p>{{ card.metricValue }}</p>
-</div>
+<button [class]="'feed-card ' + card.inferredType">
+  <p class="type">{{ formatInferredCardType() }}</p>
+  <span class="icon material-symbols-outlined">{{ generateIcon() }}</span>
+  <p class="message">{{ generateMessage() }}</p>
+  <p class="time">{{ card.timeGenerated }}</p>
+</button>

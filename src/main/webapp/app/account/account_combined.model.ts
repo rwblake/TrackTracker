@@ -13,7 +13,7 @@ export interface Account_Combined {
   userPreferencesID: number;
   feed: Feed;
   friends: Friendship[];
-  pinnedFriends: Pick<IAppUser, 'id' | 'internalUser' | 'avatarURL' | 'spotifyUsername'>[] | null;
+  pinnedFriends: Pick<IAppUser, 'id' | 'internalUser' | 'avatarURL' | 'spotifyUsername'>[];
 }
 
 interface Feed {

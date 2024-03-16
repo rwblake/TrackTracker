@@ -174,7 +174,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return [this.account_data.internalUser.firstName, this.account_data.internalUser.lastName];
     } else {
       console.warn('This user does not have their account set up properly - Missing AppUser');
-      return ['', ''];
+      return ['no_name', 'no_name'];
     }
   }
 

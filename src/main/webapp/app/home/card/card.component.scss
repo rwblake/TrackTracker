@@ -1,0 +1,58 @@
+p {
+  margin: 0;
+}
+
+.feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  padding: 16px;
+  width: 238px;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgb(255, 208, 88, 0.3);
+
+  transition: all ease-out 200ms;
+
+  &.milestone {
+    background-color: rgb(255, 208, 88);
+    border: solid 2px rgb(255, 255, 255, 0.5);
+
+    * {
+      color: black;
+    }
+  }
+
+  &:hover {
+    transform: scale(1.01) translateY(-4px);
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: none;
+    filter: brightness(0.8);
+  }
+}
+
+.type {
+  align-self: stretch;
+  text-align: left;
+  opacity: 70%;
+}
+
+.icon {
+  font-size: 48px;
+}
+
+.message {
+  align-self: stretch;
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.time {
+  align-self: stretch;
+  text-align: center;
+  opacity: 70%;
+}
