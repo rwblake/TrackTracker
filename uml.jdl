@@ -25,25 +25,23 @@ entity FriendRequest {
  */
 entity FriendRecommendation {
     similarity Float min(0.0) max(1.0) required
-    createdAt LocalDate required
+    createdAt Instant required
 }
 
-relationship OneToOne {
+relationship ManyToOne {
     /** Each FriendRecommendation relates to the AppUser recommended. */
-    FriendRecommendation{aboutAppUser required} to AppUser{aboutFriendRecommendation}
+    FriendRecommendation{aboutAppUser required} to AppUser{aboutFriendRecommendation}  // Who the recommendation is about
+    FriendRecommendation{forAppUser required} to AppUser{forFriendRecommendation}  // Who the recommendation is for
 
     /** Each FriendRequest is associated with a particular user, who initiated it. */
-    FriendRequest{initiatingAppUser required} to AppUser{intitiatingFriendRequest}
+    FriendRequest{initiatingAppUser required} to AppUser{intitiatingFriendRequest}  // Who made the friend request
+    FriendRequest{toAppUser required} to AppUser{toFriendRequest}  // Who the friend request is to
 
-    /** Friendships relate to two AppUsers: initiating, and accepting users */
-    Friendship{friendInitiating required} to AppUser{friendshipInitiated}
-    /** Friendships relate to two AppUsers: initiating, and accepting users */
-    Friendship{friendAccepting  required} to AppUser{friendshipAccepted}
+    /** Friendships relate to two AppUsers: initiating, and accepting users  */
+    Friendship{friendInitiating required} to AppUser{friendshipInitiated}  // The person who originally made the friend request
+    Friendship{friendAccepting  required} to AppUser{friendshipAccepted}  // The person who accepted the friend request
 }
-relationship OneToMany {
-    AppUser{friend} to Friendship
-    AppUser{toFriendRequest} to FriendRequest{toAppUser}
-    AppUser{forFriendRecommendation} to FriendRecommendation{forAppUser}
+relationship ManyToMany {
     /** Blocked users are related to the user who blocked them. */
     AppUser{blockedUser} to AppUser{blockedByUser}
 }
