@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import team.bham.domain.*;
 import team.bham.domain.enumeration.CardType;
 import team.bham.repository.AppUserRepository;
+import team.bham.repository.CardRepository;
 import team.bham.repository.UserRepository;
 import team.bham.security.SecurityUtils;
 import team.bham.service.*;
@@ -67,8 +69,7 @@ public class AccountResource {
     private final MailService mailService;
 
     private final SpotifyAuthorisationService spotifyAuthorisationService;
-
-    private final AppUserRepository appUserRepository;
+    private final CardRepository cardRepository;
 
     public AccountResource(
         UserRepository userRepository,
@@ -78,7 +79,7 @@ public class AccountResource {
         FeedService feedService,
         MailService mailService,
         SpotifyAuthorisationService spotifyAuthorisationService,
-        AppUserRepository appUserRepository
+        CardRepository cardRepository
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -87,7 +88,7 @@ public class AccountResource {
         this.feedService = feedService;
         this.mailService = mailService;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
-        this.appUserRepository = appUserRepository;
+        this.cardRepository = cardRepository;
     }
 
     /**
@@ -217,16 +218,11 @@ public class AccountResource {
         Set<FeedCard> feedCards = feedService.getCards(appUser.get().getFeed());
 
         // Get pinned friends from cards
-        List<AppUser> pinnedFriends = new ArrayList<>();
-        for (FeedCard feedCard : feedCards) {
-            try {
-                if (feedCard.getCard().getMetric().equals(CardType.PINNED_FRIEND)) {
-                    pinnedFriends.add(appUserRepository.findOneBySpotifyID(feedCard.getCard().getAppUser().getSpotifyID()).get());
-                }
-            } catch (NoSuchElementException e) {
-                e.printStackTrace();
-            }
-        }
+        List<AppUser> pinnedFriends =
+            this.cardRepository.getCardsByAppUserAndMetric(appUser.get(), CardType.PINNED_FRIEND)
+                .stream()
+                .map(Card::getAppUser)
+                .collect(Collectors.toList());
 
         AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, feedCards, pinnedFriends);
 

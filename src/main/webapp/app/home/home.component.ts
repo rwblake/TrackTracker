@@ -16,6 +16,7 @@ import { Account_Combined } from '../account/account_combined.model';
 import { Account } from '../core/auth/account.model';
 import { error } from '@angular/compiler-cli/src/transformers/util';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
+import { FriendsService } from '../friends/friends.service';
 
 @Component({
   selector: 'jhi-home',
@@ -87,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(private accountService: AccountService, private router: Router, private friendsService: FriendsService) {}
 
   ngOnInit(): void {
     this.accountService
@@ -175,6 +176,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.warn('This user does not have their account set up properly - Missing AppUser');
       return ['', ''];
     }
+  }
+
+  pin(appUserId: number) {
+    this.friendsService.pin(appUserId);
+  }
+
+  unpin(appUserId: number) {
+    this.friendsService.unpin(appUserId);
   }
 
   protected readonly APP_NAME = APP_NAME;

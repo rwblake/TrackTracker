@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.*;
+import team.bham.domain.enumeration.CardType;
 import team.bham.repository.AppUserRepository;
+import team.bham.repository.CardRepository;
 import team.bham.repository.FriendRequestRepository;
 import team.bham.repository.FriendshipRepository;
 import team.bham.service.UserService;
@@ -26,17 +28,20 @@ public class FriendsResource {
     private final AppUserRepository appUserRepository;
     private final UserService userService;
     private final FriendshipRepository friendshipRepository;
+    private final CardRepository cardRepository;
 
     public FriendsResource(
         FriendRequestRepository friendRequestRepository,
         AppUserRepository appUserRepository,
         UserService userService,
-        FriendshipRepository friendshipRepository
+        FriendshipRepository friendshipRepository,
+        CardRepository cardRepository
     ) {
         this.friendRequestRepository = friendRequestRepository;
         this.appUserRepository = appUserRepository;
         this.userService = userService;
         this.friendshipRepository = friendshipRepository;
+        this.cardRepository = cardRepository;
     }
 
     /** Find the current user and check they have an associated AppUser entity */
@@ -125,6 +130,26 @@ public class FriendsResource {
         this.friendRequestRepository.delete(friendRequest);
 
         return getFriendRequests();
+    }
+
+    @PostMapping("/friends/pin")
+    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        Card myCard = new Card();
+        myCard.setAppUser(currentUser);
+        myCard.setMetric(CardType.PINNED_FRIEND);
+        myCard.setMetricValue(currentUser.getId().intValue()); // Incompatible types (be cautious)
+        myCard.setTimeGenerated(Instant.now());
+        // Not sure what setUsages and setTimeFrame do
+        this.cardRepository.save(myCard);
+    }
+
+    @PostMapping("/friends/unpin")
+    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        this.cardRepository.deleteByAppUserId(pinAppUserId);
     }
 
     @PostMapping("/friends")

@@ -35,4 +35,12 @@ export class FriendsService {
   rejectFriendRequest(id: number): Observable<IFriendRequest[]> {
     return this.http.post<IFriendRequest[]>(this.resourceUrl + '/reject', id);
   }
+
+  pin(id: number) {
+    this.http.post(this.resourceUrl + '/pin', id);
+  }
+
+  unpin(id: number) {
+    this.http.post(this.resourceUrl + '/unpin', id);
+  }
 }
