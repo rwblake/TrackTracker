@@ -55,19 +55,19 @@ public class AppUser implements Serializable {
     private User internalUser;
 
     @JsonIgnoreProperties(value = { "sharingPreferences", "appUser" }, allowSetters = true)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(unique = true)
     private UserPreferences userPreferences;
 
     @JsonIgnoreProperties(value = { "appUser" }, allowSetters = true)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(unique = true)
     private SpotifyToken spotifyToken;
 
     @JsonIgnoreProperties(value = { "cards", "appUser" }, allowSetters = true)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(unique = true)
     private Feed feed;

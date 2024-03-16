@@ -6,6 +6,7 @@ export interface IFriendship {
   createdAt?: dayjs.Dayjs | null;
   friendInitiating?: Pick<IAppUser, 'id'> | null;
   friendAccepting?: Pick<IAppUser, 'id'> | null;
+  appUser?: Pick<IAppUser, 'id'> | null;
 }
 
 export type NewFriendship = Omit<IFriendship, 'id'> & { id: null };

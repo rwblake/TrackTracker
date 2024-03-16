@@ -78,7 +78,7 @@
           </td>
           <td>{{ album.spotifyID }}</td>
           <td>{{ album.name }}</td>
-          <td>{{ album.imageURL }}</td>
+          <td><img [src]="album.imageURL" alt="album cover" style="max-height: 180px" /></td>
           <td>{{ album.releaseDate | formatMediumDatetime }}</td>
           <td>{{ album.albumType }}</td>
           <td class="text-end">

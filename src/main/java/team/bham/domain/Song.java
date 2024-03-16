@@ -130,7 +130,7 @@ public class Song implements Serializable {
     @JsonIgnoreProperties(value = { "playlistStats", "songs", "appUser" }, allowSetters = true)
     private Set<Playlist> playlists = new HashSet<>();
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();

@@ -44,15 +44,21 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="imageURL">
+            <div class="d-flex">
+              <span>Image URL</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col" jhiSortBy="name">
             <div class="d-flex">
               <span>Name</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="imageURL">
+          <th scope="col" jhiSortBy="album.id">
             <div class="d-flex">
-              <span>Image URL</span>
+              <span>Album</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -140,12 +146,6 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="album.id">
-            <div class="d-flex">
-              <span>Album</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -155,8 +155,13 @@
             <a [routerLink]="['/song', song.id, 'view']">{{ song.id }}</a>
           </td>
           <td>{{ song.spotifyID }}</td>
+          <td><img [src]="song.imageURL" alt="album art" style="max-height: 180px" /></td>
           <td>{{ song.name }}</td>
-          <td>{{ song.imageURL }}</td>
+          <td>
+            <div *ngIf="song.album">
+              <a [routerLink]="['/album', song.album.id, 'view']">{{ song.album.name }}</a>
+            </div>
+          </td>
           <td>{{ song.releaseDate | formatMediumDatetime }}</td>
           <td title="{{ song.duration }}">{{ song.duration | duration }}</td>
           <td>{{ song.acousticness }}</td>
@@ -171,11 +176,6 @@
           <td>{{ song.tempo }}</td>
           <td>{{ song.timeSignature }}</td>
           <td>{{ song.valence }}</td>
-          <td>
-            <div *ngIf="song.album">
-              <a [routerLink]="['/album', song.album.id, 'view']">{{ song.album.id }}</a>
-            </div>
-          </td>
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/song', song.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

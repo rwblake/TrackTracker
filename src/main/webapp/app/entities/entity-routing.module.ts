@@ -94,11 +94,6 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'FeedCards' },
         loadChildren: () => import('./feed-card/feed-card.module').then(m => m.FeedCardModule),
       },
-      {
-        path: 'spotify-token',
-        data: { pageTitle: 'SpotifyTokens' },
-        loadChildren: () => import('./spotify-token/spotify-token.module').then(m => m.SpotifyTokenModule),
-      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

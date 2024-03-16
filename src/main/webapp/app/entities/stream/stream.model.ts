@@ -5,7 +5,7 @@ import { IAppUser } from 'app/entities/app-user/app-user.model';
 export interface IStream {
   id: number;
   playedAt?: dayjs.Dayjs | null;
-  song?: Pick<ISong, 'id'> | null;
+  song?: Pick<ISong, 'id' | 'name' | 'imageURL'> | null;
   appUser?: Pick<IAppUser, 'id'> | null;
 }
 

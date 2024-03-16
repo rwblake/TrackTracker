@@ -28,7 +28,7 @@ public class Genre implements Serializable {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(mappedBy = "genres", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();

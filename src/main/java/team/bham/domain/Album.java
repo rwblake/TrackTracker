@@ -46,7 +46,7 @@ public class Album implements Serializable {
     @Column(name = "album_type")
     private AlbumType albumType;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {
