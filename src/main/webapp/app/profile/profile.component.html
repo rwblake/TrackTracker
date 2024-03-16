@@ -2,7 +2,7 @@
   <div class="col">
     <div class="row" style="padding-top: 10%; padding-bottom: 10%">
       <h2>{{ account ? account.login : 'ProfileName' }}</h2>
-      <h5 style="padding-left: 15%">
+      <h5 style="text-align: center">
         {{ account ? account.firstName : 'FirstName' }} {{ account ? account.lastName : 'LastName' }} links to
         {{ user ? user.spotifyUsername : 'SpotifyUsername' }}
       </h5>
@@ -27,7 +27,7 @@
       <h5>Playlists: {{ playlist ? playlist : 'You currently have no playlists saved.' }}</h5>
     </div>
     <div class="row">
-      <div class="card" style="width: 50%">
+      <div class="card" style="width: 40%">
         <div class="card-header text-muted">PlaylistName</div>
         <img
           class="card-img-top"
@@ -44,7 +44,8 @@
         </p>
         <div class="card-footer text-muted">TimePeriod</div>
       </div>
-      <div class="card" style="width: 50%">
+      <div style="width: 10px"></div>
+      <div class="card" style="width: 40%">
         <div class="card-header text-muted">PlaylistName</div>
         <img
           class="card-img-top"
@@ -63,33 +64,34 @@
       </div>
     </div>
   </div>
-  <div class="col" style="padding-left: 5%">
-    <div class="row" style="height: 20%"></div>
-    <button (click)="edit()">Edit</button>
-    <br />
-    <!--    <button (click)="settings()">Settings</button>-->
-    <!--    <br />-->
-    <button (click)="toFriends()">Friends</button>
-    <br />
-    <button (click)="toSettings()">Settings</button>
-    <br />
-    <button (click)="toChangePassword()">Change Password</button>
-    <br />
-    <button id="helpBtn" (click)="showModal()">Help</button>
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close" (click)="closeModal()">&times;</span>
-        <p>For help, contact the team:</p>
-        <p>Frederick: fxr233@student.bham.ac.uk, Reuben: rxb208@student.bham.ac.uk</p>
-        <p>Robert: rxb256@student.bham.ac.uk, Joseph: jfh245@student.bham.ac.uk</p>
-        <p>Shoaib: sxh1499@student.bham.ac.uk, Matthew: mxh1131@student.bham.ac.uk</p>
-        <p>Chris: cxw298@student.bham.ac.uk</p>
-      </div>
-    </div>
-    <br />
-    <button id="gdprBtn" (click)="navigateToGDPR()">GDPR</button>
-    <br />
-    <button (click)="logout()">Logout</button>
-  </div>
+  <!--  <div class="col" style="padding-left: 5%">-->
+  <!--    <div class="row" style="height: 20%"></div>-->
+  <!--    <button (click)="edit()">Edit</button>-->
+  <!--    <br />-->
+  <!--    &lt;!&ndash;    <button (click)="settings()">Settings</button>&ndash;&gt;-->
+  <!--    &lt;!&ndash;    <br />&ndash;&gt;-->
+  <!--    <button (click)="toFriends()">Friends</button>-->
+  <!--    <br />-->
+  <!--    <button (click)="toSettings()">Settings</button>-->
+  <!--    <br />-->
+  <!--    <button (click)="toChangePassword()">Change Password</button>-->
+  <!--    <br />-->
+  <!--    <button id="helpBtn" (click)="showModal()">Help</button>-->
+  <!--    <div id="myModal" class="modal">-->
+  <!--      <div class="modal-content">-->
+  <!--        <span class="close" (click)="closeModal()">&times;</span>-->
+  <!--        <p>For help, contact the team:</p>-->
+  <!--        <p>Frederick: fxr233@student.bham.ac.uk, Reuben: rxb208@student.bham.ac.uk</p>-->
+  <!--        <p>Robert: rxb256@student.bham.ac.uk, Joseph: jfh245@student.bham.ac.uk</p>-->
+  <!--        <p>Shoaib: sxh1499@student.bham.ac.uk, Matthew: mxh1131@student.bham.ac.uk</p>-->
+  <!--        <p>Chris: cxw298@student.bham.ac.uk</p>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--    <br />-->
+  <!--    <button id="gdprBtn" (click)="navigateToGDPR()">GDPR</button>-->
+  <!--    <br />-->
+  <!--    <button (click)="logout()">Logout</button>-->
+  <!--  </div>-->
   <!--  <div class="row" style="height: 200px"></div>-->
 </div>
+<div class="row" style="height: 100px"></div>
