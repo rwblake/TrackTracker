@@ -49,7 +49,7 @@ public class AppUser implements Serializable {
     @Column(name = "spotify_username", nullable = false)
     private String spotifyUsername;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(unique = true)
     private User internalUser;
