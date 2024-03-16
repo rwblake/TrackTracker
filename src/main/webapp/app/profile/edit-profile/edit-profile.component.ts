@@ -106,7 +106,7 @@ export class EditProfileComponent implements OnInit {
       userPreferences: myPreferences,
       spotifyToken: this.user?.spotifyToken,
       feed: this.user?.feed,
-      blockedByUser: this.user?.blockedByUser,
+      blockedByUsers: this.user?.blockedByUsers,
     };
 
     this.isSaving = true;

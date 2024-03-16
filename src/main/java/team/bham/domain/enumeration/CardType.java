@@ -39,4 +39,6 @@ public enum CardType {
 
     /** The card displays the song which best sums up a given playlist */
     PLAYLIST_SUMS_UP,
+
+    GENRE,
 }
