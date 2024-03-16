@@ -375,7 +375,7 @@
           </ul>
         </li>
 
-        <li class="nav-item" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item profile" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
           <a
             class="nav-link"
@@ -387,6 +387,39 @@
             <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
             <!--            <span>Profile</span>-->
           </a>
+          <ul class="dropdown-menu profile-menu">
+            <li>
+              <button class="dropdown-item" (click)="toFriends()">Friends</button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="edit()">Edit</button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="toSettings()">Settings</button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="toChangePassword()">Change Password</button>
+            </li>
+            <li>
+              <button class="dropdown-item" id="helpBtn" (click)="showModal()">Help</button>
+              <div id="myModal" class="modal">
+                <div class="modal-content">
+                  <span class="close" (click)="closeModal()">&times;</span>
+                  <p>For help, contact the team:</p>
+                  <p>Frederick: fxr233@student.bham.ac.uk, Reuben: rxb208@student.bham.ac.uk</p>
+                  <p>Robert: rxb256@student.bham.ac.uk, Joseph: jfh245@student.bham.ac.uk</p>
+                  <p>Shoaib: sxh1499@student.bham.ac.uk, Matthew: mxh1131@student.bham.ac.uk</p>
+                  <p>Chris: cxw298@student.bham.ac.uk</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <button class="dropdown-item" id="gdprBtn" (click)="navigateToGDPR()">GDPR</button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="logout()">Logout</button>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item" routerLinkActive="active" *ngSwitchCase="false" [routerLinkActiveOptions]="{ exact: true }">
