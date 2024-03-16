@@ -59,6 +59,41 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['']);
   }
 
+  edit(): void {
+    this.router.navigate(['./profile/edit-profile']);
+  }
+
+  toFriends(): void {
+    this.router.navigate(['./friends']);
+  }
+  showModal() {
+    let modal = document.getElementById('myModal') as HTMLElement | null;
+    if (modal) {
+      modal.style.display = 'block';
+    } else {
+      console.error('Modal element not found');
+    }
+  }
+  closeModal() {
+    let modal = document.getElementById('myModal') as HTMLElement | null;
+    if (modal) {
+      modal.style.display = 'none';
+    } else {
+      console.error('Modal element not found');
+    }
+  }
+  navigateToGDPR() {
+    this.router.navigate(['/gdpr-policy']);
+  }
+
+  toSettings() {
+    this.router.navigate(['/account/settings']);
+  }
+
+  toChangePassword() {
+    this.router.navigate(['/account/password']);
+  }
+
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }

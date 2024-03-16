@@ -2,6 +2,10 @@
   <div class="col">
     <div class="row" style="padding-top: 10%; padding-bottom: 10%">
       <h2>{{ account ? account.login : 'ProfileName' }}</h2>
+      <h5 style="padding-left: 15%">
+        {{ account ? account.firstName : 'FirstName' }} {{ account ? account.lastName : 'LastName' }} links to
+        {{ user ? user.spotifyUsername : 'SpotifyUsername' }}
+      </h5>
     </div>
     <div class="row">
       <img
