@@ -136,6 +136,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     return card.id;
   }
 
+  hasMaxPinned() {
+    if (this.account_data === null) return false;
+
+    return this.account_data && this.account_data.pinnedFriends.length >= 5;
+  }
+
   // getLastUpdateMessage(): string {
   //   if (this.account_data === null) return "";
   //

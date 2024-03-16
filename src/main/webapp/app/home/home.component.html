@@ -18,9 +18,9 @@
         </div>
       </button>
 
-      <div *ngIf="account_data.pinnedFriends == null || account_data.pinnedFriends.length == 0">You have no pinned friends.</div>
+      <!--      <div *ngIf="account_data.pinnedFriends == null || account_data.pinnedFriends.length == 0">You have no pinned friends.</div>-->
 
-      <!--      <hr class="divider" />-->
+      <hr class="divider" />
 
       <!--      <button *ngFor="let friend of account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">-->
       <!--        <img-->
@@ -33,13 +33,13 @@
       <!--        <p *ngIf="friend.pinned" class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>-->
       <!--      </button>-->
 
-      <!--      <button *ngIf="!hasMaxPinned()" class="friend-card">-->
-      <!--        <div class="circle-button">-->
-      <!--          <fa-icon icon="add" [fixedWidth]="true"></fa-icon>-->
-      <!--        </div>-->
+      <button *ngIf="!hasMaxPinned()" class="friend-card">
+        <div class="circle-button">
+          <fa-icon icon="add" [fixedWidth]="true"></fa-icon>
+        </div>
 
-      <!--        <p class="name">Pin friend</p>-->
-      <!--      </button>-->
+        <p class="name">Pin friend</p>
+      </button>
     </section>
   </div>
 
