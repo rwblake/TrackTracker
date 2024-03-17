@@ -19,22 +19,27 @@ export interface Account_Combined {
 interface Feed {
   id: number;
   lastUpdated: dayjs.Dayjs;
-  cards: Card[];
+  cards: FeedCard[];
 }
 
-export interface Card {
+export interface FeedCard {
   id: number;
   liked: boolean;
-  metric?: CardType | null;
-  inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update';
-  timeFrame?: string | null;
-  metricValue?: number | null;
   timeGenerated?: dayjs.Dayjs;
   belongsTo: {
     id: number;
     firstName: string;
     lastName: string;
   };
+
+  inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update';
+  generatedMessage: string;
+  inferredIcon: string;
+  linksTo: string;
+
+  // timeFrame?: string | null;
+  // metricValue?: number | null;
+  // metric?: CardType | null;
 }
 
 interface InternalUser {

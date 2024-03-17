@@ -1,4 +1,4 @@
-package team.bham.service;
+package team.bham.service.spotify;
 
 public class DeclinedSpotifyAccessException extends RuntimeException {
 

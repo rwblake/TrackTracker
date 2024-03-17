@@ -49,12 +49,12 @@ public class Card implements Serializable {
     @Column(name = "time_generated", nullable = false)
     private Instant timeGenerated;
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "feed", "card" }, allowSetters = true)
     private Set<FeedCard> usages = new HashSet<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JsonIgnoreProperties(
         value = {

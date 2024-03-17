@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
+import se.michaelthelin.spotify.model_objects.specification.Image;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.*;
 import team.bham.security.AuthoritiesConstants;
-import team.bham.service.EmailAlreadyUsedException;
-import team.bham.service.SpotifyIDAlreadyUsedException;
-import team.bham.service.UsernameAlreadyUsedException;
 import team.bham.service.spotify.SpotifyAuthorisationService;
 import team.bham.web.rest.vm.ManagedAppUserVM;
 import tech.jhipster.security.RandomUtil;
@@ -159,7 +158,14 @@ public class AppUserService extends team.bham.service.UserService {
         newAppUser.setSpotifyUsername(spotifyDisplayName);
         newAppUser.setName("UNUSED FIELD");
         if (spotifyUser.getImages() != null && spotifyUser.getImages().length != 0) {
-            newAppUser.setAvatarURL(spotifyUser.getImages()[0].getUrl());
+            Image[] images = spotifyUser.getImages();
+            String imageUrl = Arrays
+                .stream(images)
+                .sorted(Comparator.comparing(Image::getHeight).reversed())
+                .collect(Collectors.toList())
+                .get(0)
+                .getUrl();
+            newAppUser.setAvatarURL(imageUrl);
         }
 
         // Create a Feed

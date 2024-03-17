@@ -1,4 +1,4 @@
-package team.bham.service;
+package team.bham.service.account;
 
 public class InvalidPasswordException extends RuntimeException {
 

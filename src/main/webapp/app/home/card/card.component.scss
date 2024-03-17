@@ -1,3 +1,8 @@
+:host {
+  //display: flex;
+  //width: 100%;
+}
+
 p {
   margin: 0;
 }
@@ -17,9 +22,20 @@ p {
   &.milestone {
     background-color: rgb(255, 208, 88);
     border: solid 2px rgb(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgb(255, 208, 88, 0.3);
 
     * {
       color: black;
+    }
+  }
+
+  &.personal {
+    background-color: rgb(164, 66, 210);
+    border: solid 2px rgb(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgb(164, 66, 210, 0.5);
+
+    * {
+      color: white;
     }
   }
 

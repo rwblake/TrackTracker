@@ -128,9 +128,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // trackByIndex(index: number) {
-  //   return index;
-  // }
+  trackByIndex(index: number) {
+    return index;
+  }
 
   trackByCardID(card: any) {
     return card.id;

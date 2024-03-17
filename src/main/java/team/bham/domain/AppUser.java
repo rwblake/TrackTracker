@@ -72,22 +72,22 @@ public class AppUser implements Serializable {
     @JoinColumn(unique = true)
     private Feed feed;
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "playlistStats", "songs", "appUser" }, allowSetters = true)
     private Set<Playlist> playlists = new HashSet<>();
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "song", "appUser" }, allowSetters = true)
     private Set<Stream> streams = new HashSet<>();
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "usages", "appUser" }, allowSetters = true)
     private Set<Card> cards = new HashSet<>();
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "metrics", "appUser" }, allowSetters = true)
     private Set<CardTemplate> cardTemplates = new HashSet<>();
@@ -126,37 +126,37 @@ public class AppUser implements Serializable {
     )
     private Set<AppUser> blockedUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "aboutAppUser")
+    @OneToMany(mappedBy = "aboutAppUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
     private Set<FriendRecommendation> aboutFriendRecommendations = new HashSet<>();
 
-    @OneToMany(mappedBy = "forAppUser")
+    @OneToMany(mappedBy = "forAppUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "aboutAppUser", "forAppUser" }, allowSetters = true)
     private Set<FriendRecommendation> forFriendRecommendations = new HashSet<>();
 
-    @OneToMany(mappedBy = "initiatingAppUser")
+    @OneToMany(mappedBy = "initiatingAppUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
     private Set<FriendRequest> intitiatingFriendRequests = new HashSet<>();
 
-    @OneToMany(mappedBy = "toAppUser")
+    @OneToMany(mappedBy = "toAppUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "initiatingAppUser", "toAppUser" }, allowSetters = true)
     private Set<FriendRequest> toFriendRequests = new HashSet<>();
 
-    @OneToMany(mappedBy = "friendInitiating")
+    @OneToMany(mappedBy = "friendInitiating", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting" }, allowSetters = true)
     private Set<Friendship> friendshipInitiateds = new HashSet<>();
 
-    @OneToMany(mappedBy = "friendAccepting")
+    @OneToMany(mappedBy = "friendAccepting", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "friendInitiating", "friendAccepting" }, allowSetters = true)
     private Set<Friendship> friendshipAccepteds = new HashSet<>();
 
-    @ManyToMany(mappedBy = "blockedUsers")
+    @ManyToMany(mappedBy = "blockedUsers", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
         value = {

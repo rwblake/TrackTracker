@@ -29,6 +29,7 @@ import org.zalando.problem.StatusType;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.security.SecurityAdviceTrait;
 import org.zalando.problem.violations.ConstraintViolationProblem;
+import team.bham.service.account.UsernameAlreadyUsedException;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.web.util.HeaderUtil;
 
@@ -117,7 +118,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
 
     @ExceptionHandler
     public ResponseEntity<Problem> handleEmailAlreadyUsedException(
-        team.bham.service.EmailAlreadyUsedException ex,
+        team.bham.service.account.EmailAlreadyUsedException ex,
         NativeWebRequest request
     ) {
         EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
@@ -129,10 +130,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(
-        team.bham.service.UsernameAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
+    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException ex, NativeWebRequest request) {
         LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
         return create(
             problem,
@@ -142,7 +140,10 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleInvalidPasswordException(team.bham.service.InvalidPasswordException ex, NativeWebRequest request) {
+    public ResponseEntity<Problem> handleInvalidPasswordException(
+        team.bham.service.account.InvalidPasswordException ex,
+        NativeWebRequest request
+    ) {
         return create(new InvalidPasswordException(), request);
     }
 

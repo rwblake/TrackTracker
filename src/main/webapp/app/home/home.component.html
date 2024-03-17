@@ -22,16 +22,10 @@
 
       <hr class="divider" />
 
-      <!--      <button *ngFor="let friend of account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">-->
-      <!--        <img-->
-      <!--          *ngIf="friend.pinned"-->
-      <!--          [src]="friend.avatarURL"-->
-      <!--          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"-->
-      <!--          height="64"-->
-      <!--          width="64"-->
-      <!--        />-->
-      <!--        <p *ngIf="friend.pinned" class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>-->
-      <!--      </button>-->
+      <button *ngFor="let friend of account_data.pinnedFriends; index as i; trackBy: trackByIndex" class="friend-card">
+        <img [src]="friend.avatarURL" alt="{{ friend.id }}'s profile picture" height="64" width="64" />
+        <!--        <p class="name">{{ friend. + ' ' + friend.lastName }}</p>-->
+      </button>
 
       <button *ngIf="!hasMaxPinned()" class="friend-card">
         <div class="circle-button">

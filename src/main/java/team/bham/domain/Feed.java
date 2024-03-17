@@ -35,7 +35,7 @@ public class Feed implements Serializable {
     @Column(name = "last_updated", nullable = false)
     private Instant lastUpdated;
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "feed", "card" }, allowSetters = true)
     private Set<FeedCard> cards = new HashSet<>();
@@ -61,7 +61,7 @@ public class Feed implements Serializable {
         },
         allowSetters = true
     )
-    @OneToOne(mappedBy = "feed")
+    @OneToOne(mappedBy = "feed", cascade = CascadeType.ALL)
     private AppUser appUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

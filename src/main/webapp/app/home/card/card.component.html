@@ -1,6 +1,6 @@
-<button [class]="'feed-card ' + card.inferredType">
+<button [class]="'feed-card ' + card.inferredType" (press)="(card.linksTo)">
   <p class="type">{{ formatInferredCardType() }}</p>
-  <span class="icon material-symbols-outlined">{{ generateIcon() }}</span>
-  <p class="message">{{ generateMessage() }}</p>
+  <span class="icon material-symbols-outlined">{{ card.inferredIcon }}</span>
+  <p class="message">{{ card.generatedMessage }}</p>
   <p class="time">{{ card.timeGenerated }}</p>
 </button>

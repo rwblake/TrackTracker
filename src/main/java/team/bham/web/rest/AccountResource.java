@@ -11,11 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -23,7 +19,6 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.CardType;
-import team.bham.repository.AppUserRepository;
 import team.bham.repository.CardRepository;
 import team.bham.repository.UserRepository;
 import team.bham.security.SecurityUtils;
@@ -32,6 +27,10 @@ import team.bham.service.account.AccountCombinedResponse;
 import team.bham.service.account.AppUserService;
 import team.bham.service.dto.AdminUserDTO;
 import team.bham.service.dto.PasswordChangeDTO;
+import team.bham.service.feed.FeedCardResponse;
+import team.bham.service.feed.FeedCardService;
+import team.bham.service.feed.FeedService;
+import team.bham.service.spotify.DeclinedSpotifyAccessException;
 import team.bham.service.spotify.SpotifyAuthorisationService;
 import team.bham.web.rest.errors.*;
 import team.bham.web.rest.errors.EmailAlreadyUsedException;
@@ -70,6 +69,7 @@ public class AccountResource {
 
     private final SpotifyAuthorisationService spotifyAuthorisationService;
     private final CardRepository cardRepository;
+    private final FeedCardService feedCardService;
 
     public AccountResource(
         UserRepository userRepository,
@@ -79,7 +79,8 @@ public class AccountResource {
         FeedService feedService,
         MailService mailService,
         SpotifyAuthorisationService spotifyAuthorisationService,
-        CardRepository cardRepository
+        CardRepository cardRepository,
+        FeedCardService feedCardService
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -89,6 +90,7 @@ public class AccountResource {
         this.mailService = mailService;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
         this.cardRepository = cardRepository;
+        this.feedCardService = feedCardService;
     }
 
     /**
@@ -224,7 +226,9 @@ public class AccountResource {
                 .map(Card::getAppUser)
                 .collect(Collectors.toList());
 
-        AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, feedCards, pinnedFriends);
+        List<FeedCardResponse> frontendFeedCards = this.feedCardService.generateFrontendCards(feedCards);
+
+        AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, frontendFeedCards, pinnedFriends);
 
         Gson gson = new Gson();
         return gson.toJson(response);
