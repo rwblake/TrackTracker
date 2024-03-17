@@ -80,6 +80,7 @@ a:hover {
 
 .progressBarInside {
   border-radius: 8px;
+  border: solid 1px $translucent-border;
 
   height: 100%;
   width: 50%;

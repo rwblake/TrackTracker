@@ -16,7 +16,7 @@
               id="name"
               name="link-input"
               formControlName="name"
-              placeholder="Paste the link to a public Spotify playlist here..."
+              placeholder="Paste the link to a Spotify playlist here..."
               [(ngModel)]="linkInput"
               required
             />
@@ -34,7 +34,10 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead" *ngIf="showWaitingMessage">Please wait while we process your playlist. This won't take too long.</p>
-        <p class="lead" *ngIf="showErrorMessage">Sorry, we weren't able to process your playlist due to an error.</p>
+        <p class="lead" *ngIf="showErrorMessage">
+          Sorry, we weren't able to process your playlist due to an error. If you're trying to access private content, please make sure
+          you're logged in and have authorised us with your Spotify account.
+        </p>
       </div>
     </div>
   </div>
