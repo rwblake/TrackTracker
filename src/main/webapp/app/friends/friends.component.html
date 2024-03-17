@@ -1,100 +1,93 @@
-<h1>Friends</h1>
+<div class="friends-root">
+  <h1>Friends</h1>
 
-<!-- List friend requests -->
-<div *ngIf="friendRequests && friendRequests.length > 0">
-  <h2>Friend Requests</h2>
-  <table class="table table-striped" aria-describedby="page-heading">
-    <thead>
-      <th scope="col">
-        <span>From</span>
-      </th>
-      <th scope="col">
-        <span>Created</span>
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let friendRequest of friendRequests">
-        <td>{{ friendRequest.initiatingAppUser?.internalUser?.login }}</td>
-        <td>{{ friendRequest.createdAt?.toString() }}</td>
+  <!-- List friend requests -->
+  <div *ngIf="friendRequests && friendRequests.length > 0">
+    <h2>Friend Requests</h2>
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <th scope="col">
+          <span>From</span>
+        </th>
+        <th scope="col">
+          <span>Created</span>
+        </th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let friendRequest of friendRequests">
+          <td>{{ friendRequest.initiatingAppUser?.internalUser?.login }}</td>
+          <td>{{ friendRequest.createdAt?.toString() }}</td>
 
-        <td>
-          <div>
-            <button type="submit" (click)="accept(friendRequest.id)">
-              <fa-icon icon="check"></fa-icon>
-            </button>
-            <button type="submit" (click)="reject(friendRequest.id)">
-              <fa-icon icon="xmark"></fa-icon>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- View all visible users -->
-<div *ngIf="users && users.length > 0">
-  <h2>Users</h2>
-  <table class="table table-striped" aria-describedby="page-heading">
-    <thead>
-      <th scope="col">
-        <span>Name</span>
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>
-          <img [src]="user?.avatarURL" width="64px" height="64px" />
-          {{ user.internalUser?.login }}
-        </td>
-        <td>
-          <div>
-            <button type="submit" (click)="sendLink(user.id)">
-              <fa-icon icon="plus"></fa-icon>
-            </button>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <p class="lead" *ngIf="showErrorMessage">Friend request was unable to be sent.</p>
+          <td>
+            <div>
+              <button type="submit" (click)="accept(friendRequest.id)">
+                <fa-icon icon="check"></fa-icon>
+              </button>
+              <button type="submit" (click)="reject(friendRequest.id)">
+                <fa-icon icon="xmark"></fa-icon>
+              </button>
             </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<div class="container-fluid px-5" *ngIf="pulledData">
-  <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
-</div>
-
-<!-- List friends -->
-<div *ngIf="friends && friends.length > 0">
-  <h2>Friends</h2>
-  <table class="table table-striped" aria-describedby="page-heading">
-    <thead>
-      <th scope="col">
-        <span>Name</span>
-      </th>
-      <th scope="col">
-        <span>Created</span>
-      </th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let friend of friends">
-        <td>
-          <img [src]="friend.friendAppUser?.avatarURL" width="64px" height="64px" />
-          {{ friend.friendAppUser?.internalUser?.login }}
-        </td>
-        <td>{{ friend?.createdAt?.toString() }}</td>
-        <td>
-          <div>
-            <button type="submit" (click)="delete(friend)">
-              <fa-icon icon="xmark"></fa-icon>
-            </button>
+  <!-- View all visible users -->
+  <div *ngIf="users && users.length > 0">
+    <h2>Users</h2>
+    <table class="table table-striped" aria-describedby="page-heading">
+      <tbody>
+        <tr *ngFor="let user of users">
+          <div class="friendCard">
+            <td>
+              <img [src]="user?.avatarURL" />
+              {{ user.internalUser?.login }}
+            </td>
+            <td>
+              <div>
+                <button type="submit" (click)="sendLink(user.id)">
+                  <fa-icon icon="plus"></fa-icon>
+                </button>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <p class="lead" *ngIf="showErrorMessage">Friend request was unable to be sent.</p>
+                </div>
+              </div>
+            </td>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="container-fluid px-5" *ngIf="pulledData">
+    <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
+  </div>
+
+  <!-- List friends -->
+  <div *ngIf="friends && friends.length > 0">
+    <h2>My Friends</h2>
+    <table class="table table-striped" aria-describedby="page-heading">
+      <tbody>
+        <tr *ngFor="let friend of friends">
+          <div class="friendCard">
+            <td>
+              <img [src]="friend.friendAppUser?.avatarURL" />
+              <p>{{ friend.friendAppUser?.internalUser?.login }}</p>
+            </td>
+            <td>{{ friend?.createdAt?.toString() }}</td>
+            <td>
+              <div>
+                <button type="submit" (click)="delete(friend)">
+                  <fa-icon icon="xmark"></fa-icon>
+                </button>
+              </div>
+            </td>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
