@@ -4,12 +4,12 @@ import { APP_NAME } from '../app.constants';
 import { Router } from '@angular/router';
 import { LoginService } from 'app/login/login.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
-import { map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
 import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
 import { PlaylistService } from '../entities/playlist/service/playlist.service';
-import { IPlaylist } from '../entities/playlist/playlist.model';
+import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
 
 @Component({
   selector: 'jhi-profile',
@@ -17,7 +17,6 @@ import { IPlaylist } from '../entities/playlist/playlist.model';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  //playlist: any;
   playlistData: any[] = [];
   friends: any;
   user: IAppUser | null = null;
@@ -31,9 +30,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private titleService: Title,
     private router: Router,
-    private loginService: LoginService,
     private accountService: AccountService,
-    private playlistService: PlaylistService
+    private playlistInsightsService: PlaylistInsightsService
   ) {}
 
   ngOnInit(): void {
@@ -50,14 +48,12 @@ export class ProfileComponent implements OnInit {
         console.error('Error fetching user bio:', error);
       }
     );
-    const playlists$ = this.playlistService.getAllPlaylists();
+    const playlists$ = this.playlistInsightsService.retrieveUserPlaylists();
     playlists$.subscribe(playlists => {
       if (Array.isArray(playlists)) {
         playlists.forEach(playlist => {
           console.log(playlist);
-          if (playlist.appUser.id == this.user?.id) {
-            this.playlistData.push(playlist);
-          }
+          this.playlistData.push(playlist);
         });
       } else {
         console.error('Data is not an array of playlists');
