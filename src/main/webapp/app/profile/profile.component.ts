@@ -8,6 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
 import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
+import { PlaylistService } from '../entities/playlist/service/playlist.service';
+import { IPlaylist } from '../entities/playlist/playlist.model';
 
 @Component({
   selector: 'jhi-profile',
@@ -15,7 +17,8 @@ import { Account } from 'app/core/auth/account.model';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  playlist: any;
+  //playlist: any;
+  playlistData: IPlaylist | undefined;
   friends: any;
   user: IAppUser | null = null;
   appUser: any;
@@ -29,7 +32,8 @@ export class ProfileComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private loginService: LoginService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private playlistService: PlaylistService
   ) {}
 
   ngOnInit(): void {
@@ -46,46 +50,16 @@ export class ProfileComponent implements OnInit {
         console.error('Error fetching user bio:', error);
       }
     );
-  }
-  edit(): void {
-    this.router.navigate(['./profile/edit-profile']);
-  }
-  // settings(): void {
-  //   this.router.navigate(['./profile/user-preferences']);
-  // }
-
-  toFriends(): void {
-    this.router.navigate(['./friends']);
-  }
-  logout(): void {
-    this.loginService.logout();
-    this.router.navigate(['']);
-  }
-  showModal() {
-    let modal = document.getElementById('myModal') as HTMLElement | null;
-    if (modal) {
-      modal.style.display = 'block';
-    } else {
-      console.error('Modal element not found');
-    }
-  }
-  closeModal() {
-    let modal = document.getElementById('myModal') as HTMLElement | null;
-    if (modal) {
-      modal.style.display = 'none';
-    } else {
-      console.error('Modal element not found');
-    }
-  }
-  navigateToGDPR() {
-    this.router.navigate(['/gdpr-policy']);
-  }
-
-  toSettings() {
-    this.router.navigate(['/account/settings']);
-  }
-
-  toChangePassword() {
-    this.router.navigate(['/account/password']);
+    const playlists$ = this.playlistService.getAllPlaylists();
+    console.log(playlists$);
+    // playlists$.subscribe(playlists => {
+    //   if (Array.isArray(playlists)) {
+    //     playlists.forEach(playlist => {
+    //       this.playlistData = playlist;
+    //     });
+    //   } else {
+    //     console.error('Data is not an array of playlists');
+    //   }
+    // });
   }
 }

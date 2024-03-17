@@ -70,4 +70,9 @@ export class PlaylistService {
     }
     return playlistCollection;
   }
+
+  getAllPlaylists(): Observable<Object> {
+    console.log(this.http.get('/playlists'));
+    return this.http.get('/playlists');
+  }
 }
