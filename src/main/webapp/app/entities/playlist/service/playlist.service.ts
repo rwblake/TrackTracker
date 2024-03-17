@@ -6,6 +6,7 @@ import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IPlaylist, NewPlaylist } from '../playlist.model';
+import { IAppUser } from '../../app-user/app-user.model';
 
 export type PartialUpdatePlaylist = Partial<IPlaylist> & Pick<IPlaylist, 'id'>;
 
@@ -72,7 +73,7 @@ export class PlaylistService {
   }
 
   getAllPlaylists(): Observable<Object> {
-    console.log(this.http.get('/playlists'));
-    return this.http.get('/playlists');
+    console.log(this.http.get(this.resourceUrl));
+    return this.http.get(this.resourceUrl);
   }
 }

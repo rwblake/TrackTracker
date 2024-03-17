@@ -4,7 +4,7 @@ import { APP_NAME } from '../app.constants';
 import { Router } from '@angular/router';
 import { LoginService } from 'app/login/login.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
 import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
@@ -18,7 +18,7 @@ import { IPlaylist } from '../entities/playlist/playlist.model';
 })
 export class ProfileComponent implements OnInit {
   //playlist: any;
-  playlistData: IPlaylist | undefined;
+  playlistData: any[] = [];
   friends: any;
   user: IAppUser | null = null;
   appUser: any;
@@ -51,15 +51,17 @@ export class ProfileComponent implements OnInit {
       }
     );
     const playlists$ = this.playlistService.getAllPlaylists();
-    console.log(playlists$);
-    // playlists$.subscribe(playlists => {
-    //   if (Array.isArray(playlists)) {
-    //     playlists.forEach(playlist => {
-    //       this.playlistData = playlist;
-    //     });
-    //   } else {
-    //     console.error('Data is not an array of playlists');
-    //   }
-    // });
+    playlists$.subscribe(playlists => {
+      if (Array.isArray(playlists)) {
+        playlists.forEach(playlist => {
+          console.log(playlist);
+          if (playlist.appUser.id == this.user?.id) {
+            this.playlistData.push(playlist);
+          }
+        });
+      } else {
+        console.error('Data is not an array of playlists');
+      }
+    });
   }
 }
