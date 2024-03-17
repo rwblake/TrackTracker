@@ -59,11 +59,7 @@ public class UserPlaylistResource {
             return ResponseEntity.status(HttpStatus.OK).body(userPlaylists);
         }
 
-        for (team.bham.domain.Playlist playlist : playlistRepository.findAll()) {
-            if (playlist.getAppUser() != null && playlist.getAppUser() == currentUser) {
-                userPlaylists.add(playlist);
-            }
-        }
+        userPlaylists = this.playlistRepository.findPlaylistsByAppUser(currentUser);
 
         return ResponseEntity.status(HttpStatus.OK).body(userPlaylists);
     }

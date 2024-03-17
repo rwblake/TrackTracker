@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import team.bham.domain.AppUser;
 import team.bham.domain.Playlist;
 
 /**
@@ -32,4 +33,6 @@ public interface PlaylistRepository extends PlaylistRepositoryWithBagRelationshi
     public Boolean existsBySpotifyID(String spotifyID);
 
     public Playlist findPlaylistBySpotifyID(String spotifyID);
+
+    public List<Playlist> findPlaylistsByAppUser(AppUser appUser);
 }
