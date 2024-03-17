@@ -3,6 +3,11 @@ import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
+import { AccountService } from '../core/auth/account.service';
+import { IAppUser } from '../entities/app-user/app-user.model';
+// import {InsightsService} from './insights.'
+import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
+import { PlaylistInsightsResponse } from '../playlist-insights/playlist-insights-response-interface';
 
 @Component({
   selector: 'jhi-insights',
@@ -10,79 +15,17 @@ import { TimePeriod } from '../time-period-picker/time-period-picker.component';
   styleUrls: ['./insights.component.scss'],
 })
 export class InsightsComponent implements OnInit {
+  user: IAppUser | null = null;
+
   genrePieChartTitle = 'Genres Listened To';
-  genrePieChart = [
-    {
-      name: 'Pop',
-      value: 40632,
-      extra: {
-        code: 'po',
-      },
-    },
-    {
-      name: 'Rock',
-      value: 50000,
-      extra: {
-        code: 'rk',
-      },
-    },
-    {
-      name: 'Hip Hop',
-      value: 36745,
-      extra: {
-        code: 'hh',
-      },
-    },
-  ];
+  pieLimit: number = 10;
+  genrePieChart: { name: string; value: number }[] = [];
   below = LegendPosition.Below;
 
   xaxisLabelBar = 'Time period';
   yaxisLabelBar = 'Hours';
 
-  listenedTimeBar = [
-    {
-      name: 'Monday',
-      value: 40632,
-      extra: {
-        code: 'de',
-      },
-    },
-    {
-      name: 'Tuesday',
-      value: 50000,
-      extra: {
-        code: 'us',
-      },
-    },
-    {
-      name: 'Wednesday',
-      value: 36745,
-      extra: {
-        code: 'fr',
-      },
-    },
-    {
-      name: 'Thursday',
-      value: 36240,
-      extra: {
-        code: 'uk',
-      },
-    },
-    {
-      name: 'Friday',
-      value: 33000,
-      extra: {
-        code: 'es',
-      },
-    },
-    {
-      name: 'Saturday',
-      value: 35800,
-      extra: {
-        code: 'it',
-      },
-    },
-  ];
+  listenedTimeBar: { name: string; value: number }[] = [];
 
   yaxisLabelLine = 'Hours';
   artistLineChartTitle = 'Artists';
@@ -190,52 +133,52 @@ export class InsightsComponent implements OnInit {
   ];
 
   xaxisLabelBarAlbum = 'Albums';
-  albumsListenedBar = [
-    {
-      name: 'Hugo',
-      value: 40632,
-      extra: {
-        code: 'lc',
-      },
-    },
-    {
-      name: 'Halo',
-      value: 50000,
-      extra: {
-        code: 'bk',
-      },
-    },
-    {
-      name: 'Purpose',
-      value: 36745,
-      extra: {
-        code: 'jb',
-      },
-    },
-    {
-      name: '30',
-      value: 36240,
-      extra: {
-        code: 'ad',
-      },
-    },
-    {
-      name: '25',
-      value: 33000,
-      extra: {
-        code: 'ad',
-      },
-    },
-  ];
+  albumsListenedBar: { name: string; value: number }[] = [];
 
   selectedTimePeriod?: TimePeriod;
   // view: number[] = [];
 
-  constructor(private titleService: Title) {}
+  // Used to check if data has been pulled
+  pulledData: boolean = false;
+  waitingForResponse: boolean = false;
+  showWaitingMessage: boolean = false;
+  showErrorMessage: boolean = false;
+
+  constructor(private titleService: Title, private accountService: AccountService) {}
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Insights');
-  }
 
+    this.accountService.fetchUser().subscribe(
+      (data: IAppUser) => {
+        this.user = data;
+      },
+      error => {
+        console.error('Error fetching user bio:', error);
+      }
+    );
+  }
+  // constructor(private titleService: Title, private insightsService: InsightsService) {}
+  // response: InsightsResponse | undefined;
+  // async sendSpotID() {
+  //   // @ts-ignore
+  //   const spotid: String = data;
+  //
+  //     this.waitingForResponse = true;
+  //   this.pulledData = false;
+  //   this.showErrorMessage = false;
+  //
+  //   this.InsightsService.sendURL(url).subscribe({
+  //     next: v => this.onSuccessfulResponse(v),
+  //     error: e => this.onFailure(e),
+  //   });
+  //
+  //   // Pulling data is sometimes effectively instant. It looks bad if the "waiting" message pops up
+  //   // for half a second - so we only show it if we've been waiting for some time.
+  //   await this.delay(750);
+  //   if (this.waitingForResponse) {
+  //     this.showWaitingMessage = true;
+  //   }
+  // }
   onTimePeriodChange(period: TimePeriod): void {
     this.selectedTimePeriod = period;
   }
