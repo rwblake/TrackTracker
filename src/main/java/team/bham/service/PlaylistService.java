@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
+import team.bham.domain.AppUser;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
 import team.bham.domain.User;
@@ -47,17 +48,28 @@ public class PlaylistService {
         throws IOException, ParseException, SpotifyWebApiException {
         boolean playlistExists = false;
         Playlist myPlaylist = null;
+        AppUser currentUser = null;
 
-        // Check if playlist is already in the database
         String spotifyID = playlist.getId();
+
+        // Check for user. We'll need this later.
+        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
+            currentUser = this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
+        }
+
         if (playlistRepository.existsBySpotifyID(spotifyID)) {
-            // If yes, check if its data is outdated.
+            playlistExists = true;
             myPlaylist = playlistRepository.findPlaylistBySpotifyID(spotifyID);
-            long minutesOld = Duration.between(myPlaylist.getPlaylistStats().getLastUpdated(), Instant.now()).toMinutes();
-            if (minutesOld < 60) {
-                return myPlaylist;
-            } else {
-                playlistExists = true;
+
+            // Check the playlist owner matches. If not, we'll try to pull it, but
+            // we'll be rejected by Spotify if the user doesn't have the right to
+            if (!(currentUser != null && currentUser != myPlaylist.getAppUser())) {
+                // Check if its data is outdated.
+                long minutesOld = Duration.between(myPlaylist.getPlaylistStats().getLastUpdated(), Instant.now()).toMinutes();
+                if (minutesOld < 60) {
+                    return myPlaylist;
+                }
             }
         }
 
@@ -67,10 +79,10 @@ public class PlaylistService {
         }
 
         // If there's a user logged in, make them the owner of the playlist!
-        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
-        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
-            myPlaylist.setAppUser(this.appUserRepository.getAppUserByInternalUser(userMaybe.get()));
+        if (currentUser != null) {
+            myPlaylist.setAppUser(currentUser);
         }
+
         myPlaylist.setSpotifyID(playlist.getId());
         myPlaylist.setName(playlist.getName());
         myPlaylist.setImageURL(playlist.getImages()[0].getUrl());

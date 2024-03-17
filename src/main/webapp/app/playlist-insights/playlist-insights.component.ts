@@ -74,6 +74,11 @@ export class PlaylistInsightsComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
+
+    this.playlistInsightsService.retrieveUserPlaylists().subscribe({
+      next: v => console.log(v),
+      error: e => this.onFailure(e),
+    });
   }
 
   // Sends playlist link to backend HTTP endpoint and subscribes to response
