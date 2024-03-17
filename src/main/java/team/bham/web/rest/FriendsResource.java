@@ -19,7 +19,6 @@ import team.bham.repository.CardRepository;
 import team.bham.repository.FriendRequestRepository;
 import team.bham.repository.FriendshipRepository;
 import team.bham.service.UserService;
-import tech.jhipster.web.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -119,6 +118,43 @@ public class FriendsResource {
         this.friendRequestRepository.delete(friendRequest);
 
         return getFriendRequests();
+    }
+
+    @PostMapping("/friends/block")
+    public ResponseEntity<Void> blockUser(@Valid @RequestBody Long appUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        AppUser otherUser = this.appUserRepository.getReferenceById(appUserId);
+
+        // Add to blocked list
+        currentUser.addBlockedUser(otherUser);
+        otherUser.addBlockedByUser(currentUser);
+        this.appUserRepository.save(currentUser);
+        this.appUserRepository.save(otherUser);
+
+        // Delete friend
+        deleteFriend(appUserId);
+
+        // Delete requests
+        this.friendRequestRepository.deleteAllByInitiatingAppUserAndToAppUser(currentUser, otherUser);
+        this.friendRequestRepository.deleteAllByInitiatingAppUserAndToAppUser(otherUser, currentUser);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/friends/unblock")
+    public ResponseEntity<Void> unblockUser(@Valid @RequestBody Long appUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        AppUser otherUser = this.appUserRepository.getReferenceById(appUserId);
+
+        // Remove from blocked list
+        currentUser.removeBlockedUser(otherUser);
+        otherUser.removeBlockedByUser(currentUser);
+        this.appUserRepository.save(currentUser);
+        this.appUserRepository.save(otherUser);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/friends/delete")
