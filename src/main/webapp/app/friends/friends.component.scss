@@ -1,0 +1,58 @@
+$translucent-border: rgb(255, 255, 255, 0.5);
+$translucent-bg: rgb(255, 255, 255, 0.1);
+
+* {
+  box-sizing: border-box;
+}
+
+tr {
+  float: left;
+  width: 50%;
+}
+
+h2 {
+  text-align: left;
+}
+
+tbody:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.friends-root {
+  display: flex;
+  width: 80%;
+  margin: auto;
+  flex-direction: column;
+}
+
+.friendCard {
+  display: flex;
+  align-items: center;
+  background: $translucent-bg;
+  border-radius: 8px;
+  border: solid 1px $translucent-border;
+  gap: 16px;
+  width: 100%;
+  overflow: clip;
+  margin-bottom: 8px;
+
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 1000px;
+    border: solid 2px rgb(255, 255, 255, 0.1);
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-right: 16px;
+    text-align: left;
+    margin-bottom: 0;
+  }
+
+  a {
+    target: '_blank';
+  }
+}

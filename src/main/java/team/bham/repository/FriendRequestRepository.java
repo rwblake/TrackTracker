@@ -16,4 +16,6 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
     public boolean existsByInitiatingAppUserAndToAppUser(@NotNull AppUser initiatingAppUser, AppUser toAppUser);
 
     public List<FriendRequest> findAllByToAppUser(AppUser toAppUser);
+
+    public void deleteAllByInitiatingAppUserAndToAppUser(@NotNull AppUser initiatingAppUser, @NotNull AppUser toAppUser);
 }
