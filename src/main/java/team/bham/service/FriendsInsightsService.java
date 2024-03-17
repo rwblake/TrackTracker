@@ -9,15 +9,16 @@ import team.bham.domain.*;
 import team.bham.domain.enumeration.AlbumType;
 import team.bham.repository.FriendshipRepository;
 import team.bham.repository.SongRepository;
+import team.bham.repository.StreamRepository;
 import team.bham.service.spotify.FriendsInsightsPopularCategoriesResponse;
 
 @Service
 public class FriendsInsightsService {
 
-    private final FriendshipRepository friendshipRepository;
+    private final FriendService friendService;
 
-    public FriendsInsightsService(FriendshipRepository friendshipRepository) {
-        this.friendshipRepository = friendshipRepository;
+    public FriendsInsightsService(FriendService friendService) {
+        this.friendService = friendService;
     }
 
     private <T> List<Map.Entry<T, Integer>> getTopNFromFreqMap(Map<T, Integer> freqMap, int n) {
@@ -38,32 +39,8 @@ public class FriendsInsightsService {
      */
     public FriendsInsightsPopularCategoriesResponse getPopularCategories(AppUser appUser, Optional<Integer> timePeriodInDays) {
         // Get set of all users friends
-
-        // *Sorry joe. When I changed the JDL, I removed the .getFriends() method, so your code wouldn't even run
-        Set<Friendship> myFriendShips = friendshipRepository.findAllByFriendAcceptingOrFriendInitiating(appUser, appUser);
-        // Convert into Friend objects, so that we only deal with the other person in the friendship,
-        // rather than initiating and accepting AppUsers
-        List<Friend> myFriends = new ArrayList<>(myFriendShips.size());
-        Friend tmpFriend;
-        for (Friendship myFriendship : myFriendShips) {
-            if (myFriendship.getFriendInitiating().getId().longValue() == appUser.getId().longValue()) {
-                tmpFriend = new Friend(myFriendship.getCreatedAt(), true, myFriendship.getFriendAccepting(), myFriendship.getId());
-            } else {
-                tmpFriend = new Friend(myFriendship.getCreatedAt(), false, myFriendship.getFriendInitiating(), myFriendship.getId());
-            }
-            myFriends.add(tmpFriend);
-        }
+        List<Friend> myFriends = friendService.getFriends(appUser);
         Set<AppUser> allFriends = myFriends.stream().map(Friend::getFriendAppUser).collect(Collectors.toSet());
-        //        Set<AppUser> allFriends = appUser
-        //            .getFriends()
-        //            .stream()
-        //            .map(friendship -> {
-        //                AppUser initiating = friendship.getFriendInitiating();
-        //                AppUser accepting = friendship.getFriendAccepting();
-        //
-        //                return Objects.equals(appUser.getId(), initiating.getId()) ? accepting : initiating;
-        //            })
-        //            .collect(Collectors.toSet());
 
         // Add the requesting user to the set
         allFriends.add(appUser);
