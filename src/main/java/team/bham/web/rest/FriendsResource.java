@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.CardType;
+import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.CardRepository;
 import team.bham.repository.FriendRequestRepository;
@@ -55,6 +56,13 @@ public class FriendsResource {
             // Not logged in
             throw new Exception("Current User is not related to an AppUser.");
         }
+    }
+
+    @GetMapping("/friends/appUsers")
+    public List<AppUser> getAppUsers() throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        return this.appUserRepository.getAppUsersByUserPreferencesVisibility(VisibilityPreference.GLOBAL);
     }
 
     @GetMapping("/friends")

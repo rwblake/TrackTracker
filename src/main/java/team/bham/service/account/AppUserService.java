@@ -169,7 +169,7 @@ public class AppUserService extends team.bham.service.UserService {
         // Create a UserPreferences
         UserPreferences userPreferences = new UserPreferences();
         userPreferences.setIsDarkMode(true);
-        userPreferences.setVisibility(VisibilityPreference.FRIENDS);
+        userPreferences.setVisibility(VisibilityPreference.GLOBAL);
         userPreferences.setIsHighContrast(false);
 
         // Link children to AppUser

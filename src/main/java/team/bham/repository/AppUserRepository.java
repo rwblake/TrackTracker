@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import team.bham.domain.AppUser;
 import team.bham.domain.User;
+import team.bham.domain.enumeration.VisibilityPreference;
 
 /**
  * Spring Data JPA repository for the AppUser entity.
@@ -37,4 +38,6 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
     public boolean existsByInternalUser(User user);
 
     public AppUser getAppUserByInternalUser(User user);
+
+    public List<AppUser> getAppUsersByUserPreferencesVisibility(VisibilityPreference userPreferences_visibility);
 }

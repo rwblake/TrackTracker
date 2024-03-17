@@ -32,21 +32,38 @@
   </table>
 </div>
 
-<!-- Send friend request -->
-<form (ngSubmit)="sendLink()" [formGroup]="friendRequestForm">
-  <label class="form-label" for="name"> Friend (AppUser) id </label>
-  <div>
-    <input type="text" class="form-control" id="name" name="link-input" formControlName="name" [(ngModel)]="linkInput" required />
-    <button type="submit" id="submit-request" data-cy="entityCreateSaveButton" class="btn btn-primary" [disabled]="linkInput === ''">
-      Send!
-    </button>
-    <div class="row">
-      <div class="col-md-12">
-        <p class="lead" *ngIf="showErrorMessage">Friend request was unable to be sent.</p>
-      </div>
-    </div>
-  </div>
-</form>
+<!-- View all visible users -->
+<div *ngIf="users && users.length > 0">
+  <h2>Users</h2>
+  <table class="table table-striped" aria-describedby="page-heading">
+    <thead>
+      <th scope="col">
+        <span>Name</span>
+      </th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>
+          <img [src]="user?.avatarURL" width="64px" height="64px" />
+          {{ user.internalUser?.login }}
+        </td>
+        <td>
+          <div>
+            <button type="submit" (click)="sendLink(user.id)">
+              <fa-icon icon="plus"></fa-icon>
+            </button>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <p class="lead" *ngIf="showErrorMessage">Friend request was unable to be sent.</p>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <div class="container-fluid px-5" *ngIf="pulledData">
   <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
 </div>

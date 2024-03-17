@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FriendsService } from './friends.service';
 import { IFriendRequest } from '../entities/friend-request/friend-request.model';
 import { IFriend } from './friend.model';
+import { IAppUser } from '../entities/app-user/app-user.model';
 
 @Component({
   selector: 'jhi-friends',
@@ -23,6 +24,7 @@ export class FriendsComponent implements OnInit {
   createFriendRequestResponse: IFriendship | undefined;
   friendRequests?: IFriendRequest[];
   friends?: IFriend[];
+  users?: IAppUser[];
 
   constructor(private titleService: Title, private friendsService: FriendsService) {}
 
@@ -30,6 +32,7 @@ export class FriendsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Friends');
     this.loadFriendRequests();
     this.loadFriends();
+    this.loadUsers();
   }
 
   loadFriendRequests(): void {
@@ -44,11 +47,15 @@ export class FriendsComponent implements OnInit {
     });
   }
 
-  async sendLink() {
-    // @ts-ignore
-    const url: string = this.friendRequestForm.get('name').value;
+  loadUsers(): void {
+    this.friendsService.getUsers().subscribe({
+      next: v => (this.users = v),
+    });
+  }
+
+  async sendLink(id: number) {
     this.showErrorMessage = false;
-    this.friendsService.sendURL(parseInt(url)).subscribe({
+    this.friendsService.sendURL(id).subscribe({
       next: v => this.onSuccessfulFriendRequestCreationResponse(v),
       error: e => (this.showErrorMessage = true),
     });
