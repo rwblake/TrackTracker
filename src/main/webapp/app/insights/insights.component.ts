@@ -157,6 +157,7 @@ export class InsightsComponent implements OnInit {
       }
     );
   }
+
   // constructor(private titleService: Title, private insightsService: InsightsService) {}
   // response: InsightsResponse | undefined;
   // async sendSpotID() {

@@ -6,6 +6,7 @@ import team.bham.domain.Artist;
 import team.bham.domain.Genre;
 import team.bham.domain.Playlist;
 import team.bham.domain.Song;
+import team.bham.domain.Stream;
 
 public class MyInsightCalculator {
 
@@ -19,7 +20,7 @@ public class MyInsightCalculator {
     }
 
     /** Adds missing years to the map*/
-    private static MyInsightsGraphData calculateGraphData(Playlist playlist) {
+    private static MyInsightsGraphData calculateGraphData(List<Stream> streams) {
         // Dictionary mappings for each counted element of data.
         // Converted to our data types later.
         Map<String, Integer> songsAndCounts = new HashMap<>();
@@ -29,15 +30,15 @@ public class MyInsightCalculator {
 
         String[] yearBounds = { "9999", "0000" };
 
-        for (Song song : playlist.getSongs().toArray(new Song[0])) {
+        for (Stream stream : streams) {
             // Each track has multiple artists
-            String year = song.getReleaseDate().toString().substring(0, 4);
+            String year = stream.getSong().getReleaseDate().toString().substring(0, 4);
 
             incrementIfPresent(decadesAndCounts, year.substring(0, 3) + "0s"); // get decade from year
-            incrementIfPresent(songsAndCounts, song.getName());
+            incrementIfPresent(songsAndCounts, stream.getSong().getName());
 
             // Iterate through all artists and update their dictionary entries accordingly
-            for (Artist artist : song.getArtists()) {
+            for (Artist artist : stream.getSong().getArtists()) {
                 incrementIfPresent(artistsAndCounts, artist);
                 for (Genre genre : artist.getGenres()) {
                     incrementIfPresent(genresAndCounts, genre);
@@ -99,5 +100,10 @@ public class MyInsightCalculator {
         }
 
         return new MyInsightsGraphData(decadeMaps, songMaps, artistMaps, genreMaps);
+    }
+
+    public static MyInsightsHTTPResponse getInsights(List<Stream> streams) {
+        MyInsightsGraphData graphData = calculateGraphData(streams);
+        return new MyInsightsHTTPResponse(graphData);
     }
 }
