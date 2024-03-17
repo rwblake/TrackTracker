@@ -43,10 +43,27 @@ public class Friend implements Serializable {
     )
     private AppUser friendAppUser;
 
-    public Friend(Instant createdAt, Boolean initiatedByCurrentUser, AppUser friendAppUser, Long id) {
+    public Song getMostRecentSong() {
+        return mostRecentSong;
+    }
+
+    public void setMostRecentSong(Song mostRecentSong) {
+        this.mostRecentSong = mostRecentSong;
+    }
+
+    @JsonIgnoreProperties(
+        value = {
+            "streams", "happiestPlaylistStats", "energeticPlaylistStats", "sumsUpPlaylistStats", "anomalousPlaylistStats", "playlists",
+        },
+        allowSetters = true
+    )
+    private Song mostRecentSong;
+
+    public Friend(Instant createdAt, Boolean initiatedByCurrentUser, AppUser friendAppUser, Song mostRecentSong, Long id) {
         this.createdAt = createdAt;
         this.initiatedByCurrentUser = initiatedByCurrentUser;
         this.friendAppUser = friendAppUser;
+        this.mostRecentSong = mostRecentSong;
         this.id = id;
     }
 
