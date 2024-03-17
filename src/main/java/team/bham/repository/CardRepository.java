@@ -16,5 +16,5 @@ import team.bham.domain.enumeration.CardType;
 public interface CardRepository extends JpaRepository<Card, Long> {
     public List<Card> getCardsByAppUserAndMetric(@NotNull AppUser appUser, @NotNull CardType metric);
 
-    public void deleteByAppUserId(Long appUser_id);
+    public void deleteAllByAppUserIdAndMetricAndMetricValue(Long appUser_id, @NotNull CardType metric, @NotNull Integer metricValue);
 }

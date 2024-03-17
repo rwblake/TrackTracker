@@ -51,7 +51,7 @@
   <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
 </div>
 
-<!-- List friends requests -->
+<!-- List friends -->
 <div *ngIf="friends && friends.length > 0">
   <h2>Friends</h2>
   <table class="table table-striped" aria-describedby="page-heading">
@@ -70,6 +70,13 @@
           {{ friend.friendAppUser?.internalUser?.login }}
         </td>
         <td>{{ friend?.createdAt?.toString() }}</td>
+        <td>
+          <div>
+            <button type="submit" (click)="delete(friend)">
+              <fa-icon icon="xmark"></fa-icon>
+            </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

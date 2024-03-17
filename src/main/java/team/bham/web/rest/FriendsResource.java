@@ -18,6 +18,7 @@ import team.bham.repository.CardRepository;
 import team.bham.repository.FriendRequestRepository;
 import team.bham.repository.FriendshipRepository;
 import team.bham.service.UserService;
+import tech.jhipster.web.util.HeaderUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -112,6 +113,21 @@ public class FriendsResource {
         return getFriendRequests();
     }
 
+    @PostMapping("/friends/delete")
+    public ResponseEntity<Void> deleteFriend(@Valid @RequestBody Long friendAppUserId) throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+
+        // Delete friendship
+        this.friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(currentUser.getId(), friendAppUserId);
+        this.friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(friendAppUserId, currentUser.getId());
+
+        // Delete any pinned friends
+        unpinFriend(friendAppUserId);
+        unpinFriend(currentUser.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/friends/reject")
     public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
         // Find the current user and check they have an associated AppUser entity
@@ -139,7 +155,7 @@ public class FriendsResource {
         Card myCard = new Card();
         myCard.setAppUser(currentUser);
         myCard.setMetric(CardType.PINNED_FRIEND);
-        myCard.setMetricValue(currentUser.getId().intValue()); // Incompatible types (be cautious)
+        myCard.setMetricValue(pinAppUserId.intValue()); // Incompatible types (be cautious)
         myCard.setTimeGenerated(Instant.now());
         // Not sure what setUsages and setTimeFrame do
         this.cardRepository.save(myCard);
@@ -149,7 +165,11 @@ public class FriendsResource {
     public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws Exception {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = getCurrentUser();
-        this.cardRepository.deleteByAppUserId(pinAppUserId);
+        this.cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(
+                currentUser.getId(),
+                CardType.PINNED_FRIEND,
+                pinAppUserId.intValue()
+            );
     }
 
     @PostMapping("/friends")

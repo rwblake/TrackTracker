@@ -43,4 +43,8 @@ export class FriendsService {
   unpin(id: number) {
     this.http.post(this.resourceUrl + '/unpin', id);
   }
+
+  delete(friend: IFriend): Observable<HttpResponse<{}>> {
+    return this.http.post(this.resourceUrl + '/delete', friend.friendAppUser?.id, { observe: 'response' });
+  }
 }

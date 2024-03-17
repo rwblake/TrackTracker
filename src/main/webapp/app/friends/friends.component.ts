@@ -74,4 +74,9 @@ export class FriendsComponent implements OnInit {
       next: v => (this.friendRequests = v),
     });
   }
+
+  // Delete a friend (unfriend them)
+  delete(friend: IFriend) {
+    this.friendsService.delete(friend).subscribe(() => this.loadFriends());
+  }
 }

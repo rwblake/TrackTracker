@@ -19,4 +19,6 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     public boolean existsByFriendInitiatingAndFriendAccepting(@NotNull AppUser friendInitiating, @NotNull AppUser friendAccepting);
 
     public Set<Friendship> findAllByFriendAcceptingOrFriendInitiating(@NotNull AppUser friendAccepting, @NotNull AppUser friendInitiating);
+
+    public void deleteAllByFriendAcceptingIdAndFriendInitiatingId(Long friendAccepting_id, Long friendInitiating_id);
 }
