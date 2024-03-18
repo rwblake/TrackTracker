@@ -1,34 +1,20 @@
 package team.bham.web.rest;
 
-import com.google.gson.Gson;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
-import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-import se.michaelthelin.spotify.SpotifyApi;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
-import se.michaelthelin.spotify.model_objects.specification.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import team.bham.domain.AppUser;
-import team.bham.domain.PlaylistStats;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.PlaylistRepository;
-import team.bham.service.PlaylistService;
-import team.bham.service.PlaylistStatsService;
 import team.bham.service.UserService;
-import team.bham.service.spotify.*;
 
 @RestController
 @RequestMapping("/api")
@@ -47,19 +33,25 @@ public class UserPlaylistResource {
         this.appUserRepository = appUserRepository;
     }
 
+    /** API endpoint for retrieving the currently logged-in user's playlists*/
     @GetMapping("/current-user-playlists")
     public ResponseEntity<List<team.bham.domain.Playlist>> createPlaylist() {
-        AppUser currentUser = null;
+        AppUser currentUser;
         List<team.bham.domain.Playlist> userPlaylists = new ArrayList<>();
 
         Optional<team.bham.domain.User> userMaybe = this.userService.getUserWithAuthorities();
         if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
             currentUser = this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
         } else {
-            return ResponseEntity.status(HttpStatus.OK).body(userPlaylists);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(userPlaylists);
         }
 
         userPlaylists = this.playlistRepository.findPlaylistsByAppUser(currentUser);
+
+        // Sort based on recency
+        userPlaylists.sort((p1, p2) ->
+            (int) p2.getPlaylistStats().getLastUpdated().getEpochSecond() - (int) p1.getPlaylistStats().getLastUpdated().getEpochSecond()
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(userPlaylists);
     }

@@ -33,7 +33,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <h3>View past playlists</h3>
+        <h3 *ngIf="hasPlaylists">Recently Viewed Playlists</h3>
         <div class="recentPlaylistList">
           <div class="songCard" *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index">
             <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />

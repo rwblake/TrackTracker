@@ -1,20 +1,10 @@
-import { Component, NgModule, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { PlaylistInsightsService } from './playlist-insights.service';
-import {
-  ArtistMapResponse,
-  PlaylistInsightsResponse,
-  YearMapResponse,
-  GenreMapResponse,
-  GraphDataResponse,
-} from './playlist-insights-response-interface';
-import { InsightsComponent } from '../insights/insights.component';
-import { CommonModule } from '@angular/common';
-import { InsightsRoutingModule } from '../insights/insights-routing.module';
-import { Color, LegendPosition, NgxChartsModule, ScaleType } from '@swimlane/ngx-charts';
-import { SharedModule } from '../shared/shared.module';
+import { ArtistMapResponse, PlaylistInsightsResponse, YearMapResponse, GenreMapResponse } from './playlist-insights-response-interface';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { right } from '@popperjs/core';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { IPlaylist } from '../entities/playlist/playlist.model';
@@ -43,6 +33,7 @@ export class PlaylistInsightsComponent implements OnInit {
 
   // User playlists
   recentPlaylists: IPlaylist[] = [];
+  hasPlaylists: boolean = false;
 
   // Information for the pie charts
   artistsPieChart: { name: string; value: number }[] = [];
@@ -79,8 +70,9 @@ export class PlaylistInsightsComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
 
+    // Pull recently viewed playlists for quick access
     this.playlistInsightsService.retrieveUserPlaylists().subscribe({
-      next: v => (this.recentPlaylists = v),
+      next: v => this.onRecentlyViewedRetrievalSuccess(v),
     });
   }
 
@@ -94,8 +86,8 @@ export class PlaylistInsightsComponent implements OnInit {
     this.showErrorMessage = false;
 
     this.playlistInsightsService.sendURL(url).subscribe({
-      next: v => this.onSuccessfulResponse(v),
-      error: e => this.onFailure(e),
+      next: v => this.onPlaylistRetrievalSuccess(v),
+      error: e => this.onPlaylistRetrievalFailure(e),
     });
 
     // Pulling data is sometimes effectively instant. It looks bad if the "waiting" message pops up
@@ -111,14 +103,14 @@ export class PlaylistInsightsComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  onFailure(error: any) {
+  onPlaylistRetrievalFailure(error: any) {
     this.waitingForResponse = false;
     this.showWaitingMessage = false;
     this.pulledData = false;
     this.showErrorMessage = true;
   }
 
-  onSuccessfulResponse(val: PlaylistInsightsResponse) {
+  onPlaylistRetrievalSuccess(val: PlaylistInsightsResponse) {
     this.waitingForResponse = false;
     this.showWaitingMessage = false;
 
@@ -137,6 +129,11 @@ export class PlaylistInsightsComponent implements OnInit {
 
     // Reveal the lower section of the page.
     this.pulledData = true;
+  }
+
+  onRecentlyViewedRetrievalSuccess(val: IPlaylist[]) {
+    this.recentPlaylists = val;
+    this.hasPlaylists = this.recentPlaylists.length != 0;
   }
 
   setCardURLs(response: PlaylistInsightsResponse) {
