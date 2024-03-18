@@ -1,0 +1,20 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { Observable } from 'rxjs';
+import { InsightsResponse } from './insights-response-interface';
+import { TimePeriod } from '../time-period-picker/time-period-picker.component';
+
+export type EntityResponseType = HttpResponse<String>;
+
+@Injectable({ providedIn: 'root' })
+export class InsightsService {
+  protected chosenTime = this.applicationConfigService.getEndpointFor('api/insights');
+
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+
+  sendTime(period: TimePeriod): Observable<InsightsResponse> {
+    return this.http.post<InsightsResponse>(this.chosenTime, period);
+  }
+}

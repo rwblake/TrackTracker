@@ -16,4 +16,6 @@ public interface StreamRepository extends JpaRepository<Stream, Long> {
     public List<Stream> findAllByPlayedAtAfterAndAppUserOrderByPlayedAt(Instant playedAt, AppUser appUser);
 
     public List<Stream> findStreamByAppUserOrderByPlayedAtDesc(AppUser appUser);
+
+    public List<Stream> findAllByAppUserOrderByPlayedAt(AppUser appUser);
 }

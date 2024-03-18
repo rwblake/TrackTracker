@@ -6,8 +6,8 @@ import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { AccountService } from '../core/auth/account.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
 // import {InsightsService} from './insights.'
-import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
-import { PlaylistInsightsResponse } from '../playlist-insights/playlist-insights-response-interface';
+import { InsightsService } from './insights.service';
+import { ArtistMapResponse, InsightsResponse, YearMapResponse, GenreMapResponse, GraphDataResponse } from './insights-response-interface';
 
 @Component({
   selector: 'jhi-insights',
@@ -133,6 +133,7 @@ export class InsightsComponent implements OnInit {
   ];
 
   xaxisLabelBarAlbum = 'Albums';
+  yaxisLableBarAlbum = 'Frequency';
   albumsListenedBar: { name: string; value: number }[] = [];
 
   selectedTimePeriod?: TimePeriod;
@@ -144,7 +145,8 @@ export class InsightsComponent implements OnInit {
   showWaitingMessage: boolean = false;
   showErrorMessage: boolean = false;
 
-  constructor(private titleService: Title, private accountService: AccountService) {}
+  constructor(private titleService: Title, private accountService: AccountService, private InsightsService: InsightsService) {}
+  response: InsightsResponse | undefined;
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Insights');
 
@@ -183,6 +185,10 @@ export class InsightsComponent implements OnInit {
   onTimePeriodChange(period: TimePeriod): void {
     this.selectedTimePeriod = period;
   }
+
+  // async sendTime(){
+  //   this.
+  // }
 
   graphNameChange(): string {
     switch (this.selectedTimePeriod?.label) {
