@@ -242,12 +242,14 @@
       <div class="col-md-12">
         <h3 *ngIf="hasPlaylists">Recently Viewed Playlists</h3>
         <div class="recentPlaylistList">
-          <div class="songCard" *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index">
-            <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
-            <p>
-              <b>{{ playlist.name }}</b>
-            </p>
-          </div>
+          <a *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index" [href]="constructPlaylistLink(playlist.spotifyID)">
+            <div class="songCard">
+              <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
+              <p>
+                <b>{{ playlist.name }}</b>
+              </p>
+            </div>
+          </a>
         </div>
       </div>
     </div>

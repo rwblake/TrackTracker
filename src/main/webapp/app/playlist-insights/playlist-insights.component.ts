@@ -7,6 +7,7 @@ import { ArtistMapResponse, PlaylistInsightsResponse, YearMapResponse, GenreMapR
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { IPlaylist } from '../entities/playlist/playlist.model';
+import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -64,7 +65,12 @@ export class PlaylistInsightsComponent implements OnInit {
   sumsUpSongURL: string = '';
   anomalousSongURL: string = '';
 
-  constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService, private route: ActivatedRoute) {}
+  constructor(
+    private titleService: Title,
+    private playlistInsightsService: PlaylistInsightsService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
   response: PlaylistInsightsResponse | undefined;
 
   // Query parameters. A playlist may be passed in to load straight away.
@@ -74,12 +80,22 @@ export class PlaylistInsightsComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - Playlist Analyser');
 
-    this.handleParameters(this.route.snapshot.queryParams);
+    this.handleParameters(this.activatedRoute.snapshot.queryParams);
 
     // Pull recently viewed playlists for quick access
     this.playlistInsightsService.retrieveUserPlaylists().subscribe({
       next: v => this.onRecentlyViewedRetrievalSuccess(v),
     });
+  }
+
+  constructPlaylistLink(id: string | null | undefined): string {
+    // This will actually never happen.
+    if (id === undefined || id === null) {
+      return '';
+    }
+
+    // Gets the current page (without parameters) and attaches the playlist ID.
+    return this.router.url.split('?')[0] + '?playlistID=' + id;
   }
 
   handleParameters(val: any): void {
