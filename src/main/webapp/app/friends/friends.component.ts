@@ -57,37 +57,29 @@ export class FriendsComponent implements OnInit {
     });
   }
 
-  async sendLink(id: number) {
+  sendFriendRequest(id: number) {
     this.showErrorMessage = false;
-    this.friendsService.sendURL(id).subscribe({
-      next: v => this.onSuccessfulFriendRequestCreationResponse(v),
-      error: e => (this.showErrorMessage = true),
+    this.friendsService.sendFriendRequest(id).subscribe({
+      next: v => this.reload(),
     });
-  }
-
-  onSuccessfulFriendRequestCreationResponse(val: IFriendship) {
-    this.createFriendRequestResponse = val;
-    // Reveal the lower section of the page.
-    this.pulledData = true;
-    this.loadFriends();
   }
 
   // Accept a friend request by id
   accept(id: number) {
     this.friendsService.acceptFriendRequest(id).subscribe({
-      next: v => (this.friendRequests = v),
+      next: v => this.reload(),
     });
   }
 
   // Reject a friend request by id
   reject(id: number) {
     this.friendsService.rejectFriendRequest(id).subscribe({
-      next: v => (this.friendRequests = v),
+      next: v => this.reload(),
     });
   }
 
   // Delete a friend (unfriend them)
   delete(friend: IFriend) {
-    this.friendsService.delete(friend).subscribe(() => this.loadFriends());
+    this.friendsService.delete(friend).subscribe(() => this.reload());
   }
 }

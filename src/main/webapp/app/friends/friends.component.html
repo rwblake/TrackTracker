@@ -36,34 +36,15 @@
   <!-- View all visible users -->
   <div *ngIf="users && users.length > 0">
     <h2>Users</h2>
-    <table class="table table-striped" aria-describedby="page-heading">
-      <tbody>
-        <tr *ngFor="let user of users">
-          <div class="friendCard">
-            <td>
-              <img [src]="user?.avatarURL" />
-              {{ user.internalUser?.login }}
-            </td>
-            <td>
-              <div>
-                <button type="submit" (click)="sendLink(user.id)">
-                  <fa-icon icon="plus"></fa-icon>
-                </button>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="lead" *ngIf="showErrorMessage">Friend request was unable to be sent.</p>
-                </div>
-              </div>
-            </td>
-          </div>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="container-fluid px-5" *ngIf="pulledData">
-    <p>{{ createFriendRequestResponse?.createdAt?.toString() }}</p>
+    <div *ngFor="let user of users">
+      <div class="userCard">
+        <img [src]="user?.avatarURL" />
+        {{ user.internalUser?.login }}
+        <button type="submit" (click)="sendFriendRequest(user.id)">
+          <fa-icon icon="plus"></fa-icon>
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- List friends -->

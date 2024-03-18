@@ -17,7 +17,7 @@ export class FriendsService {
 
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
-  sendURL(id: number): Observable<IFriendship> {
+  sendFriendRequest(id: number): Observable<IFriendship> {
     return this.http.post<IFriendship>(this.resourceUrl, id);
   }
 
