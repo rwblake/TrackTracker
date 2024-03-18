@@ -10,7 +10,7 @@ export interface IAppUser {
   avatarURL?: string | null;
   bio?: string | null;
   spotifyUsername?: string | null;
-  internalUser?: Pick<IUser, 'id' | 'login'> | null;
+  internalUser?: Pick<IUser, 'id' | 'login' | 'firstName' | 'lastName'> | null;
   userPreferences?: Pick<IUserPreferences, 'id'> | null;
   spotifyToken?: Pick<ISpotifyToken, 'id'> | null;
   feed?: Pick<IFeed, 'id'> | null;

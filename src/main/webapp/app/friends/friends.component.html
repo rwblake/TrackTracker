@@ -2,73 +2,104 @@
   <h1>Friends</h1>
 
   <!-- List friend requests -->
-  <div *ngIf="friendRequests && friendRequests.length > 0">
+  <section *ngIf="friendRequests && friendRequests.length > 0">
     <h2>Friend Requests</h2>
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
-        <th scope="col">
-          <span>From</span>
-        </th>
-        <th scope="col">
-          <span>Created</span>
-        </th>
-      </thead>
-      <tbody>
-        <tr *ngFor="let friendRequest of friendRequests">
-          <td>{{ friendRequest.initiatingAppUser?.internalUser?.login }}</td>
-          <td>{{ friendRequest.createdAt?.toString() }}</td>
+    <div class="userList">
+      <div class="userCard" *ngFor="let friendRequest of friendRequests">
+        <img [src]="friendRequest.initiatingAppUser?.avatarURL" />
 
-          <td>
-            <div>
-              <button type="submit" (click)="accept(friendRequest.id)">
-                <fa-icon icon="check"></fa-icon>
-              </button>
-              <button type="submit" (click)="reject(friendRequest.id)">
-                <fa-icon icon="xmark"></fa-icon>
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <div class="details">
+          <div
+            *ngIf="
+              friendRequest.initiatingAppUser?.internalUser?.firstName != null &&
+              friendRequest.initiatingAppUser?.internalUser?.lastName != null
+            "
+          >
+            <p class="name">
+              {{ friendRequest.initiatingAppUser?.internalUser?.firstName }} {{ friendRequest.initiatingAppUser?.internalUser?.lastName }}
+            </p>
+          </div>
+          <div
+            *ngIf="
+              friendRequest.initiatingAppUser?.internalUser?.firstName == null ||
+              friendRequest.initiatingAppUser?.internalUser?.lastName == null
+            "
+          >
+            <p class="name">{{ friendRequest.initiatingAppUser?.internalUser?.login }}</p>
+          </div>
+          <p class="other">{{ since(friendRequest.createdAt) }} ago</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="accept(friendRequest.id)">
+          <fa-icon icon="check"></fa-icon>
+        </button>
+        <button type="submit" class="btn btn-secondary" (click)="reject(friendRequest.id)">
+          <fa-icon icon="xmark"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </section>
 
   <!-- View all visible users -->
-  <div *ngIf="users && users.length > 0">
+  <section>
     <h2>Users</h2>
-    <div *ngFor="let user of users">
-      <div class="userCard">
+    <!--    <div class="searchBar">-->
+    <!--      <form class="form-inline">-->
+    <!--        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+    <!--        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+    <!--      </form>-->
+    <!--    </div>-->
+    <div class="userList">
+      <div class="userCard" *ngFor="let user of users">
         <img [src]="user?.avatarURL" />
-        {{ user.internalUser?.login }}
-        <button type="submit" (click)="sendFriendRequest(user.id)">
+
+        <div class="details">
+          <div *ngIf="user?.internalUser?.firstName != null && user?.internalUser?.lastName != null">
+            <p class="name">{{ user?.internalUser?.firstName }} {{ user?.internalUser?.lastName }}</p>
+          </div>
+          <div *ngIf="user?.internalUser?.firstName == null || user?.internalUser?.lastName == null">
+            <p class="name">{{ user?.internalUser?.login }}</p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
           <fa-icon icon="plus"></fa-icon>
         </button>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- List friends -->
-  <div *ngIf="friends && friends.length > 0">
+  <section *ngIf="friends && friends.length > 0">
     <h2>My Friends</h2>
-    <table class="table table-striped" aria-describedby="page-heading">
-      <tbody>
-        <tr *ngFor="let friend of friends">
-          <div class="friendCard">
-            <td>
-              <img [src]="friend.friendAppUser?.avatarURL" />
-              <p>{{ friend.friendAppUser?.internalUser?.login }}</p>
-            </td>
-            <td>{{ friend?.createdAt?.toString() }}</td>
-            <td>
-              <div>
-                <button type="submit" (click)="delete(friend)">
-                  <fa-icon icon="xmark"></fa-icon>
-                </button>
-              </div>
-            </td>
+    <div class="userList">
+      <div class="userCard" *ngFor="let friend of friends">
+        <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
+
+        <div class="details">
+          <div *ngIf="friend.friendAppUser?.internalUser?.firstName != null && friend.friendAppUser?.internalUser?.lastName != null">
+            <p class="name">{{ friend.friendAppUser?.internalUser?.firstName }} {{ friend.friendAppUser?.internalUser?.lastName }}</p>
           </div>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          <div *ngIf="friend.friendAppUser?.internalUser?.firstName == null || friend.friendAppUser?.internalUser?.lastName == null">
+            <p class="name">{{ friend.friendAppUser?.internalUser?.login }}</p>
+          </div>
+          <p>
+            <a class="song-name" [href]="'https://open.spotify.com/track/' + friend?.mostRecentSong?.spotifyID" target="_blank">
+              {{ friend?.mostRecentSong?.name }}
+              <div *ngFor="let artist of friend.mostRecentSong?.artists">
+                {{ artist.name }}
+              </div>
+            </a>
+            <br />
+            <a class="album-name" [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID" target="_blank">{{
+              friend.mostRecentSong?.album?.name
+            }}</a>
+          </p>
+        </div>
+        <button type="submit" class="btn btn-secondary" (click)="delete(friend)">
+          <fa-icon icon="xmark"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </section>
 </div>

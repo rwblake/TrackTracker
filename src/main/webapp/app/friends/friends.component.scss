@@ -5,54 +5,93 @@ $translucent-bg: rgb(255, 255, 255, 0.1);
   box-sizing: border-box;
 }
 
-tr {
-  float: left;
-  width: 50%;
-}
-
 h2 {
   text-align: left;
 }
 
-tbody:after {
-  content: '';
-  display: table;
-  clear: both;
+section {
+  margin-bottom: 32px;
 }
 
 .friends-root {
   display: flex;
+  min-width: 500px;
   width: 80%;
   margin: auto;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.searchBar {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+
+  button {
+    margin-left: 16px;
+    width: 64px;
+  }
+}
+
+.userList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  justify-content: space-between;
+  justify-self: center;
+  row-gap: 32px;
 }
 
 .userCard {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  background: $translucent-bg;
+  padding: 16px 16px;
   border-radius: 8px;
-  border: solid 1px $translucent-border;
-  gap: 16px;
-  width: 100%;
-  overflow: clip;
-  margin-bottom: 8px;
+  gap: 32px;
+  width: 500px;
+  background: rgb(255, 255, 255, 0.2);
+  transition: background-color 50ms ease-out;
+  border: solid 1px rgb(255, 255, 255, 0.5);
 
   img {
-    width: 100px;
-    height: 100px;
+    width: 64px;
+    height: 64px;
     border-radius: 1000px;
     border: solid 2px rgb(255, 255, 255, 0.1);
   }
 
-  p {
-    font-size: 1.2rem;
-    margin-right: 16px;
-    text-align: left;
-    margin-bottom: 0;
+  button {
+    margin-left: auto;
   }
 
-  a {
-    target: '_blank';
+  .details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 1rem;
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .name {
+      font-size: 1.2rem;
+      margin-right: 16px;
+      text-align: left;
+    }
+
+    :not(name) {
+      font-size: 1rem;
+      color: rgb(255, 255, 255, 0.75);
+      white-space: nowrap;
+    }
   }
 }

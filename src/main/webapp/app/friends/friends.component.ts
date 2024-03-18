@@ -7,6 +7,9 @@ import { FriendsService } from './friends.service';
 import { IFriendRequest } from '../entities/friend-request/friend-request.model';
 import { IFriend } from './friend.model';
 import { IAppUser } from '../entities/app-user/app-user.model';
+import relativeTime from 'dayjs/esm/plugin/relativeTime';
+import dayjs from 'dayjs/esm';
+dayjs.extend(relativeTime);
 
 @Component({
   selector: 'jhi-friends',
@@ -37,6 +40,10 @@ export class FriendsComponent implements OnInit {
     this.loadFriendRequests();
     this.loadFriends();
     this.loadUsers();
+  }
+
+  since(time: dayjs.Dayjs | null | undefined): string {
+    return dayjs().from(time, true);
   }
 
   loadFriendRequests(): void {
