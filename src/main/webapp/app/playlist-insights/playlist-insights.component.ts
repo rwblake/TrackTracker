@@ -17,6 +17,7 @@ import { Color, LegendPosition, NgxChartsModule, ScaleType } from '@swimlane/ngx
 import { SharedModule } from '../shared/shared.module';
 import { right } from '@popperjs/core';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
+import { IPlaylist } from '../entities/playlist/playlist.model';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -39,6 +40,9 @@ export class PlaylistInsightsComponent implements OnInit {
     group: ScaleType.Ordinal,
     domain: ['#7825BC', '#B237EC', '#EA3AC1', '#EA002B', '#FF3407', '#FF6528', '#FF8E16', '#FFB219', '#FFD54C', '#FFEFA3'],
   };
+
+  // User playlists
+  recentPlaylists: IPlaylist[] = [];
 
   // Information for the pie charts
   artistsPieChart: { name: string; value: number }[] = [];
@@ -76,8 +80,7 @@ export class PlaylistInsightsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
 
     this.playlistInsightsService.retrieveUserPlaylists().subscribe({
-      next: v => console.log(v),
-      error: e => this.onFailure(e),
+      next: v => (this.recentPlaylists = v),
     });
   }
 

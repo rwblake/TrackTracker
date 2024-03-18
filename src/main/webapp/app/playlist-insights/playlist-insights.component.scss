@@ -30,6 +30,18 @@ a:hover {
   border: solid 1px $translucent-border;
 }
 
+.recentPlaylistList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+
+  .songCard {
+    max-width: 275px;
+  }
+}
+
 // "cards" that appear for selected songs
 .songCard {
   display: flex;
