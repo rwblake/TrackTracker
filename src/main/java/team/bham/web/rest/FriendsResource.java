@@ -3,6 +3,7 @@ package team.bham.web.rest;
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,53 @@ public class FriendsResource {
     public List<AppUser> getAppUsers() throws Exception {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = getCurrentUser();
-        return this.appUserRepository.getAppUsersByUserPreferencesVisibility(VisibilityPreference.GLOBAL);
+        List<Long> badIds = new ArrayList<>();
+
+        // Only return users that aren't
+        // -- blocked
+        badIds.addAll(currentUser.getBlockedUsers().stream().map(AppUser::getId).collect(Collectors.toList()));
+        badIds.addAll(currentUser.getBlockedByUsers().stream().map(AppUser::getId).collect(Collectors.toList()));
+        // -- part of ongoing friend requests
+        badIds.addAll(
+            currentUser
+                .getToFriendRequests()
+                .stream()
+                .map(FriendRequest::getInitiatingAppUser)
+                .map(AppUser::getId)
+                .collect(Collectors.toList())
+        );
+        badIds.addAll(
+            currentUser
+                .getIntitiatingFriendRequests()
+                .stream()
+                .map(FriendRequest::getToAppUser)
+                .map(AppUser::getId)
+                .collect(Collectors.toList())
+        );
+        // -- part of friendships
+        badIds.addAll(
+            currentUser
+                .getFriendshipInitiateds()
+                .stream()
+                .map(Friendship::getFriendAccepting)
+                .map(AppUser::getId)
+                .collect(Collectors.toList())
+        );
+        badIds.addAll(
+            currentUser
+                .getFriendshipAccepteds()
+                .stream()
+                .map(Friendship::getFriendInitiating)
+                .map(AppUser::getId)
+                .collect(Collectors.toList())
+        );
+
+        // Only return users with global visibility preferences
+        if (badIds.isEmpty()) {
+            return this.appUserRepository.getAppUsersByUserPreferencesVisibility(VisibilityPreference.GLOBAL);
+        } else {
+            return this.appUserRepository.getAppUsersByUserPreferencesVisibilityAndIdNotIn(VisibilityPreference.GLOBAL, badIds);
+        }
     }
 
     @GetMapping("/friends")

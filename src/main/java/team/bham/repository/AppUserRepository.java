@@ -1,5 +1,6 @@
 package team.bham.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -40,4 +41,9 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
     public AppUser getAppUserByInternalUser(User user);
 
     public List<AppUser> getAppUsersByUserPreferencesVisibility(VisibilityPreference userPreferences_visibility);
+
+    public List<AppUser> getAppUsersByUserPreferencesVisibilityAndIdNotIn(
+        VisibilityPreference userPreferences_visibility,
+        Collection<Long> id
+    );
 }
