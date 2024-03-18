@@ -60,4 +60,8 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+  goToPlaylist(id: number) {
+    this.router.navigate(['/insights/playlist'], { queryParams: { playlistID: id } });
+  }
 }

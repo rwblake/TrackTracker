@@ -30,7 +30,7 @@
     </div>
     <div class="row">
       <ng-container *ngIf="playlistData.length > 0; else genericCard">
-        <div class="card" style="width: 40%" *ngFor="let playlist of playlistData.slice(0, 2)">
+        <div class="card" style="width: 40%" *ngFor="let playlist of playlistData.slice(0, 2)" (click)="goToPlaylist(playlist.spotifyID)">
           <div class="card-header">{{ playlist.name }}</div>
           <img class="card-img-top" [src]="playlist.imageURL" />
           <p class="card-text">Number of songs: {{ playlist.playlistStats.playlistLength }}</p>
