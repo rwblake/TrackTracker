@@ -5,9 +5,9 @@ import { APP_NAME } from '../app.constants';
 import { PlaylistInsightsService } from './playlist-insights.service';
 import { ArtistMapResponse, PlaylistInsightsResponse, YearMapResponse, GenreMapResponse } from './playlist-insights-response-interface';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { right } from '@popperjs/core';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { IPlaylist } from '../entities/playlist/playlist.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -64,11 +64,17 @@ export class PlaylistInsightsComponent implements OnInit {
   sumsUpSongURL: string = '';
   anomalousSongURL: string = '';
 
-  constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService) {}
+  constructor(private titleService: Title, private playlistInsightsService: PlaylistInsightsService, private route: ActivatedRoute) {}
   response: PlaylistInsightsResponse | undefined;
 
+  // Query parameters. A playlist may be passed in to load straight away.
+  passedParams: any;
+  passedPlaylist: string = '';
+
   ngOnInit(): void {
-    this.titleService.setTitle(APP_NAME + ' - Playlist Insights');
+    this.titleService.setTitle(APP_NAME + ' - Playlist Analyser');
+
+    this.handleParameters(this.route.snapshot.queryParams);
 
     // Pull recently viewed playlists for quick access
     this.playlistInsightsService.retrieveUserPlaylists().subscribe({
@@ -76,16 +82,32 @@ export class PlaylistInsightsComponent implements OnInit {
     });
   }
 
+  handleParameters(val: any): void {
+    this.passedParams = val;
+
+    // If no playlist supplied, break and load the page as normal.
+    if (val['playlistID'] === undefined) {
+      return;
+    }
+
+    // If there is a playlist supplied, fetch its insights - or try to.
+    this.passedPlaylist = val['playlistID'];
+    this.sendPlaylistURL(this.playlistURLStart + this.passedPlaylist);
+  }
+
   // Sends playlist link to backend HTTP endpoint and subscribes to response
   async sendLink() {
     // @ts-ignore
-    const url: String = this.urlForm.get('name').value;
+    const url: string = this.urlForm.get('name').value;
+    await this.sendPlaylistURL(url);
+  }
 
+  async sendPlaylistURL(URL: string) {
     this.waitingForResponse = true;
     this.pulledData = false;
     this.showErrorMessage = false;
 
-    this.playlistInsightsService.sendURL(url).subscribe({
+    this.playlistInsightsService.sendURL(URL).subscribe({
       next: v => this.onPlaylistRetrievalSuccess(v),
       error: e => this.onPlaylistRetrievalFailure(e),
     });
@@ -196,6 +218,4 @@ export class PlaylistInsightsComponent implements OnInit {
   onTimeFormatChange(period: TimePeriod) {
     this.showByDecade = period.label !== 'Year';
   }
-
-  protected readonly right = right;
 }
