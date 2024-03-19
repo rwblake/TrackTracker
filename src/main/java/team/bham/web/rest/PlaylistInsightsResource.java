@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.*;
+import team.bham.domain.Card;
 import team.bham.domain.PlaylistStats;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.PlaylistRepository;
@@ -74,7 +75,7 @@ public class PlaylistInsightsResource {
             .getUserWithAuthorities()
             .flatMap(appUserService::getAppUser)
             .ifPresent(appUser -> {
-                // save a card which tells the user they have just
+                // save a card which tells the user they have just analysed a new playlist
                 cardService.createNewPlaylistCard(appUser, myPlaylist.getId());
             });
 

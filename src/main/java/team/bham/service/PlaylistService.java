@@ -25,9 +25,7 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongService songService;
     private final PlaylistStatsService playlistStatsService;
-
     private final UserService userService;
-
     private final AppUserRepository appUserRepository;
 
     public PlaylistService(

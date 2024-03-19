@@ -2,6 +2,7 @@ package team.bham.service.feed;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 import team.bham.domain.AppUser;
@@ -92,12 +93,18 @@ public class CardService {
     }
 
     /**Create a card for a new playlist the user has just analysed.
+     * If there is already a card made for the user, return Empty.
      * <br>The new playlist card automatically gets added to the user's feed.
      * @param appUser the user to whom this card belongs.
      * @param playlistID the id of the newly analysed playlist
      *
-     * @return The card once it has been saved in the database*/
-    public Card createNewPlaylistCard(AppUser appUser, Long playlistID) {
+     * @return The card once it has been saved in the database, or Empty if the card already exists as a Card for the user.*/
+    public Optional<Card> createNewPlaylistCard(AppUser appUser, Long playlistID) {
+        // Check that the card doesn't already exist in the database
+        if (
+            cardRepository.findOneByAppUserAndMetricAndMetricValue(appUser, CardType.NEW_PLAYLIST, playlistID.intValue()).isPresent()
+        ) return Optional.empty();
+
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -111,7 +118,7 @@ public class CardService {
         // add to the user's feed
         Feed feed = appUser.getFeed();
         feedService.addCardToFeed(card, feed);
-        return card;
+        return Optional.of(card);
     }
 
     /**Create a milestone card for a given user (a milestone measures "of all time" achievements).
