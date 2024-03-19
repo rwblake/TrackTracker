@@ -12,17 +12,15 @@ import team.bham.domain.Artist;
 import team.bham.domain.Genre;
 import team.bham.domain.Song;
 
-@JsonSerialize
-@JsonDeserialize
 public class StreamInsightsResponse implements Serializable {
 
-    Counter<Song> songCounter;
-    Counter<Artist> artistCounter;
-    Counter<String> decadeCounter;
-    Counter<Genre> genreCounter;
-    Counter<Album> albumCounter;
+    private final Counter<Song> songCounter;
+    private final Counter<Artist> artistCounter;
+    private final Counter<String> decadeCounter;
+    private final Counter<Genre> genreCounter;
+    private final Counter<Album> albumCounter;
 
-    StreamInsightsResponse(
+    public StreamInsightsResponse(
         Counter<Song> songCounter,
         Counter<Artist> artistCounter,
         Counter<String> decadeCounter,
@@ -36,35 +34,35 @@ public class StreamInsightsResponse implements Serializable {
         this.albumCounter = albumCounter;
     }
 
-    @Override
-    public String toString() {
-        return (
-            "StreamInsightsResponse{" +
-            "songCounter=" +
-            songCounter +
-            ", artistCounter=" +
-            artistCounter +
-            ", decadeCounter=" +
-            decadeCounter +
-            ", genreCounter=" +
-            genreCounter +
-            ", albumCounter=" +
-            albumCounter +
-            '}'
-        );
+    public Counter<Song> getSongCounter() {
+        return songCounter;
+    }
+
+    public Counter<Artist> getArtistCounter() {
+        return artistCounter;
+    }
+
+    public Counter<String> getDecadeCounter() {
+        return decadeCounter;
+    }
+
+    public Counter<Genre> getGenreCounter() {
+        return genreCounter;
+    }
+
+    public Counter<Album> getAlbumCounter() {
+        return albumCounter;
     }
 }
 
-@JsonSerialize
-@JsonDeserialize
 class Counter<T> implements Serializable {
 
-    List<Entry<T>> byWeek;
-    List<Entry<T>> byMonth;
-    List<Entry<T>> byYear;
-    List<Entry<T>> ofAllTime;
+    private final List<Entry<T>> byWeek;
+    private final List<Entry<T>> byMonth;
+    private final List<Entry<T>> byYear;
+    private final List<Entry<T>> ofAllTime;
 
-    Counter(List<List<Map.Entry<T, Integer>>> counterList) {
+    public Counter(List<List<Map.Entry<T, Integer>>> counterList) {
         if (counterList.size() != 4) throw new IllegalArgumentException("counterList must have 4 counters; invalid list length provided");
 
         this.byWeek = counterList.get(0).stream().map(Entry::new).collect(Collectors.toList());
@@ -73,26 +71,38 @@ class Counter<T> implements Serializable {
         this.ofAllTime = counterList.get(3).stream().map(Entry::new).collect(Collectors.toList());
     }
 
-    @Override
-    public String toString() {
-        return "Counter{" + "byWeek=" + byWeek + ", byMonth=" + byMonth + ", byYear=" + byYear + ", ofAllTime=" + ofAllTime + '}';
+    public List<Entry<T>> getByWeek() {
+        return byWeek;
+    }
+
+    public List<Entry<T>> getByMonth() {
+        return byMonth;
+    }
+
+    public List<Entry<T>> getByYear() {
+        return byYear;
+    }
+
+    public List<Entry<T>> getOfAllTime() {
+        return ofAllTime;
     }
 }
 
-@JsonSerialize
-@JsonDeserialize
 class Entry<T> implements Serializable {
 
-    T metric;
-    Integer value;
+    private final T metric;
+    private final Integer value;
 
-    Entry(Map.Entry<T, Integer> counterList) {
+    public Entry(Map.Entry<T, Integer> counterList) {
         this.metric = counterList.getKey();
         this.value = counterList.getValue();
     }
 
-    @Override
-    public String toString() {
-        return "Entry{" + "metric=" + metric + ", value=" + value + '}';
+    public T getMetric() {
+        return metric;
+    }
+
+    public Integer getValue() {
+        return value;
     }
 }
