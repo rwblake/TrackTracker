@@ -142,37 +142,39 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.account_data && this.account_data.pinnedFriends.length >= 5;
   }
 
-  // getLastUpdateMessage(): string {
-  //   if (this.account_data === null) return "";
-  //
-  //   // console.log(this.account_data.feed.lastUpdated)
-  //   //
-  //   // let seconds = Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime() / 1000;
-  //   // let time;
-  //   // let period = 'second';
-  //   //
-  //   // if (seconds < 60) {
-  //   //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60));
-  //   //   period = 'minute';
-  //   // } else if (seconds < 60 * 60) {
-  //   //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60));
-  //   //   period = 'hour';
-  //   // } else if (seconds < 60 * 60) {
-  //   //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60 * 24));
-  //   //   period = 'day';
-  //   // } else {
-  //   //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60 * 24 * 7));
-  //   //   period = 'week';
-  //   // }
-  //   //
-  //   // if (time > 1) period += 's';
-  //   //
-  //   // return 'Your music profile was last updated ' + time + ' ' + period + ' ago.';
-  //
-  //   dayjs.extend(relativeTime)
-  //   console.log(this.account_data.feed.lastUpdated)
-  //   return dayjs(this.account_data.feed.lastUpdated).fromNow();
-  // }
+  getLastUpdateMessage(): string {
+    if (this.account_data === null) return '';
+
+    return this.account_data.feed.lastUpdated.toString();
+
+    // console.log(this.account_data.feed.lastUpdated)
+    //
+    // let seconds = Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime() / 1000;
+    // let time;
+    // let period = 'second';
+    //
+    // if (seconds < 60) {
+    //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60));
+    //   period = 'minute';
+    // } else if (seconds < 60 * 60) {
+    //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60));
+    //   period = 'hour';
+    // } else if (seconds < 60 * 60) {
+    //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60 * 24));
+    //   period = 'day';
+    // } else {
+    //   time = Math.floor((Date.now() - (new Date(this.account_data.feed.lastUpdated)).getTime()) / (1000 * 60 * 60 * 24 * 7));
+    //   period = 'week';
+    // }
+    //
+    // if (time > 1) period += 's';
+    //
+    // return 'Your music profile was last updated ' + time + ' ' + period + ' ago.';
+
+    // dayjs.extend(relativeTime)
+    // console.log(this.account_data.feed.lastUpdated)
+    // return dayjs(this.account_data.feed.lastUpdated).fromNow();
+  }
 
   // Gets the names of a user, handling is a user's account is not set up properly
   getNames() {

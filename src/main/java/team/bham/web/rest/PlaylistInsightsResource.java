@@ -27,6 +27,9 @@ import team.bham.repository.PlaylistRepository;
 import team.bham.service.PlaylistService;
 import team.bham.service.PlaylistStatsService;
 import team.bham.service.UserService;
+import team.bham.service.account.AppUserService;
+import team.bham.service.account.NoAppUserException;
+import team.bham.service.feed.CardService;
 import team.bham.service.spotify.*;
 
 @RestController
@@ -39,15 +42,24 @@ public class PlaylistInsightsResource {
     private final PlaylistService playlistService;
     private final PlaylistRepository playlistRepository;
     private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final CardService cardService;
+    private final UserService userService;
+    private final AppUserService appUserService;
 
     public PlaylistInsightsResource(
         PlaylistService playlistService,
         PlaylistRepository playlistRepository,
-        SpotifyAuthorisationService spotifyAuthorisationService
+        SpotifyAuthorisationService spotifyAuthorisationService,
+        CardService cardService,
+        UserService userService,
+        AppUserService appUserService
     ) {
         this.playlistService = playlistService;
         this.playlistRepository = playlistRepository;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.cardService = cardService;
+        this.userService = userService;
+        this.appUserService = appUserService;
     }
 
     @PostMapping("/playlist-insights")
@@ -58,7 +70,24 @@ public class PlaylistInsightsResource {
         team.bham.domain.Playlist myPlaylist;
         myPlaylist = createPlaylistEntity(spotifyID);
 
+        userService
+            .getUserWithAuthorities()
+            .ifPresent(user -> {
+                appUserService
+                    .getAppUser(user)
+                    .ifPresentOrElse(
+                        appUser -> {
+                            // save a card which tells the user they have just
+                            cardService.createNewPlaylistCard(appUser, myPlaylist.getId());
+                        },
+                        () -> {
+                            throw new NoAppUserException();
+                        }
+                    );
+            });
+
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);
+
         Gson gson = new Gson();
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(reply));
     }
