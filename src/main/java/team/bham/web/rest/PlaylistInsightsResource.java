@@ -72,18 +72,10 @@ public class PlaylistInsightsResource {
 
         userService
             .getUserWithAuthorities()
-            .ifPresent(user -> {
-                appUserService
-                    .getAppUser(user)
-                    .ifPresentOrElse(
-                        appUser -> {
-                            // save a card which tells the user they have just
-                            cardService.createNewPlaylistCard(appUser, myPlaylist.getId());
-                        },
-                        () -> {
-                            throw new NoAppUserException();
-                        }
-                    );
+            .flatMap(appUserService::getAppUser)
+            .ifPresent(appUser -> {
+                // save a card which tells the user they have just
+                cardService.createNewPlaylistCard(appUser, myPlaylist.getId());
             });
 
         PlaylistInsightsHTTPResponse reply = PlaylistInsightCalculator.getInsights(myPlaylist);
