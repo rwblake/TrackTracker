@@ -15,8 +15,8 @@ section {
 
 .friends-root {
   display: flex;
-  min-width: 500px;
   width: 80%;
+  min-width: 500px;
   margin: auto;
   flex-direction: column;
   justify-content: space-between;
@@ -25,11 +25,11 @@ section {
 .searchBar {
   display: flex;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
+  margin: auto;
 
   button {
     margin-left: 16px;
-    width: 64px;
   }
 }
 
@@ -37,9 +37,25 @@ section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   justify-content: space-between;
-  justify-self: center;
   row-gap: 32px;
 }
+
+.dropdown {
+  //background: rgb(255, 255, 255, 0.2);
+  //transition: background-color 50ms ease-out;
+  //border: solid 1px rgb(255, 255, 255, 0.5);
+  padding: 16px 16px;
+  border-radius: 8px;
+  width: 800px;
+  margin: auto;
+}
+
+//.dropdownContent {
+//  margin: auto;
+//  display: flex;
+//  flex-direction: column;
+//  row-gap: 32px;
+//}
 
 .userCard {
   display: flex;
@@ -52,6 +68,8 @@ section {
   background: rgb(255, 255, 255, 0.2);
   transition: background-color 50ms ease-out;
   border: solid 1px rgb(255, 255, 255, 0.5);
+  margin: auto;
+  margin-top: 32px;
 
   img {
     width: 64px;
@@ -69,6 +87,7 @@ section {
     align-items: flex-start;
     gap: 4px;
     font-size: 1rem;
+    overflow-wrap: anywhere;
 
     p {
       margin-bottom: 10px;

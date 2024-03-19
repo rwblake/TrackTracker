@@ -9,6 +9,7 @@ import { IFriend } from './friend.model';
 import { IAppUser } from '../entities/app-user/app-user.model';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import dayjs from 'dayjs/esm';
+import { IUser } from '../entities/user/user.model';
 dayjs.extend(relativeTime);
 
 @Component({
@@ -22,14 +23,18 @@ export class FriendsComponent implements OnInit {
   pulledData: boolean = false;
   showErrorMessage: boolean = false;
 
-  linkInput: string = '';
+  search: string = '';
 
   createFriendRequestResponse: IFriendship | undefined;
   friendRequests?: IFriendRequest[];
   friends?: IFriend[];
   users?: IAppUser[];
+  dialog: boolean;
+  recommendations?: IAppUser[];
 
-  constructor(private titleService: Title, private friendsService: FriendsService) {}
+  constructor(private titleService: Title, private friendsService: FriendsService) {
+    this.dialog = false;
+  }
 
   ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
@@ -44,6 +49,18 @@ export class FriendsComponent implements OnInit {
 
   since(time: dayjs.Dayjs | null | undefined): string {
     return dayjs().from(time, true);
+  }
+
+  toggledialog() {
+    this.dialog = !this.dialog;
+  }
+
+  getDisplayName(user?: Pick<IUser, 'id' | 'login' | 'firstName' | 'lastName'> | null): string {
+    if (user?.lastName != null && user?.firstName != null) {
+      return user.firstName + ' ' + user.lastName;
+    } else {
+      return user?.login ?? '';
+    }
   }
 
   loadFriendRequests(): void {

@@ -1,6 +1,49 @@
 <div class="friends-root">
   <h1>Friends</h1>
 
+  <!-- View all visible users -->
+  <section class="dropdown" (focusin)="toggledialog()">
+    <div class="searchBar">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search for users" aria-label="Search" [(ngModel)]="search" />
+    </div>
+    <div class="userList" *ngIf="search != ''">
+      <!-- Show friends -->
+      <div *ngFor="let friend of friends">
+        <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).startsWith(search)">
+          <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
+
+          <div class="details">
+            <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
+            <p>Friends from {{ since(friend.createdAt) }} ago</p>
+          </div>
+
+          <button type="submit" class="btn btn-secondary" (click)="delete(friend)">
+            <fa-icon icon="xmark"></fa-icon>
+          </button>
+        </div>
+      </div>
+      <!-- Show new users -->
+      <div *ngFor="let user of users">
+        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).startsWith(search)">
+          <img [src]="user?.avatarURL" />
+
+          <div class="details">
+            <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
+            <fa-icon icon="plus"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- List recommendations -->
+  <section *ngIf="true">
+    <h2>Friend Recommendations</h2>
+  </section>
+
   <!-- List friend requests -->
   <section *ngIf="friendRequests && friendRequests.length > 0">
     <h2>Friend Requests</h2>
@@ -9,24 +52,7 @@
         <img [src]="friendRequest.initiatingAppUser?.avatarURL" />
 
         <div class="details">
-          <div
-            *ngIf="
-              friendRequest.initiatingAppUser?.internalUser?.firstName != null &&
-              friendRequest.initiatingAppUser?.internalUser?.lastName != null
-            "
-          >
-            <p class="name">
-              {{ friendRequest.initiatingAppUser?.internalUser?.firstName }} {{ friendRequest.initiatingAppUser?.internalUser?.lastName }}
-            </p>
-          </div>
-          <div
-            *ngIf="
-              friendRequest.initiatingAppUser?.internalUser?.firstName == null ||
-              friendRequest.initiatingAppUser?.internalUser?.lastName == null
-            "
-          >
-            <p class="name">{{ friendRequest.initiatingAppUser?.internalUser?.login }}</p>
-          </div>
+          <p class="name">{{ getDisplayName(friendRequest.initiatingAppUser?.internalUser) }}</p>
           <p class="other">{{ since(friendRequest.createdAt) }} ago</p>
         </div>
 
@@ -40,35 +66,6 @@
     </div>
   </section>
 
-  <!-- View all visible users -->
-  <section>
-    <h2>Users</h2>
-    <!--    <div class="searchBar">-->
-    <!--      <form class="form-inline">-->
-    <!--        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
-    <!--        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-    <!--      </form>-->
-    <!--    </div>-->
-    <div class="userList">
-      <div class="userCard" *ngFor="let user of users">
-        <img [src]="user?.avatarURL" />
-
-        <div class="details">
-          <div *ngIf="user?.internalUser?.firstName != null && user?.internalUser?.lastName != null">
-            <p class="name">{{ user?.internalUser?.firstName }} {{ user?.internalUser?.lastName }}</p>
-          </div>
-          <div *ngIf="user?.internalUser?.firstName == null || user?.internalUser?.lastName == null">
-            <p class="name">{{ user?.internalUser?.login }}</p>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
-          <fa-icon icon="plus"></fa-icon>
-        </button>
-      </div>
-    </div>
-  </section>
-
   <!-- List friends -->
   <section *ngIf="friends && friends.length > 0">
     <h2>My Friends</h2>
@@ -77,12 +74,7 @@
         <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
 
         <div class="details">
-          <div *ngIf="friend.friendAppUser?.internalUser?.firstName != null && friend.friendAppUser?.internalUser?.lastName != null">
-            <p class="name">{{ friend.friendAppUser?.internalUser?.firstName }} {{ friend.friendAppUser?.internalUser?.lastName }}</p>
-          </div>
-          <div *ngIf="friend.friendAppUser?.internalUser?.firstName == null || friend.friendAppUser?.internalUser?.lastName == null">
-            <p class="name">{{ friend.friendAppUser?.internalUser?.login }}</p>
-          </div>
+          <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
           <p>
             <a class="song-name" [href]="'https://open.spotify.com/track/' + friend?.mostRecentSong?.spotifyID" target="_blank">
               {{ friend?.mostRecentSong?.name }}
