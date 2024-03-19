@@ -209,7 +209,7 @@ public class AccountResource {
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be returned.
      */
     @GetMapping("/account-combined")
-    public String getAccountCombined() {
+    public AccountCombinedResponse getAccountCombined() {
         Optional<User> user = userService.getUserWithAuthorities();
         if (user.isEmpty()) throw new AccountResourceException("User could not be found");
 
@@ -230,8 +230,7 @@ public class AccountResource {
 
         AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, frontendFeedCards, pinnedFriends);
 
-        Gson gson = new Gson();
-        return gson.toJson(response);
+        return response;
     }
 
     @GetMapping("/account-user")

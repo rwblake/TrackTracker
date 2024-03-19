@@ -5,10 +5,10 @@ import java.time.Instant;
 
 public class FeedCardResponse implements Serializable {
 
-    Long id;
-    boolean liked;
-    Instant timeGenerated;
-    BelongsTo belongsTo;
+    private Long id;
+    private boolean liked;
+    private Instant timeGenerated;
+    private BelongsTo belongsTo;
 
     /** NOT STORED IN DATABASE:
      * The type of card that can be shown on the frontend.
@@ -17,19 +17,19 @@ public class FeedCardResponse implements Serializable {
      * The card pertains to another user -> inferredType = "friend" -> The card will be displayed in the
      * frontend as a friend update.
      * */
-    String inferredType;
+    private String inferredType;
 
     /** NOT STORED IN DATABASE:
      * The message shown on the frontend for the card. This message is generated given the card's database values.
      * */
-    String generatedMessage;
+    private String generatedMessage;
 
     /** NOT STORED IN DATABASE:
      * The material symbol icon shown on the frontend for the card.
      * */
-    String inferredIcon;
+    private String inferredIcon;
 
-    String linksTo = "#";
+    private String linksTo = "#";
 
     public FeedCardResponse(team.bham.domain.FeedCard feedCard, String inferredType, String generatedMessage, String inferredIcon) {
         id = feedCard.getId();
@@ -48,16 +48,104 @@ public class FeedCardResponse implements Serializable {
             );
     }
 
-    static class BelongsTo implements Serializable {
+    public Long getId() {
+        return id;
+    }
 
-        Long id;
-        String firstName;
-        String lastName;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        BelongsTo(Long id, String firstName, String lastName) {
-            this.id = id;
-            this.firstName = firstName;
-            this.lastName = lastName;
-        }
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public Instant getTimeGenerated() {
+        return timeGenerated;
+    }
+
+    public void setTimeGenerated(Instant timeGenerated) {
+        this.timeGenerated = timeGenerated;
+    }
+
+    public BelongsTo getBelongsTo() {
+        return belongsTo;
+    }
+
+    public void setBelongsTo(BelongsTo belongsTo) {
+        this.belongsTo = belongsTo;
+    }
+
+    public String getInferredType() {
+        return inferredType;
+    }
+
+    public void setInferredType(String inferredType) {
+        this.inferredType = inferredType;
+    }
+
+    public String getGeneratedMessage() {
+        return generatedMessage;
+    }
+
+    public void setGeneratedMessage(String generatedMessage) {
+        this.generatedMessage = generatedMessage;
+    }
+
+    public String getInferredIcon() {
+        return inferredIcon;
+    }
+
+    public void setInferredIcon(String inferredIcon) {
+        this.inferredIcon = inferredIcon;
+    }
+
+    public String getLinksTo() {
+        return linksTo;
+    }
+
+    public void setLinksTo(String linksTo) {
+        this.linksTo = linksTo;
+    }
+}
+
+class BelongsTo implements Serializable {
+
+    private Long id;
+    private String firstName;
+    private String lastName;
+
+    BelongsTo(Long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

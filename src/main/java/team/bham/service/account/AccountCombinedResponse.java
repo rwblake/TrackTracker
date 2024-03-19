@@ -10,17 +10,16 @@ import team.bham.service.feed.FeedCardResponse;
 
 public class AccountCombinedResponse implements Serializable {
 
-    Long id;
-    String spotifyID;
-    String avatarURL;
-    String bio;
-    String spotifyUsername;
-    InternalUserResponse internalUser;
-    Long userPreferencesID;
-    FeedResponse feed;
-    List<FriendshipResponse> friends;
-
-    List<AppUser> pinnedFriends;
+    private Long id;
+    private String spotifyID;
+    private String avatarURL;
+    private String bio;
+    private String spotifyUsername;
+    private InternalUserResponse internalUser;
+    private Long userPreferencesID;
+    private FeedResponse feed;
+    private List<FriendshipResponse> friends;
+    private List<AppUser> pinnedFriends;
 
     public AccountCombinedResponse(
         AppUser appUser,
@@ -36,60 +35,244 @@ public class AccountCombinedResponse implements Serializable {
         internalUser = new InternalUserResponse(appUser.getInternalUser());
         userPreferencesID = appUser.getUserPreferences().getId();
         feed = new FeedResponse(appUser.getFeed());
-        feed.cards = feedCards;
+        feed.setCards(feedCards);
         this.friends = friends.stream().map(friend -> new FriendshipResponse(friend, appUser.getId())).collect(Collectors.toList());
         this.pinnedFriends = pinnedFriends;
     }
 
-    static class FeedResponse implements Serializable {
-
-        Long id;
-        Instant lastUpdated;
-        List<FeedCardResponse> cards;
-
-        public FeedResponse(team.bham.domain.Feed feed) {
-            id = feed.getId();
-            lastUpdated = feed.getLastUpdated();
-        }
+    public Long getId() {
+        return id;
     }
 
-    static class InternalUserResponse implements Serializable {
-
-        Long id;
-        String firstName;
-        String lastName;
-        String login;
-        String email;
-
-        InternalUserResponse(User internalUser) {
-            this.id = internalUser.getId();
-            this.firstName = internalUser.getFirstName();
-            this.lastName = internalUser.getLastName();
-            this.login = internalUser.getLogin();
-            this.email = internalUser.getEmail();
-        }
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    static class FriendshipResponse implements Serializable {
+    public String getSpotifyID() {
+        return spotifyID;
+    }
 
-        Instant createdAt;
-        long friendID;
-        String firstName;
-        String lastName;
-        String avatarURL;
+    public void setSpotifyID(String spotifyID) {
+        this.spotifyID = spotifyID;
+    }
 
-        public FriendshipResponse(team.bham.domain.Friendship friendship, Long me) {
-            createdAt = friendship.getCreatedAt();
-            AppUser otherPerson;
-            if (friendship.getFriendAccepting().getId().longValue() != me.longValue()) {
-                otherPerson = friendship.getFriendAccepting();
-            } else {
-                otherPerson = friendship.getFriendInitiating();
-            }
-            friendID = otherPerson.getId();
-            firstName = otherPerson.getInternalUser().getFirstName();
-            lastName = otherPerson.getInternalUser().getLastName();
-            avatarURL = otherPerson.getAvatarURL();
+    public String getAvatarURL() {
+        return avatarURL;
+    }
+
+    public void setAvatarURL(String avatarURL) {
+        this.avatarURL = avatarURL;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getSpotifyUsername() {
+        return spotifyUsername;
+    }
+
+    public void setSpotifyUsername(String spotifyUsername) {
+        this.spotifyUsername = spotifyUsername;
+    }
+
+    public InternalUserResponse getInternalUser() {
+        return internalUser;
+    }
+
+    public void setInternalUser(InternalUserResponse internalUser) {
+        this.internalUser = internalUser;
+    }
+
+    public Long getUserPreferencesID() {
+        return userPreferencesID;
+    }
+
+    public void setUserPreferencesID(Long userPreferencesID) {
+        this.userPreferencesID = userPreferencesID;
+    }
+
+    public FeedResponse getFeed() {
+        return feed;
+    }
+
+    public void setFeed(FeedResponse feed) {
+        this.feed = feed;
+    }
+
+    public List<FriendshipResponse> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<FriendshipResponse> friends) {
+        this.friends = friends;
+    }
+
+    public List<AppUser> getPinnedFriends() {
+        return pinnedFriends;
+    }
+
+    public void setPinnedFriends(List<AppUser> pinnedFriends) {
+        this.pinnedFriends = pinnedFriends;
+    }
+}
+
+class FeedResponse implements Serializable {
+
+    private Long id;
+    private Instant lastUpdated;
+    private List<FeedCardResponse> cards;
+
+    public FeedResponse(team.bham.domain.Feed feed) {
+        id = feed.getId();
+        lastUpdated = feed.getLastUpdated();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Instant getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public List<FeedCardResponse> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<FeedCardResponse> cards) {
+        this.cards = cards;
+    }
+}
+
+class InternalUserResponse implements Serializable {
+
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String login;
+    private String email;
+
+    InternalUserResponse(User internalUser) {
+        this.id = internalUser.getId();
+        this.firstName = internalUser.getFirstName();
+        this.lastName = internalUser.getLastName();
+        this.login = internalUser.getLogin();
+        this.email = internalUser.getEmail();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+}
+
+class FriendshipResponse implements Serializable {
+
+    private Instant createdAt;
+    private long friendID;
+    private String firstName;
+    private String lastName;
+    private String avatarURL;
+
+    public FriendshipResponse(team.bham.domain.Friendship friendship, Long me) {
+        createdAt = friendship.getCreatedAt();
+        AppUser otherPerson;
+        if (friendship.getFriendAccepting().getId().longValue() != me.longValue()) {
+            otherPerson = friendship.getFriendAccepting();
+        } else {
+            otherPerson = friendship.getFriendInitiating();
         }
+        friendID = otherPerson.getId();
+        firstName = otherPerson.getInternalUser().getFirstName();
+        lastName = otherPerson.getInternalUser().getLastName();
+        avatarURL = otherPerson.getAvatarURL();
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public long getFriendID() {
+        return friendID;
+    }
+
+    public void setFriendID(long friendID) {
+        this.friendID = friendID;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getAvatarURL() {
+        return avatarURL;
+    }
+
+    public void setAvatarURL(String avatarURL) {
+        this.avatarURL = avatarURL;
     }
 }
