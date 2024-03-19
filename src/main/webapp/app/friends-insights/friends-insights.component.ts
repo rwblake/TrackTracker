@@ -41,6 +41,7 @@ export class FriendsInsightsComponent implements OnInit {
   onAuthenticated(account: Account | null) {
     this.account = account;
     this.popularCategories = undefined;
+    this.leaderboards = undefined;
 
     if (!account) return;
   }
