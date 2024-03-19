@@ -11,3 +11,18 @@ export interface IPopularCategories {
   artists: CategoryInformation[];
   albums: CategoryInformation[];
 }
+
+export interface ILeaderboardUser {
+  username: string;
+  avatarUrl: string;
+}
+
+export interface LeaderboardEntry {
+  value: ILeaderboardUser;
+  frequency: number;
+}
+
+export interface ILeaderboard {
+  streamedSecondsLeaderboard: LeaderboardEntry[];
+  streamedArtistsLeaderboard: LeaderboardEntry[];
+}

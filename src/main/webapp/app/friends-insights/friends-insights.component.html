@@ -33,9 +33,13 @@
 
         <hr />
 
-        <div class="row">
-          <div class="col-md-6">Leaderboard</div>
-          <div class="col-md-6">Leaderboard</div>
+        <div class="row justify-content-around py-5">
+          <div class="col-md-5">
+            <jhi-leaderboard-card [data]="getHoursStreamedLeaderboardData()"></jhi-leaderboard-card>
+          </div>
+          <div class="col-md-5">
+            <jhi-leaderboard-card [data]="getArtistsLeaderboardData()"></jhi-leaderboard-card>
+          </div>
         </div>
       </div>
     </div>
