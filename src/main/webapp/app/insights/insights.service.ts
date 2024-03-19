@@ -3,11 +3,11 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { AccountService } from '../core/auth/account.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Observable } from 'rxjs';
-import { InsightsResponse } from './insights-response-interface';
+import { InsightsResponse, StreamInsightsResponse } from './insights-response-interface';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { IStream } from '../entities/stream/stream.model';
 
-export type EntityResponseType = HttpResponse<String>;
+// export type EntityResponseType = HttpResponse<String>;
 
 @Injectable({ providedIn: 'root' })
 export class InsightsService {
@@ -19,7 +19,7 @@ export class InsightsService {
   //   return this.http.post<InsightsResponse>(this.insightsURL);
   // }
 
-  retrieveUserSongs() {
-    return this.http.get<string>(this.streamsURL, { observe: 'response' });
+  retrieveStreamInsights(): Observable<StreamInsightsResponse> {
+    return this.http.get<StreamInsightsResponse>(this.streamsURL);
   }
 }

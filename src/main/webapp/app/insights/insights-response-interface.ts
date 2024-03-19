@@ -1,4 +1,46 @@
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
+import { ISong } from '../entities/song/song.model';
+import { IGenre } from '../entities/genre/genre.model';
+import { IAlbum } from '../entities/album/album.model';
+import { IArtist } from '../entities/artist/artist.model';
+
+export interface StreamInsightsResponse {
+  songCounter: {
+    byWeek: Entry[];
+    byMonth: Entry[];
+    byYear: Entry[];
+    byAllTime: Entry[];
+  };
+  artistCounter: {
+    byWeek: Entry[];
+    byMonth: Entry[];
+    byYear: Entry[];
+    byAllTime: Entry[];
+  };
+  decadeCounter: {
+    byWeek: Entry[];
+    byMonth: Entry[];
+    byYear: Entry[];
+    byAllTime: Entry[];
+  };
+  genreCounter: {
+    byWeek: Entry[];
+    byMonth: Entry[];
+    byYear: Entry[];
+    byAllTime: Entry[];
+  };
+  albumCounter: {
+    byWeek: Entry[];
+    byMonth: Entry[];
+    byYear: Entry[];
+    byAllTime: Entry[];
+  };
+}
+
+interface Entry {
+  metric: ISong | IGenre | IAlbum | IArtist | string;
+  value: number;
+}
 
 export interface InsightsResponse {
   graphData: GraphDataResponse;

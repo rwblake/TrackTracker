@@ -172,20 +172,22 @@ export class InsightsComponent implements OnInit {
 
   constructor(private titleService: Title, private accountService: AccountService, private insightsService: InsightsService) {}
   response: InsightsResponse | undefined;
+
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Insights');
 
-    this.accountService.fetchUser().subscribe(
-      (data: IAppUser) => {
-        this.user = data;
-      },
-      error => {
-        console.error('Error fetching user bio:', error);
-      }
-    );
+    // get the user
+    this.accountService.fetchUser().subscribe({
+      next: data => (this.user = data),
+      error: error => console.error('Error fetching user bio:', error),
+    });
 
-    this.insightsService.retrieveUserSongs().subscribe({
-      next: x => console.log(x.body),
+    // get the insights to populate the graphs
+    this.insightsService.retrieveStreamInsights().subscribe({
+      next: response => {
+        if (response === null) console.error('No response given');
+        else console.log(response);
+      },
       error: e => console.error(e),
       // this.onStreamRetrievalFailure(e),
     });
