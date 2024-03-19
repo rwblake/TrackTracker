@@ -47,6 +47,7 @@ export class FriendsInsightsComponent implements OnInit {
   }
 
   private requestPopularCategories() {
+    if (!this.account) return;
     this.popularCategories = undefined;
 
     this.friendsInsightsService.getPopularCategories(this.selectedTimePeriod?.periodDays).subscribe({
@@ -59,18 +60,17 @@ export class FriendsInsightsComponent implements OnInit {
     this.popularCategories = undefined;
 
     this.friendsInsightsService.getLeaderboards(this.selectedTimePeriod?.periodDays).subscribe({
-      next: res => {
-        this.leaderboards = res;
-        console.log(res);
-      },
+      next: res => (this.leaderboards = res),
       error: () => (this.error = true),
     });
   }
 
   onTimePeriodChange(period: TimePeriod) {
     this.selectedTimePeriod = period;
-    this.requestPopularCategories();
-    this.requestLeaderboards();
+    if (this.account) {
+      this.requestPopularCategories();
+      this.requestLeaderboards();
+    }
   }
 
   private categoryInformationToCardStackData(data: CategoryInformation): CardStackData {
