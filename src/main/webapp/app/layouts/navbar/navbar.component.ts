@@ -44,8 +44,29 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  toProfile() {
+    this.collapseNavbar();
+    this.router.navigate(['/profile', this.account?.firstName]);
+  }
+
+  showDropdown() {
+    let dropdown = document.getElementById('dropdown');
+    // @ts-ignore
+    dropdown.style.right = '0';
+    // @ts-ignore
+    if (window.getComputedStyle(dropdown).display === 'block') {
+      // @ts-ignore
+      dropdown.style.display = 'none';
+    } else {
+      // @ts-ignore
+      dropdown.style.display = 'block';
+    }
+  }
+
   collapseNavbar(): void {
     this.isNavbarCollapsed = true;
+    // @ts-ignore
+    document.getElementById('dropdown').style.display = 'none';
   }
 
   login(): void {
@@ -60,13 +81,16 @@ export class NavbarComponent implements OnInit {
   }
 
   edit(): void {
+    this.collapseNavbar();
     this.router.navigate(['./profile/edit-profile']);
   }
 
   toFriends(): void {
+    this.collapseNavbar();
     this.router.navigate(['./friends']);
   }
   showModal() {
+    this.collapseNavbar();
     let modal = document.getElementById('myModal') as HTMLElement | null;
     if (modal) {
       modal.style.display = 'block';
@@ -83,14 +107,17 @@ export class NavbarComponent implements OnInit {
     }
   }
   navigateToGDPR() {
+    this.collapseNavbar();
     this.router.navigate(['/gdpr-policy']);
   }
 
   toSettings() {
+    this.collapseNavbar();
     this.router.navigate(['/account/settings']);
   }
 
   toChangePassword() {
+    this.collapseNavbar();
     this.router.navigate(['/account/password']);
   }
 

@@ -377,17 +377,13 @@
 
         <li class="nav-item profile" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
           <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
-          <a
-            class="nav-link"
-            [routerLink]="['/profile', account?.firstName]"
-            routerLinkActive="active"
-            (click)="collapseNavbar()"
-            data-cy="profile"
-          >
+          <a class="nav-link" (click)="showDropdown()" data-cy="profile">
             <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
-            <!--            <span>Profile</span>-->
           </a>
-          <ul class="dropdown-menu profile-menu">
+          <ul class="dropdown-menu profile-menu" id="dropdown">
+            <li>
+              <button class="dropdown-item" (click)="toProfile()">Profile page</button>
+            </li>
             <li>
               <button class="dropdown-item" (click)="toFriends()">Friends</button>
             </li>
