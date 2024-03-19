@@ -23,7 +23,7 @@
       <div class="col-md-3">
         <!--   Genre pie chart     -->
         <ngx-charts-pie-chart
-          [results]="genrePieChart"
+          [results]="genrePieChartWeek"
           [arcWidth]="3"
           [explodeSlices]="true"
           [legendPosition]="below"
@@ -34,9 +34,9 @@
       </div>
 
       <div #containerRef class="col-md-3">
-        <!--   Listened time bar chart   -->
+        <!--   Listened time bar chart   [results]="listenedTimeBar" -->
         <ngx-charts-bar-vertical
-          [results]="listenedTimeBar"
+          [results]="genrePieChartMonth"
           [view]="[containerRef.offsetWidth, 400]"
           [showXAxisLabel]="true"
           [showYAxisLabel]="true"
