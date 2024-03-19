@@ -1,5 +1,13 @@
+export interface CategoryInformation {
+  value: {
+    imageURL: string;
+    name: string;
+  };
+  frequency: number;
+}
+
 export interface IPopularCategories {
-  tracks: any[];
-  artists: any[];
-  albums: any[];
+  tracks: CategoryInformation[];
+  artists: CategoryInformation[];
+  albums: CategoryInformation[];
 }

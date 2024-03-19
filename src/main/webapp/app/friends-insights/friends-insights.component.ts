@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { FriendsInsightsService } from './friends-insights.service';
-import { IPopularCategories } from './friends-insights.model';
+import { CategoryInformation, IPopularCategories } from './friends-insights.model';
 import { Account } from '../core/auth/account.model';
 import { AccountService } from '../core/auth/account.service';
 import { CardStackData } from '../card-stack/card-stack.component';
@@ -20,59 +20,6 @@ export class FriendsInsightsComponent implements OnInit {
   account: Account | null = null;
 
   popularCategories?: IPopularCategories;
-
-  sampleData: CardStackData[] = [
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-      title: 'Eminem',
-      description: '12,325 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d0000b273282b9210352afd2c657ec103',
-      title: 'Billie Eilish',
-      description: '10,619 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e0234f21d3047d85440dfa37f10',
-      title: 'Ariana Grande',
-      description: '4,097 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e02451dc79ccf6dfaa6cc5ce029',
-      title: 'I DONT KNOW HOW BUT THEY FOUND ME',
-      description: '1,290 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228',
-      title: 'Eminem',
-      description: '12,325 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d0000b273282b9210352afd2c657ec103',
-      title: 'Billie Eilish',
-      description: '10,619 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e0234f21d3047d85440dfa37f10',
-      title: 'Ariana Grande',
-      description: '4,097 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e02451dc79ccf6dfaa6cc5ce029',
-      title: 'I DONT KNOW HOW BUT THEY FOUND ME',
-      description: '1,290 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d0000b273282b9210352afd2c657ec103',
-      title: 'Billie Eilish',
-      description: '10,619 Streams',
-    },
-    {
-      image_url: 'https://i.scdn.co/image/ab67616d00001e0234f21d3047d85440dfa37f10',
-      title: 'Ariana Grande',
-      description: '4,097 Streams',
-    },
-  ];
 
   constructor(
     private titleService: Title,
@@ -108,5 +55,25 @@ export class FriendsInsightsComponent implements OnInit {
   onTimePeriodChange(period: TimePeriod) {
     this.selectedTimePeriod = period;
     this.requestPopularCategories();
+  }
+
+  private categoryInformationToCardStackData(data: CategoryInformation): CardStackData {
+    return {
+      image_url: data.value.imageURL,
+      title: data.value.name,
+      description: `${data.frequency} Streams`,
+    };
+  }
+
+  getArtistCardStackData(): CardStackData[] | undefined {
+    return this.popularCategories?.artists.map(this.categoryInformationToCardStackData);
+  }
+
+  getTracksCardStackData(): CardStackData[] | undefined {
+    return this.popularCategories?.tracks.map(this.categoryInformationToCardStackData);
+  }
+
+  getAlbumsCardStackData(): CardStackData[] | undefined {
+    return this.popularCategories?.albums.map(this.categoryInformationToCardStackData);
   }
 }

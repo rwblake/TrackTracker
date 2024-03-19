@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.springframework.stereotype.Service;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.AlbumType;
@@ -25,7 +26,7 @@ public class FriendsInsightsService {
         List<Map.Entry<T, Integer>> sortedList = freqMap
             .entrySet()
             .stream()
-            .sorted(Comparator.comparingInt(Map.Entry::getValue))
+            .sorted((a, b) -> b.getValue() - a.getValue())
             .collect(Collectors.toList());
 
         return sortedList.subList(0, Math.min(sortedList.size(), n));
@@ -63,7 +64,7 @@ public class FriendsInsightsService {
         // Calculate the frequencies of song streams
         allStreams.forEach(stream -> {
             Song song = stream.getSong();
-            songFreqMap.putIfAbsent(song, songFreqMap.getOrDefault(song, 0) + 1);
+            songFreqMap.put(song, songFreqMap.getOrDefault(song, 0) + 1);
         });
 
         // Calculate frequencies of artist streams
@@ -71,7 +72,7 @@ public class FriendsInsightsService {
             song
                 .getArtists()
                 .forEach(artist -> {
-                    artistFreqMap.putIfAbsent(artist, artistFreqMap.getOrDefault(artist, 0) + freq);
+                    artistFreqMap.put(artist, artistFreqMap.getOrDefault(artist, 0) + freq);
                 });
         });
 
@@ -79,7 +80,7 @@ public class FriendsInsightsService {
         songFreqMap.forEach((song, freq) -> {
             Album album = song.getAlbum();
             if (album.getAlbumType().equals(AlbumType.SINGLE)) return; // don't log singles as albums
-            albumFreqMap.putIfAbsent(album, albumFreqMap.getOrDefault(album, 0) + freq);
+            albumFreqMap.put(album, albumFreqMap.getOrDefault(album, 0) + freq);
         });
 
         // Sort and pick top 10 from sets
