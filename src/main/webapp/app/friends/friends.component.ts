@@ -10,6 +10,7 @@ import { IAppUser } from '../entities/app-user/app-user.model';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import dayjs from 'dayjs/esm';
 import { IUser } from '../entities/user/user.model';
+import { IFriendRecommendation } from '../entities/friend-recommendation/friend-recommendation.model';
 dayjs.extend(relativeTime);
 
 @Component({
@@ -30,7 +31,7 @@ export class FriendsComponent implements OnInit {
   friends?: IFriend[];
   users?: IAppUser[];
   dialog: boolean;
-  recommendations?: IAppUser[];
+  recommendations?: IFriendRecommendation[];
   blocked?: IAppUser[];
 
   constructor(private titleService: Title, private friendsService: FriendsService) {
@@ -39,6 +40,7 @@ export class FriendsComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
+    this.loadRecommendations();
     this.reload();
   }
 
@@ -89,7 +91,16 @@ export class FriendsComponent implements OnInit {
     });
   }
 
-  sendFriendRequest(id: number) {
+  loadRecommendations(): void {
+    this.friendsService.getRecommendations().subscribe({
+      next: v => (this.recommendations = v),
+    });
+  }
+
+  sendFriendRequest(id?: number) {
+    if (id == null) {
+      return;
+    }
     this.showErrorMessage = false;
     this.friendsService.sendFriendRequest(id).subscribe({
       next: v => this.reload(),

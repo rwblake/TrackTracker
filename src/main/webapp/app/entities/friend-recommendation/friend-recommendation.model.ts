@@ -5,7 +5,7 @@ export interface IFriendRecommendation {
   id: number;
   similarity?: number | null;
   createdAt?: dayjs.Dayjs | null;
-  aboutAppUser?: Pick<IAppUser, 'id'> | null;
+  aboutAppUser?: Pick<IAppUser, 'id' | 'internalUser' | 'avatarURL'> | null;
   forAppUser?: Pick<IAppUser, 'id'> | null;
 }
 

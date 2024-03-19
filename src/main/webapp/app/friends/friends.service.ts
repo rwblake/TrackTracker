@@ -7,6 +7,7 @@ import { IFriendship } from 'app/entities/friendship/friendship.model';
 import { IFriendRequest } from '../entities/friend-request/friend-request.model';
 import { IFriend } from './friend.model';
 import { IAppUser } from '../entities/app-user/app-user.model';
+import { IFriendRecommendation } from '../entities/friend-recommendation/friend-recommendation.model';
 
 export type EntityResponseType = HttpResponse<String>;
 export type EntityArrayResponseType = HttpResponse<IFriendRequest>;
@@ -39,6 +40,10 @@ export class FriendsService {
 
   getBlocked(): Observable<IAppUser[]> {
     return this.http.get<IAppUser[]>(this.resourceUrl + '/blocked');
+  }
+
+  getRecommendations(): Observable<IFriendRecommendation[]> {
+    return this.http.get<IFriendRecommendation[]>(this.resourceUrl + '/recommendations');
   }
 
   getUsers(): Observable<IAppUser[]> {

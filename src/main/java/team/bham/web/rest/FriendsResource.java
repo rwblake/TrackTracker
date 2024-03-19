@@ -1,5 +1,7 @@
 package team.bham.web.rest;
 
+import static java.util.stream.Stream.concat;
+
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
@@ -129,6 +131,62 @@ public class FriendsResource {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = getCurrentUser();
         return currentUser.getBlockedUsers().stream().collect(Collectors.toList());
+    }
+
+    private HashMap<String, Integer> genreFrequencies(AppUser appUser) {
+        HashMap<String, Integer> ret = new HashMap<>();
+        for (Stream stream : appUser.getStreams()) {
+            for (Artist artist : stream.getSong().getArtists()) {
+                for (Genre genre : artist.getGenres()) {
+                    if (ret.containsKey(genre.getName())) {
+                        ret.replace(genre.getName(), ret.get(genre.getName()) + 1);
+                    } else {
+                        ret.put(genre.getName(), 1);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    private Float similarity(AppUser a, AppUser b) {
+        HashMap<String, Integer> fa = genreFrequencies(a);
+        HashMap<String, Integer> fb = genreFrequencies(b);
+        float similar = 0;
+        float total = 0;
+        Set<String> keySet = concat(fa.keySet().stream(), fb.keySet().stream()).collect(Collectors.toSet());
+        for (String key : keySet) {
+            if (fa.containsKey(key)) {
+                total += fa.get(key);
+                if (fb.containsKey(key)) {
+                    total += fb.get(key);
+                    similar += fb.get(key);
+                    similar += fa.get(key);
+                }
+            } else {
+                total += fb.get(key);
+            }
+        }
+        return similar / total;
+    }
+
+    @GetMapping("/friends/recommendations")
+    public List<FriendRecommendation> getRecommendations() throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+
+        // Get available app users (not already friends/ blocked)
+        List<AppUser> appUsers = getAppUsers();
+        List<FriendRecommendation> recommendations = new ArrayList<>(appUsers.size());
+        FriendRecommendation recommendation;
+        for (AppUser appUser : appUsers) {
+            recommendation = new FriendRecommendation();
+            recommendation.setAboutAppUser(appUser);
+            recommendation.setForAppUser(currentUser);
+            recommendation.setSimilarity(similarity(currentUser, appUser));
+            recommendations.add(recommendation);
+        }
+        return recommendations;
     }
 
     @PostMapping("/friends/accept")
