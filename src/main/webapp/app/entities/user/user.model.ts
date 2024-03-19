@@ -6,7 +6,7 @@ export interface IUser {
 }
 
 export class User implements IUser {
-  constructor(public id: number, public login: string, public firstName: string, public lastName: string) {}
+  constructor(public id: number, public login: string) {}
 }
 
 export function getUserIdentifier(user: IUser): number {
