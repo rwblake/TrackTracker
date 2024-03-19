@@ -29,6 +29,14 @@ a:hover {
   border: solid 1px $translucent-border;
 }
 
+// Used to ensure the page scales properly at higher resolutions.
+.playlist-analysis-wrapper {
+  width: 100%;
+  max-width: 1920px;
+  justify-items: center;
+}
+
+// cards that appear at the bottom of the page for recent playlists
 .recentPlaylistList {
   display: flex;
   flex-direction: row;

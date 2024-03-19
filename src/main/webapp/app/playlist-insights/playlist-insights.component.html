@@ -1,255 +1,257 @@
 <div class="playlist-insights root">
-  <h1>Playlist Analyser</h1>
+  <div class="playlist-analysis-wrapper">
+    <h1>Playlist Analyser</h1>
 
-  <!-- HEADER SECTION. for everything above the actual stats.-->
-  <div class="container-fluid">
-    <div class="row">
+    <!-- HEADER SECTION. for everything above the actual stats.-->
+    <div class="container-fluid">
+      <div class="row">
+        <br />
+
+        <div class="col-md-12">
+          <form (ngSubmit)="sendLink()" [formGroup]="urlForm">
+            <label class="form-label" for="name"> Playlist URL </label>
+
+            <div class="searchBar">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="link-input"
+                formControlName="name"
+                placeholder="Paste the link to a Spotify playlist here..."
+                [(ngModel)]="linkInput"
+                required
+              />
+
+              <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="btn btn-primary" [disabled]="linkInput === ''">
+                Go!
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
       <br />
 
-      <div class="col-md-12">
-        <form (ngSubmit)="sendLink()" [formGroup]="urlForm">
-          <label class="form-label" for="name"> Playlist URL </label>
-
-          <div class="searchBar">
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              name="link-input"
-              formControlName="name"
-              placeholder="Paste the link to a Spotify playlist here..."
-              [(ngModel)]="linkInput"
-              required
-            />
-
-            <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="btn btn-primary" [disabled]="linkInput === ''">
-              Go!
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <br />
-
-    <div class="row">
-      <div class="col-md-12">
-        <p class="lead" *ngIf="showWaitingMessage">Please wait while we process your playlist. This won't take too long.</p>
-        <p class="lead" *ngIf="showErrorMessage">
-          Sorry, we weren't able to process your playlist due to an error. If you're trying to access private content, please make sure
-          you're logged in and have authorised us with your Spotify account.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!--ANALYSIS SECTION. Only displayed if a playlist has been successfully pulled-->
-  <div class="container-fluid px-5" *ngIf="pulledData">
-    <br />
-
-    <div class="row">
-      <div class="col-md-12">
-        <div class="playlist-header">
-          <h2>
-            Viewing analysis for <br /><b>{{ response?.playlistTitle }}</b>
-          </h2>
-          <img [src]="response?.imageURL" [alt]="'Playlist image for ' + response?.playlistTitle" />
+      <div class="row">
+        <div class="col-md-12">
+          <p class="lead" *ngIf="showWaitingMessage">Please wait while we process your playlist. This won't take too long.</p>
+          <p class="lead" *ngIf="showErrorMessage">
+            Sorry, we weren't able to process your playlist due to an error. If you're trying to access private content, please make sure
+            you're logged in and have authorised us with your Spotify account.
+          </p>
         </div>
       </div>
     </div>
 
-    <p></p>
+    <!--ANALYSIS SECTION. Only displayed if a playlist has been successfully pulled-->
+    <div class="container-fluid px-5" *ngIf="pulledData">
+      <br />
 
-    <div class="row g-5 align-items-start">
-      <div class="col-md-5">
-        <div class="statBox">
-          <h3>Valence</h3>
-          <div class="progressBarOutside">
-            <div
-              class="progressBarInside"
-              style="background: rgb(120, 37, 188, 1)"
-              [ngStyle]="{
-                'width.%': valenceValue
-              }"
-            ></div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="playlist-header">
+            <h2>
+              Viewing analysis for <br /><b>{{ response?.playlistTitle }}</b>
+            </h2>
+            <img [src]="response?.imageURL" [alt]="'Playlist image for ' + response?.playlistTitle" />
           </div>
-          <h3>Energy</h3>
-          <div class="progressBarOutside">
-            <div
-              class="progressBarInside"
-              style="background: rgb(234, 58, 193, 1)"
-              [ngStyle]="{
-                'width.%': energyValue
-              }"
-            ></div>
-          </div>
-          <h3>Acousticness</h3>
-          <div class="progressBarOutside">
-            <div
-              class="progressBarInside"
-              style="background: rgb(234, 0, 43, 1)"
-              [ngStyle]="{
-                'width.%': acousticnessValue
-              }"
-            ></div>
-          </div>
-          <h3>Danceability</h3>
-          <div class="progressBarOutside">
-            <div
-              class="progressBarInside"
-              style="background: rgb(255, 178, 25, 1)"
-              [ngStyle]="{
-                'width.%': danceabilityValue
-              }"
-            ></div>
-          </div>
-        </div>
-
-        <div class="statBox">
-          <a [href]="happiestSongURL" target="_blank">
-            <div class="songCard">
-              <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
-              <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
-            </div>
-          </a>
-          <a [href]="energeticSongURL" target="_blank">
-            <div class="songCard">
-              <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
-              <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
-            </div>
-          </a>
-          <a [href]="sumsUpSongURL" target="_blank">
-            <div class="songCard">
-              <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
-              <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
-            </div>
-          </a>
-          <a [href]="anomalousSongURL" target="_blank">
-            <div class="songCard">
-              <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
-              <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
-            </div>
-          </a>
         </div>
       </div>
 
-      <div class="col-md-7">
-        <div class="row align-items-start">
-          <div class="col-md-6">
-            <h3>Top Playlist Artists</h3>
-            <div #artistPieBox class="statBox">
-              <ngx-charts-pie-chart
-                [view]="[artistPieBox.offsetWidth, artistPieBox.offsetWidth * 0.9]"
-                [results]="artistsPieChart"
-                [legend]="false"
-                [scheme]="chartScheme"
-              >
-              </ngx-charts-pie-chart>
+      <p></p>
 
-              <table class="table table-striped table-dark">
-                <thead>
-                  <tr>
-                    <th>Artist</th>
-                    <th>Songs</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let artist of artistsPieChart | slice: 0:3; let i = index">
-                    <td>{{ artist.name }}</td>
-                    <td style="width: 15%">{{ artist.value }}</td>
-                  </tr>
-                </tbody>
-              </table>
+      <div class="row g-5 align-items-start">
+        <div class="col-md-5">
+          <div class="statBox">
+            <h3>Valence</h3>
+            <div class="progressBarOutside">
+              <div
+                class="progressBarInside"
+                style="background: rgb(120, 37, 188, 1)"
+                [ngStyle]="{
+                  'width.%': valenceValue
+                }"
+              ></div>
+            </div>
+            <h3>Energy</h3>
+            <div class="progressBarOutside">
+              <div
+                class="progressBarInside"
+                style="background: rgb(234, 58, 193, 1)"
+                [ngStyle]="{
+                  'width.%': energyValue
+                }"
+              ></div>
+            </div>
+            <h3>Acousticness</h3>
+            <div class="progressBarOutside">
+              <div
+                class="progressBarInside"
+                style="background: rgb(234, 0, 43, 1)"
+                [ngStyle]="{
+                  'width.%': acousticnessValue
+                }"
+              ></div>
+            </div>
+            <h3>Danceability</h3>
+            <div class="progressBarOutside">
+              <div
+                class="progressBarInside"
+                style="background: rgb(255, 178, 25, 1)"
+                [ngStyle]="{
+                  'width.%': danceabilityValue
+                }"
+              ></div>
             </div>
           </div>
 
-          <div class="col-md-6">
-            <h3>Top Playlist Genres</h3>
-            <div #genrePieBox class="statBox">
-              <ngx-charts-pie-chart
-                [view]="[genrePieBox.offsetWidth, genrePieBox.offsetWidth * 0.9]"
-                [results]="genrePieChart"
-                [legend]="false"
-                [scheme]="chartScheme"
-              >
-              </ngx-charts-pie-chart>
-
-              <table class="table table-striped table-dark">
-                <thead>
-                  <tr>
-                    <th>Genre</th>
-                    <th>Songs</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let genre of genrePieChart | slice: 0:3; let i = index">
-                    <td>{{ genre.name }}</td>
-                    <td style="width: 15%">{{ genre.value }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="statBox">
+            <a [href]="happiestSongURL" target="_blank">
+              <div class="songCard">
+                <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
+                <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
+              </div>
+            </a>
+            <a [href]="energeticSongURL" target="_blank">
+              <div class="songCard">
+                <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
+                <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
+              </div>
+            </a>
+            <a [href]="sumsUpSongURL" target="_blank">
+              <div class="songCard">
+                <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
+                <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
+              </div>
+            </a>
+            <a [href]="anomalousSongURL" target="_blank">
+              <div class="songCard">
+                <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
+                <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
+              </div>
+            </a>
           </div>
         </div>
 
-        <h3>Songs Over Time</h3>
-        <jhi-time-period-picker
-          [timePeriodSelections]="[
-            { periodDays: 10 * 365, label: 'Decade' },
-            { periodDays: 365, label: 'Year' }
-          ]"
-          (timePeriodChangeEvent)="onTimeFormatChange($event)"
-        ></jhi-time-period-picker>
+        <div class="col-md-7">
+          <div class="row align-items-start">
+            <div class="col-md-6">
+              <h3>Top Playlist Artists</h3>
+              <div #artistPieBox class="statBox">
+                <ngx-charts-pie-chart
+                  [view]="[artistPieBox.offsetWidth, artistPieBox.offsetWidth * 0.9]"
+                  [results]="artistsPieChart"
+                  [legend]="false"
+                  [scheme]="chartScheme"
+                >
+                </ngx-charts-pie-chart>
 
-        <div #yearChart *ngIf="!showByDecade" class="statBox">
-          <ngx-charts-bar-vertical
-            [results]="yearBarChart"
-            [view]="[yearChart.offsetWidth, 300]"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            [rotateXAxisTicks]="true"
-            [xAxis]="true"
-            [yAxis]="true"
-            [showGridLines]="false"
-            [xAxisLabel]="'Year'"
-            [yAxisLabel]="'Number of Songs'"
-            [scheme]="chartScheme"
-          >
-          </ngx-charts-bar-vertical>
-        </div>
-        <div #decadeChart *ngIf="showByDecade" class="statBox">
-          <ngx-charts-bar-vertical
-            [results]="decadeBarChart"
-            [view]="[decadeChart.offsetWidth, 300]"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            [rotateXAxisTicks]="false"
-            [xAxis]="true"
-            [yAxis]="true"
-            [showGridLines]="false"
-            [xAxisLabel]="'Decade'"
-            [yAxisLabel]="'Number of Songs'"
-            [scheme]="chartScheme"
-          >
-          </ngx-charts-bar-vertical>
+                <table class="table table-striped table-dark">
+                  <thead>
+                    <tr>
+                      <th>Artist</th>
+                      <th>Songs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let artist of artistsPieChart | slice: 0:3; let i = index">
+                      <td>{{ artist.name }}</td>
+                      <td style="width: 15%">{{ artist.value }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <h3>Top Playlist Genres</h3>
+              <div #genrePieBox class="statBox">
+                <ngx-charts-pie-chart
+                  [view]="[genrePieBox.offsetWidth, genrePieBox.offsetWidth * 0.9]"
+                  [results]="genrePieChart"
+                  [legend]="false"
+                  [scheme]="chartScheme"
+                >
+                </ngx-charts-pie-chart>
+
+                <table class="table table-striped table-dark">
+                  <thead>
+                    <tr>
+                      <th>Genre</th>
+                      <th>Songs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let genre of genrePieChart | slice: 0:3; let i = index">
+                      <td>{{ genre.name }}</td>
+                      <td style="width: 15%">{{ genre.value }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <h3>Songs Over Time</h3>
+          <jhi-time-period-picker
+            [timePeriodSelections]="[
+              { periodDays: 10 * 365, label: 'Decade' },
+              { periodDays: 365, label: 'Year' }
+            ]"
+            (timePeriodChangeEvent)="onTimeFormatChange($event)"
+          ></jhi-time-period-picker>
+
+          <div #yearChart *ngIf="!showByDecade" class="statBox">
+            <ngx-charts-bar-vertical
+              [results]="yearBarChart"
+              [view]="[yearChart.offsetWidth, 300]"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [rotateXAxisTicks]="true"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showGridLines]="false"
+              [xAxisLabel]="'Year'"
+              [yAxisLabel]="'Number of Songs'"
+              [scheme]="chartScheme"
+            >
+            </ngx-charts-bar-vertical>
+          </div>
+          <div #decadeChart *ngIf="showByDecade" class="statBox">
+            <ngx-charts-bar-vertical
+              [results]="decadeBarChart"
+              [view]="[decadeChart.offsetWidth, 300]"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              [rotateXAxisTicks]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [showGridLines]="false"
+              [xAxisLabel]="'Decade'"
+              [yAxisLabel]="'Number of Songs'"
+              [scheme]="chartScheme"
+            >
+            </ngx-charts-bar-vertical>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <h3 *ngIf="hasPlaylists">Recently Viewed Playlists</h3>
-        <div class="recentPlaylistList">
-          <a *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index" [href]="constructPlaylistLink(playlist.spotifyID)">
-            <div class="songCard">
-              <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
-              <p>
-                <b>{{ playlist.name }}</b>
-              </p>
-            </div>
-          </a>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 *ngIf="hasPlaylists">Recently Viewed Playlists</h3>
+          <div class="recentPlaylistList">
+            <a *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index" [href]="constructPlaylistLink(playlist.spotifyID)">
+              <div class="songCard">
+                <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
+                <p>
+                  <b>{{ playlist.name }}</b>
+                </p>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
