@@ -12,19 +12,16 @@
 
         <div class="row g-5">
           <div class="col-md-4 justify-content-center">
+            <h5 class="text-center my-4">Tracks</h5>
+            <jhi-card-stack [data]="getTracksCardStackData()"></jhi-card-stack>
+          </div>
+          <div class="col-md-4 justify-content-center">
             <h5 class="text-center my-4">Artists</h5>
-            <span *ngIf="popularCategories?.artists">{{ popularCategories?.artists }}</span>
-            <jhi-card-stack [data]="sampleData"></jhi-card-stack>
+            <jhi-card-stack [data]="getArtistCardStackData()"></jhi-card-stack>
           </div>
           <div class="col-md-4 justify-content-center">
             <h5 class="text-center my-4">Albums</h5>
-            <span *ngIf="popularCategories?.albums">{{ popularCategories?.albums }}</span>
-            <jhi-card-stack [data]="sampleData.slice().reverse()"></jhi-card-stack>
-          </div>
-          <div class="col-md-4 justify-content-center">
-            <h5 class="text-center my-4">Tracks</h5>
-            <span *ngIf="popularCategories?.tracks">{{ popularCategories?.tracks }}</span>
-            <jhi-card-stack [data]="sampleData"></jhi-card-stack>
+            <jhi-card-stack [data]="getAlbumsCardStackData()"></jhi-card-stack>
           </div>
         </div>
       </div>
