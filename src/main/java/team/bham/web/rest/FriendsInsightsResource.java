@@ -11,6 +11,7 @@ import team.bham.domain.User;
 import team.bham.repository.AppUserRepository;
 import team.bham.service.FriendsInsightsService;
 import team.bham.service.UserService;
+import team.bham.service.spotify.FriendsInsightsLeaderboardsResponse;
 import team.bham.service.spotify.FriendsInsightsPopularCategoriesResponse;
 
 @RestController
@@ -61,5 +62,22 @@ public class FriendsInsightsResource {
         if (appUser == null) throw new AccountResourceException("App User could not be found");
 
         return friendsInsightsService.getPopularCategories(appUser, periodDays);
+    }
+
+    @GetMapping("/leaderboards")
+    public FriendsInsightsLeaderboardsResponse getLeaderboards(@RequestParam("period") Optional<Integer> periodDays) {
+        log.debug("REST request to get friends insights leaderboards");
+
+        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+        if (userMaybe.isEmpty()) throw new AccountResourceException("User could not be found");
+
+        if (!this.appUserRepository.existsByInternalUser(userMaybe.get())) throw new AccountResourceException(
+            "App User could not be found"
+        );
+
+        AppUser appUser = appUserRepository.getAppUserByInternalUser(userMaybe.get());
+        if (appUser == null) throw new AccountResourceException("App User could not be found");
+
+        return friendsInsightsService.getLeaderboards(appUser, periodDays);
     }
 }

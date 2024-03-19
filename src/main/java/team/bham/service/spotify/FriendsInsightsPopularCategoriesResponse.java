@@ -10,35 +10,16 @@ import team.bham.domain.Song;
 
 public class FriendsInsightsPopularCategoriesResponse implements Serializable {
 
-    public static class FrequencyPair<T> implements Serializable {
+    private List<FriendsInsightsFrequencyPair<Song>> tracks;
+    private List<FriendsInsightsFrequencyPair<Artist>> artists;
+    private List<FriendsInsightsFrequencyPair<Album>> albums;
 
-        private final T value;
-        private final Integer frequency;
-
-        public FrequencyPair(T value, Integer frequency) {
-            this.value = value;
-            this.frequency = frequency;
-        }
-
-        public T getValue() {
-            return value;
-        }
-
-        public Integer getFrequency() {
-            return frequency;
-        }
+    private <K> FriendsInsightsFrequencyPair<K> entryToFriendsInsightsFrequencyPair(Map.Entry<K, Integer> entry) {
+        return new FriendsInsightsFrequencyPair<>(entry.getKey(), entry.getValue());
     }
 
-    private List<FrequencyPair<Song>> tracks;
-    private List<FrequencyPair<Artist>> artists;
-    private List<FrequencyPair<Album>> albums;
-
-    private <K> FrequencyPair<K> entryToFrequencyPair(Map.Entry<K, Integer> entry) {
-        return new FrequencyPair<>(entry.getKey(), entry.getValue());
-    }
-
-    private <K> List<FrequencyPair<K>> entriesToFrequencyPairs(List<Map.Entry<K, Integer>> entries) {
-        return entries.stream().map(this::entryToFrequencyPair).collect(Collectors.toList());
+    private <K> List<FriendsInsightsFrequencyPair<K>> entriesToFriendsInsightsFrequencyPairs(List<Map.Entry<K, Integer>> entries) {
+        return entries.stream().map(this::entryToFriendsInsightsFrequencyPair).collect(Collectors.toList());
     }
 
     public FriendsInsightsPopularCategoriesResponse(
@@ -46,32 +27,32 @@ public class FriendsInsightsPopularCategoriesResponse implements Serializable {
         List<Map.Entry<Artist, Integer>> artists,
         List<Map.Entry<Album, Integer>> albums
     ) {
-        this.tracks = entriesToFrequencyPairs(tracks);
-        this.artists = entriesToFrequencyPairs(artists);
-        this.albums = entriesToFrequencyPairs(albums);
+        this.tracks = entriesToFriendsInsightsFrequencyPairs(tracks);
+        this.artists = entriesToFriendsInsightsFrequencyPairs(artists);
+        this.albums = entriesToFriendsInsightsFrequencyPairs(albums);
     }
 
-    public List<FrequencyPair<Song>> getTracks() {
+    public List<FriendsInsightsFrequencyPair<Song>> getTracks() {
         return tracks;
     }
 
-    public void setTracks(List<FrequencyPair<Song>> tracks) {
+    public void setTracks(List<FriendsInsightsFrequencyPair<Song>> tracks) {
         this.tracks = tracks;
     }
 
-    public List<FrequencyPair<Artist>> getArtists() {
+    public List<FriendsInsightsFrequencyPair<Artist>> getArtists() {
         return artists;
     }
 
-    public void setArtists(List<FrequencyPair<Artist>> artists) {
+    public void setArtists(List<FriendsInsightsFrequencyPair<Artist>> artists) {
         this.artists = artists;
     }
 
-    public List<FrequencyPair<Album>> getAlbums() {
+    public List<FriendsInsightsFrequencyPair<Album>> getAlbums() {
         return albums;
     }
 
-    public void setAlbums(List<FrequencyPair<Album>> albums) {
+    public void setAlbums(List<FriendsInsightsFrequencyPair<Album>> albums) {
         this.albums = albums;
     }
 }
