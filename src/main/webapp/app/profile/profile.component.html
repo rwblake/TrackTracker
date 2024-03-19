@@ -20,13 +20,17 @@
   </div>
   <div class="col">
     <div class="row" style="height: 20%"></div>
-    <div class="row text-muted">
-      <h5>Friends: {{ friends ? friends : 'You currently have no friends added.' }}</h5>
+    <div class="row text-muted" *ngIf="friends == undefined || friends.length == 0">
+      <h5>Friends: {{ 'You currently have no friends added.' }}</h5>
     </div>
-    <div class="row text-muted">
-      <h5>
-        Playlists: {{ playlistData.length > 0 ? 'Here are some of your most recent playlists' : 'You currently have no playlists saved.' }}
-      </h5>
+    <div class="row" *ngIf="friends != undefined && friends.length > 0">
+      <h5>Friends: {{ friends?.length }}</h5>
+    </div>
+    <div class="row" *ngIf="playlistData.length > 0">
+      <h5>Playlists: {{ 'Here are some of your most recent playlists.' }}</h5>
+    </div>
+    <div class="row text-muted" *ngIf="playlistData.length == 0">
+      <h5>Playlists: {{ 'You currently have no playlists saved.' }}</h5>
     </div>
     <div class="row">
       <ng-container *ngIf="playlistData.length > 0; else genericCard">

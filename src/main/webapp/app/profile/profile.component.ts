@@ -10,6 +10,8 @@ import { Observable, Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
 import { PlaylistService } from '../entities/playlist/service/playlist.service';
 import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { IFriend } from '../friends/friend.model';
 
 @Component({
   selector: 'jhi-profile',
@@ -18,7 +20,7 @@ import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.
 })
 export class ProfileComponent implements OnInit {
   playlistData: any[] = [];
-  friends: any;
+  friends?: IFriend[];
   user: IAppUser | null = null;
   appUser: any;
   modal = document.getElementById('myModal');
@@ -31,7 +33,8 @@ export class ProfileComponent implements OnInit {
     private titleService: Title,
     private router: Router,
     private accountService: AccountService,
-    private playlistInsightsService: PlaylistInsightsService
+    private playlistInsightsService: PlaylistInsightsService,
+    protected http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +62,7 @@ export class ProfileComponent implements OnInit {
         console.error('Data is not an array of playlists');
       }
     });
+    this.http.get<IFriend[]>('/api/friends').subscribe({ next: v => (this.friends = v) });
   }
 
   goToPlaylist(id: number) {
