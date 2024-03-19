@@ -5,9 +5,18 @@ import { LegendPosition } from '@swimlane/ngx-charts';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { AccountService } from '../core/auth/account.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
-// import {InsightsService} from './insights.'
 import { InsightsService } from './insights.service';
-import { ArtistMapResponse, InsightsResponse, YearMapResponse, GenreMapResponse, GraphDataResponse } from './insights-response-interface';
+import {
+  ArtistMapResponse,
+  InsightsResponse,
+  YearMapResponse,
+  GenreMapResponse,
+  GraphDataResponse,
+  AlbumMapResponse,
+} from './insights-response-interface';
+import { IPlaylist } from '../entities/playlist/playlist.model';
+import { IStream } from '../entities/stream/stream.model';
+import { error } from '@angular/compiler-cli/src/transformers/util';
 
 @Component({
   selector: 'jhi-insights',
@@ -17,15 +26,31 @@ import { ArtistMapResponse, InsightsResponse, YearMapResponse, GenreMapResponse,
 export class InsightsComponent implements OnInit {
   user: IAppUser | null = null;
 
+  recentStreams: IStream[] = [];
+  hasStreams: boolean = false;
+
   genrePieChartTitle = 'Genres Listened To';
   pieLimit: number = 10;
-  genrePieChart: { name: string; value: number }[] = [];
+
   below = LegendPosition.Below;
 
   xaxisLabelBar = 'Time period';
   yaxisLabelBar = 'Hours';
 
-  listenedTimeBar: { name: string; value: number }[] = [];
+  listenedTimeBarWeek: { name: string; value: number }[] = [];
+  listenedTimeBarMonth: { name: string; value: number }[] = [];
+  listenedTimeBarYear: { name: string; value: number }[] = [];
+  listenedTimeBarAllTime: { name: string; value: number }[] = [];
+
+  genrePieChartWeek: { name: string; value: number }[] = [];
+  genrePieChartMonth: { name: string; value: number }[] = [];
+  genrePieChartYear: { name: string; value: number }[] = [];
+  genrePieChartAllTime: { name: string; value: number }[] = [];
+
+  albumsListenedBarWeek: { name: string; value: number }[] = [];
+  albumsListenedBarMonth: { name: string; value: number }[] = [];
+  albumsListenedBarYear: { name: string; value: number }[] = [];
+  albumsListenedBarAllTime: { name: string; value: number }[] = [];
 
   yaxisLabelLine = 'Hours';
   artistLineChartTitle = 'Artists';
@@ -145,7 +170,7 @@ export class InsightsComponent implements OnInit {
   showWaitingMessage: boolean = false;
   showErrorMessage: boolean = false;
 
-  constructor(private titleService: Title, private accountService: AccountService, private InsightsService: InsightsService) {}
+  constructor(private titleService: Title, private accountService: AccountService, private insightsService: InsightsService) {}
   response: InsightsResponse | undefined;
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Insights');
@@ -158,8 +183,25 @@ export class InsightsComponent implements OnInit {
         console.error('Error fetching user bio:', error);
       }
     );
+
+    this.insightsService.retrieveUserSongs().subscribe({
+      next: x => console.log(x.body),
+      error: e => console.error(e),
+      // this.onStreamRetrievalFailure(e),
+    });
   }
 
+  // onStreamRetrievalFailure(errors:any){
+  //   this.showErrorMessage = true;
+  // }
+
+  onStreamRetrievalSuccess(val: InsightsResponse) {
+    this.response = val;
+    this.addGenresToChartWeek(this.response.graphData.genreMapsWeek);
+    this.addGenresToChartMonth(this.response.graphData.genreMapsMonth);
+    this.addGenresToChartYear(this.response.graphData.genreMapsYear);
+    this.addGenresToChartAllTime(this.response.graphData.genreMapsAllTime);
+  }
   // constructor(private titleService: Title, private insightsService: InsightsService) {}
   // response: InsightsResponse | undefined;
   // async sendSpotID() {
@@ -182,6 +224,113 @@ export class InsightsComponent implements OnInit {
   //     this.showWaitingMessage = true;
   //   }
   // }
+
+  addGenresToChartWeek(genresToCounts: GenreMapResponse[]) {
+    this.genrePieChartWeek = [];
+
+    for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
+      if (i < genresToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.genrePieChartWeek.push({
+        name: genresToCounts[i].genreName,
+        value: genresToCounts[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addGenresToChartMonth(genresToCounts: GenreMapResponse[]) {
+    this.genrePieChartMonth = [];
+
+    for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
+      if (i < genresToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.genrePieChartMonth.push({
+        name: genresToCounts[i].genreName,
+        value: genresToCounts[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addGenresToChartYear(genresToCounts: GenreMapResponse[]) {
+    this.genrePieChartYear = [];
+
+    for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
+      if (i < genresToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.genrePieChartYear.push({
+        name: genresToCounts[i].genreName,
+        value: genresToCounts[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addGenresToChartAllTime(genresToCounts: GenreMapResponse[]) {
+    this.genrePieChartAllTime = [];
+
+    for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
+      if (i < genresToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.genrePieChartAllTime.push({
+        name: genresToCounts[i].genreName,
+        value: genresToCounts[i].occurrencesInPlaylist,
+      });
+    }
+  }
+
+  addAlbumsToChartWeek(albumsToProportions: AlbumMapResponse[]) {
+    this.albumsListenedBarWeek = [];
+
+    for (let i = albumsToProportions.length - 1; i >= 0; i--) {
+      if (i < albumsToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarWeek.push({
+        name: albumsToProportions[i].albumName,
+        value: albumsToProportions[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addAlbumsToChartMonth(albumsToProportions: AlbumMapResponse[]) {
+    this.albumsListenedBarMonth = [];
+
+    for (let i = albumsToProportions.length - 1; i >= 0; i--) {
+      if (i < albumsToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarMonth.push({
+        name: albumsToProportions[i].albumName,
+        value: albumsToProportions[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addAlbumsToChartYear(albumsToProportions: AlbumMapResponse[]) {
+    this.albumsListenedBarYear = [];
+
+    for (let i = albumsToProportions.length - 1; i >= 0; i--) {
+      if (i < albumsToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarYear.push({
+        name: albumsToProportions[i].albumName,
+        value: albumsToProportions[i].occurrencesInPlaylist,
+      });
+    }
+  }
+  addAlbumsToChartAllTime(albumsToProportions: AlbumMapResponse[]) {
+    this.albumsListenedBarAllTime = [];
+
+    for (let i = albumsToProportions.length - 1; i >= 0; i--) {
+      if (i < albumsToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarAllTime.push({
+        name: albumsToProportions[i].albumName,
+        value: albumsToProportions[i].occurrencesInPlaylist,
+      });
+    }
+  }
+
   onTimePeriodChange(period: TimePeriod): void {
     this.selectedTimePeriod = period;
   }
@@ -214,6 +363,10 @@ export class InsightsComponent implements OnInit {
       default:
         return 'Here are your all time leaderboards';
     }
+  }
+  onRecentlyViewedRetrievalSuccess(val: IStream[]) {
+    this.recentStreams = val;
+    this.hasStreams = this.recentStreams.length != 0;
   }
 
   // resizeChart(width: any): void {

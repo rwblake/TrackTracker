@@ -61,10 +61,15 @@ public class InsightsResource {
     }
 
     @GetMapping("/insights")
-    public List<Stream> getSongs(Instant playedAt) throws Exception {
-        AppUser currentUser = getCurrentUser();
-        //return list of streams
-        return streamRepository.findAllByPlayedAtAfterAndAppUserOrderByPlayedAt(playedAt, currentUser);
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public String getEverything() throws Exception {
+        //        AppUser currentUser = getCurrentUser();
+        //        //return list of streams
+        //        MyInsightsHTTPResponse httpResponse = MyInsightCalculator.getInsights(streamRepository.findAllByAppUserOrderByPlayedAt(currentUser));
+        //        Gson gson = new Gson();
+
+        return "Hello World";
     }
     //    @GetMapping("/insights")
     //    public Instant getTime(){
