@@ -65,8 +65,8 @@ export class NavbarComponent implements OnInit {
 
   collapseNavbar(): void {
     this.isNavbarCollapsed = true;
-    // @ts-ignore
-    document.getElementById('dropdown').style.display = 'none';
+    const dropdown = document.getElementById('dropdown');
+    if (dropdown !== null) dropdown.style.display = 'none';
   }
 
   login(): void {
