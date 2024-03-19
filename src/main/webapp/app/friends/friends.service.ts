@@ -29,6 +29,18 @@ export class FriendsService {
     return this.http.get<IFriend[]>(this.resourceUrl);
   }
 
+  block(id: number): Observable<HttpResponse<{}>> {
+    return this.http.post(this.resourceUrl + '/block', id, { observe: 'response' });
+  }
+
+  unblock(id: number): Observable<HttpResponse<{}>> {
+    return this.http.post(this.resourceUrl + '/unblock', id, { observe: 'response' });
+  }
+
+  getBlocked(): Observable<IAppUser[]> {
+    return this.http.get<IAppUser[]>(this.resourceUrl + '/blocked');
+  }
+
   getUsers(): Observable<IAppUser[]> {
     return this.http.get<IAppUser[]>(this.resourceUrl + '/appUsers');
   }

@@ -124,6 +124,13 @@ public class FriendsResource {
         return friendRequestRepository.findAllByToAppUser(currentUser);
     }
 
+    @GetMapping("/friends/blocked")
+    public List<AppUser> getBlocked() throws Exception {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = getCurrentUser();
+        return currentUser.getBlockedUsers().stream().collect(Collectors.toList());
+    }
+
     @PostMapping("/friends/accept")
     public List<FriendRequest> acceptFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
         // Find the current user and check they have an associated AppUser entity

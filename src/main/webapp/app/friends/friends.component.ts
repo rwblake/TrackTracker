@@ -31,6 +31,7 @@ export class FriendsComponent implements OnInit {
   users?: IAppUser[];
   dialog: boolean;
   recommendations?: IAppUser[];
+  blocked?: IAppUser[];
 
   constructor(private titleService: Title, private friendsService: FriendsService) {
     this.dialog = false;
@@ -45,6 +46,7 @@ export class FriendsComponent implements OnInit {
     this.loadFriendRequests();
     this.loadFriends();
     this.loadUsers();
+    this.loadBlocked();
   }
 
   since(time: dayjs.Dayjs | null | undefined): string {
@@ -75,6 +77,12 @@ export class FriendsComponent implements OnInit {
     });
   }
 
+  loadBlocked(): void {
+    this.friendsService.getBlocked().subscribe({
+      next: v => (this.blocked = v),
+    });
+  }
+
   loadUsers(): void {
     this.friendsService.getUsers().subscribe({
       next: v => (this.users = v),
@@ -91,6 +99,20 @@ export class FriendsComponent implements OnInit {
   // Accept a friend request by id
   accept(id: number) {
     this.friendsService.acceptFriendRequest(id).subscribe({
+      next: v => this.reload(),
+    });
+  }
+
+  // Block a user by their id
+  block(id: number) {
+    this.friendsService.block(id).subscribe({
+      next: v => this.reload(),
+    });
+  }
+
+  // Unblock a user by their id
+  unblock(id: number) {
+    this.friendsService.unblock(id).subscribe({
       next: v => this.reload(),
     });
   }
