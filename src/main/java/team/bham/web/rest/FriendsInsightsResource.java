@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.AppUser;
 import team.bham.domain.User;
+import team.bham.repository.AppUserRepository;
 import team.bham.service.FriendsInsightsService;
 import team.bham.service.UserService;
-import team.bham.service.account.AppUserService;
 import team.bham.service.spotify.FriendsInsightsPopularCategoriesResponse;
 
 @RestController
@@ -28,12 +28,16 @@ public class FriendsInsightsResource {
     private final Logger log = LoggerFactory.getLogger(FriendsInsightsResource.class);
 
     private final UserService userService;
-    private final AppUserService appUserService;
+    private final AppUserRepository appUserRepository;
     private final FriendsInsightsService friendsInsightsService;
 
-    public FriendsInsightsResource(UserService userService, AppUserService appUserService, FriendsInsightsService friendsInsightsService) {
+    public FriendsInsightsResource(
+        UserService userService,
+        AppUserRepository appUserRepository,
+        FriendsInsightsService friendsInsightsService
+    ) {
         this.userService = userService;
-        this.appUserService = appUserService;
+        this.appUserRepository = appUserRepository;
         this.friendsInsightsService = friendsInsightsService;
     }
 
@@ -46,13 +50,16 @@ public class FriendsInsightsResource {
     public FriendsInsightsPopularCategoriesResponse getPopularCategories(@RequestParam("period") Optional<Integer> periodDays) {
         log.debug("REST request to get friends insights popular categories");
 
-        User internalAppUser = userService
-            .getUserWithAuthorities()
-            .orElseThrow(() -> new AccountResourceException("User could not be found"));
-        Optional<AppUser> appUser = appUserService.getAppUser(internalAppUser);
+        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+        if (userMaybe.isEmpty()) throw new AccountResourceException("User could not be found");
 
-        if (appUser.isEmpty()) throw new AccountResourceException("App User could not be found");
+        if (!this.appUserRepository.existsByInternalUser(userMaybe.get())) throw new AccountResourceException(
+            "App User could not be found"
+        );
 
-        return friendsInsightsService.getPopularCategories(appUser.get(), periodDays);
+        AppUser appUser = appUserRepository.getAppUserByInternalUser(userMaybe.get());
+        if (appUser == null) throw new AccountResourceException("App User could not be found");
+
+        return friendsInsightsService.getPopularCategories(appUser, periodDays);
     }
 }
