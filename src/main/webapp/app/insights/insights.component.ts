@@ -52,25 +52,35 @@ export class InsightsComponent implements OnInit {
   genrePieChartYear: { name: string; value: number }[] = [];
   genrePieChartAllTime: { name: string; value: number }[] = [];
 
+  genrePie: { name: string; value: number }[] = [];
+
   albumsListenedBarWeek: { name: string; value: number }[] = [];
   albumsListenedBarMonth: { name: string; value: number }[] = [];
   albumsListenedBarYear: { name: string; value: number }[] = [];
   albumsListenedBarAllTime: { name: string; value: number }[] = [];
+
+  albumsBar: { name: string; value: number }[] = [];
 
   artistsListenedLineWeek: { name: string; value: number }[] = [];
   artistsListenedLineMonth: { name: string; value: number }[] = [];
   artistsListenedLineYear: { name: string; value: number }[] = [];
   artistsListenedLineAllTime: { name: string; value: number }[] = [];
 
+  artistsLine: { name: string; value: number }[] = [];
+
   songChartWeek: { name: string; value: number }[] = [];
   songChartMonth: { name: string; value: number }[] = [];
   songChartYear: { name: string; value: number }[] = [];
   songChartAllTime: { name: string; value: number }[] = [];
 
+  songChart: { name: string; value: number }[] = [];
+
   decadeChartWeek: { name: string; value: number }[] = [];
   decadeChartMonth: { name: string; value: number }[] = [];
   decadeChartYear: { name: string; value: number }[] = [];
   decadeChartAllTime: { name: string; value: number }[] = [];
+
+  decadeChart: { name: string; value: number }[] = [];
 
   selectedTimePeriod?: TimePeriod;
   // view: number[] = [];
@@ -131,6 +141,11 @@ export class InsightsComponent implements OnInit {
     this.addDecToChartMonth(this.response.songCounter.byMonth);
     this.addDecToChartYear(this.response.songCounter.byYear);
     this.addDecToChartAllTime(this.response.songCounter.ofAllTime);
+    this.albumsBar = this.albumsListenedBarWeek;
+    this.genrePie = this.genrePieChartWeek;
+    this.artistsLine = this.artistsListenedLineWeek;
+    this.decadeChart = this.decadeChartWeek;
+    this.songChart = this.songChartWeek;
   }
   // constructor(private titleService: Title, private insightsService: InsightsService) {}
   // response: InsightsResponse | undefined;
@@ -182,8 +197,15 @@ export class InsightsComponent implements OnInit {
       if (i < decadeToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof decadeToCounts[i].metric === 'string'
+          ? decadeToCounts[i].metric
+          : // @ts-ignore
+            decadeToCounts[i].metric.name;
+
       this.decadeChartMonth.push({
-        name: decadeToCounts[i].metric.toString(),
+        name: name,
         value: decadeToCounts[i].value,
       });
     }
@@ -195,8 +217,15 @@ export class InsightsComponent implements OnInit {
       if (i < decadeToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof decadeToCounts[i].metric === 'string'
+          ? decadeToCounts[i].metric
+          : // @ts-ignore
+            decadeToCounts[i].metric.name;
+
       this.decadeChartYear.push({
-        name: decadeToCounts[i].metric.toString(),
+        name: name,
         value: decadeToCounts[i].value,
       });
     }
@@ -208,8 +237,15 @@ export class InsightsComponent implements OnInit {
       if (i < decadeToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof decadeToCounts[i].metric === 'string'
+          ? decadeToCounts[i].metric
+          : // @ts-ignore
+            decadeToCounts[i].metric.name;
+
       this.decadeChartAllTime.push({
-        name: decadeToCounts[i].metric.toString(),
+        name: name,
         value: decadeToCounts[i].value,
       });
     }
@@ -241,8 +277,15 @@ export class InsightsComponent implements OnInit {
       if (i < songsToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof songsToCounts[i].metric === 'string'
+          ? songsToCounts[i].metric
+          : // @ts-ignore
+            songsToCounts[i].metric.name;
+
       this.songChartMonth.push({
-        name: songsToCounts[i].metric.toString(),
+        name: name,
         value: songsToCounts[i].value,
       });
     }
@@ -254,8 +297,15 @@ export class InsightsComponent implements OnInit {
       if (i < songsToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof songsToCounts[i].metric === 'string'
+          ? songsToCounts[i].metric
+          : // @ts-ignore
+            songsToCounts[i].metric.name;
+
       this.songChartYear.push({
-        name: songsToCounts[i].metric.toString(),
+        name: name,
         value: songsToCounts[i].value,
       });
     }
@@ -267,8 +317,15 @@ export class InsightsComponent implements OnInit {
       if (i < songsToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof songsToCounts[i].metric === 'string'
+          ? songsToCounts[i].metric
+          : // @ts-ignore
+            songsToCounts[i].metric.name;
+
       this.songChartAllTime.push({
-        name: songsToCounts[i].metric.toString(),
+        name: name,
         value: songsToCounts[i].value,
       });
     }
@@ -302,8 +359,15 @@ export class InsightsComponent implements OnInit {
       if (i < genresToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof genresToCounts[i].metric === 'string'
+          ? genresToCounts[i].metric
+          : // @ts-ignore
+            genresToCounts[i].metric.name;
+
       this.genrePieChartMonth.push({
-        name: genresToCounts[i].metric.toString(),
+        name: name,
         value: genresToCounts[i].value,
       });
     }
@@ -316,8 +380,15 @@ export class InsightsComponent implements OnInit {
       if (i < genresToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof genresToCounts[i].metric === 'string'
+          ? genresToCounts[i].metric
+          : // @ts-ignore
+            genresToCounts[i].metric.name;
+
       this.genrePieChartYear.push({
-        name: genresToCounts[i].metric.toString(),
+        name: name,
         value: genresToCounts[i].value,
       });
     }
@@ -330,8 +401,15 @@ export class InsightsComponent implements OnInit {
       if (i < genresToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof genresToCounts[i].metric === 'string'
+          ? genresToCounts[i].metric
+          : // @ts-ignore
+            genresToCounts[i].metric.name;
+
       this.genrePieChartAllTime.push({
-        name: genresToCounts[i].metric.toString(),
+        name: name,
         value: genresToCounts[i].value,
       });
     }
@@ -365,8 +443,15 @@ export class InsightsComponent implements OnInit {
       if (i < albumsToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof albumsToProportions[i].metric === 'string'
+          ? albumsToProportions[i].metric
+          : // @ts-ignore
+            albumsToProportions[i].metric.name;
+
       this.albumsListenedBarMonth.push({
-        name: albumsToProportions[i].metric.toString(),
+        name: name,
         value: albumsToProportions[i].value,
       });
     }
@@ -379,8 +464,15 @@ export class InsightsComponent implements OnInit {
       if (i < albumsToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof albumsToProportions[i].metric === 'string'
+          ? albumsToProportions[i].metric
+          : // @ts-ignore
+            albumsToProportions[i].metric.name;
+
       this.albumsListenedBarYear.push({
-        name: albumsToProportions[i].metric.toString(),
+        name: name,
         value: albumsToProportions[i].value,
       });
     }
@@ -393,8 +485,15 @@ export class InsightsComponent implements OnInit {
       if (i < albumsToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof albumsToProportions[i].metric === 'string'
+          ? albumsToProportions[i].metric
+          : // @ts-ignore
+            albumsToProportions[i].metric.name;
+
       this.albumsListenedBarAllTime.push({
-        name: albumsToProportions[i].metric.toString(),
+        name: name,
         value: albumsToProportions[i].value,
       });
     }
@@ -426,8 +525,15 @@ export class InsightsComponent implements OnInit {
       if (i < artiststToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof artiststToProportions[i].metric === 'string'
+          ? artiststToProportions[i].metric
+          : // @ts-ignore
+            artiststToProportions[i].metric.name;
+
       this.albumsListenedBarMonth.push({
-        name: artiststToProportions[i].metric.toString(),
+        name: name,
         value: artiststToProportions[i].value,
       });
     }
@@ -439,8 +545,15 @@ export class InsightsComponent implements OnInit {
       if (i < artiststToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof artiststToProportions[i].metric === 'string'
+          ? artiststToProportions[i].metric
+          : // @ts-ignore
+            artiststToProportions[i].metric.name;
+
       this.albumsListenedBarYear.push({
-        name: artiststToProportions[i].metric.toString(),
+        name: name,
         value: artiststToProportions[i].value,
       });
     }
@@ -452,8 +565,15 @@ export class InsightsComponent implements OnInit {
       if (i < artiststToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof artiststToProportions[i].metric === 'string'
+          ? artiststToProportions[i].metric
+          : // @ts-ignore
+            artiststToProportions[i].metric.name;
+
       this.albumsListenedBarAllTime.push({
-        name: artiststToProportions[i].metric.toString(),
+        name: name,
         value: artiststToProportions[i].value,
       });
     }
@@ -462,9 +582,43 @@ export class InsightsComponent implements OnInit {
   onTimePeriodChange(period: TimePeriod): void {
     this.selectedTimePeriod = period;
     this.showByWeek = period.label === 'Week';
-    this.showByMonth = period.label === 'Month';
+    this.showByMonth = period.label === '4 Weeks';
     this.showByYear = period.label === 'Year';
     this.showByAllTime = period.label === 'All Time';
+    this.albumsBar = [];
+    this.decadeChart = [];
+    this.genrePie = [];
+    this.songChart = [];
+    this.artistsLine = [];
+
+    if (period.label === 'Week') {
+      this.albumsBar = this.albumsListenedBarWeek;
+      this.genrePie = this.genrePieChartWeek;
+      this.artistsLine = this.artistsListenedLineWeek;
+      this.decadeChart = this.decadeChartWeek;
+      this.songChart = this.songChartWeek;
+    }
+    if (period.label === '4 Weeks') {
+      this.albumsBar = this.albumsListenedBarMonth;
+      this.genrePie = this.genrePieChartMonth;
+      this.artistsLine = this.artistsListenedLineMonth;
+      this.decadeChart = this.decadeChartMonth;
+      this.songChart = this.songChartMonth;
+    }
+    if (period.label === 'Year') {
+      this.albumsBar = this.albumsListenedBarYear;
+      this.genrePie = this.genrePieChartYear;
+      this.artistsLine = this.artistsListenedLineYear;
+      this.decadeChart = this.decadeChartYear;
+      this.songChart = this.songChartYear;
+    }
+    if (period.label === 'All Time') {
+      this.albumsBar = this.albumsListenedBarAllTime;
+      this.genrePie = this.genrePieChartAllTime;
+      this.artistsLine = this.artistsListenedLineAllTime;
+      this.decadeChart = this.decadeChartAllTime;
+      this.songChart = this.songChartAllTime;
+    }
   }
 
   // async sendTime(){

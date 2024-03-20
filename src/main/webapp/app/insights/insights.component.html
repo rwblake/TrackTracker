@@ -23,7 +23,7 @@
         <!--   Genre pie chart     -->
         <ngx-charts-pie-chart
           [view]="[genrePieChart.offsetWidth, genrePieChart.offsetWidth * 0.9]"
-          [results]="genrePieChartWeek"
+          [results]="genrePie"
           [arcWidth]="3"
           [explodeSlices]="true"
           [legendPosition]="below"
@@ -56,7 +56,7 @@
         <!--   artist trend    -->
         <ngx-charts-line-chart
           [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
-          [results]="artistsListenedLineWeek"
+          [results]="artistsLine"
           [yAxis]="true"
           [showGridLines]="false"
           [legend]="true"
@@ -74,7 +74,7 @@
         <!--  Album listened to    -->
         <ngx-charts-bar-vertical
           [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 0.9]"
-          [results]="albumsListenedBarWeek"
+          [results]="albumsBar"
           [showXAxisLabel]="true"
           [showYAxisLabel]="true"
           [rotateXAxisTicks]="true"
@@ -113,7 +113,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let artist of artistsListenedLineWeek | slice: 0:3; let i = index">
+            <tr *ngFor="let artist of artistsLine | slice: 0:3; let i = index">
               <td>{{ artist.name }}</td>
               <td></td>
               <td>{{ artist.value }}</td>
@@ -131,7 +131,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let genre of genrePieChartWeek | slice: 0:3; let i = index">
+            <tr *ngFor="let genre of genrePie | slice: 0:3; let i = index">
               <td>{{ genre.name }}</td>
               <td></td>
               <td>{{ genre.value }}</td>
@@ -149,7 +149,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let song of songChartWeek | slice: 0:3; let i = index">
+            <tr *ngFor="let song of songChart | slice: 0:3; let i = index">
               <td>{{ song.name }}</td>
               <td></td>
               <td>{{ song.value }}</td>
@@ -167,7 +167,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let decade of decadeChartWeek | slice: 0:3; let i = index">
+            <tr *ngFor="let decade of decadeChart | slice: 0:3; let i = index">
               <td>{{ decade.name }}</td>
               <td></td>
               <td>{{ decade.value }}</td>
