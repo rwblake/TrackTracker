@@ -13,14 +13,13 @@
     </div>
 
     <div class="row gx-5 buffer">
-      <h4 class="col-md-3">Genre Pie Chart</h4>
-      <h4 class="col-md-3">Overall listening time</h4>
-      <h4 class="col-md-3">Artists trends</h4>
-      <h4 class="col-md-3">Albums listened to</h4>
+      <h4 class="col-md-4">Genre Pie Chart</h4>
+      <h4 class="col-md-4">Artists trends</h4>
+      <h4 class="col-md-4">Albums listened to</h4>
     </div>
 
     <div class="row gx-5 small-buffer">
-      <div class="col-md-3">
+      <div class="col-md-4">
         <!--   Genre pie chart     -->
         <ngx-charts-pie-chart
           [results]="genrePieChartWeek"
@@ -28,50 +27,51 @@
           [explodeSlices]="true"
           [legendPosition]="below"
           [legend]="true"
-          [legendTitle]="genrePieChartTitle"
+          [legendTitle]="'Genre Listened To'"
+          [scheme]="chartScheme"
         >
         </ngx-charts-pie-chart>
       </div>
 
-      <div #containerRef class="col-md-3">
-        <!--   Listened time bar chart   [results]="listenedTimeBar" -->
-        <ngx-charts-bar-vertical
-          [results]="genrePieChartMonth"
-          [view]="[containerRef.offsetWidth, 400]"
-          [showXAxisLabel]="true"
-          [showYAxisLabel]="true"
-          [rotateXAxisTicks]="true"
-          [xAxis]="true"
-          [yAxis]="true"
-          [showGridLines]="false"
-          [xAxisLabel]="xaxisLabelBar"
-          [yAxisLabel]="yaxisLabelBar"
-        >
-        </ngx-charts-bar-vertical>
-      </div>
+      <!--      <div #containerRef class="col-md-3">-->
+      <!--        &lt;!&ndash;   Listened time bar chart   [results]="listenedTimeBar" &ndash;&gt;-->
+      <!--        <ngx-charts-bar-vertical-->
+      <!--          [results]="genrePieChartMonth"-->
+      <!--          [view]="[containerRef.offsetWidth, 400]"-->
+      <!--          [showXAxisLabel]="true"-->
+      <!--          [showYAxisLabel]="true"-->
+      <!--          [rotateXAxisTicks]="true"-->
+      <!--          [xAxis]="true"-->
+      <!--          [yAxis]="true"-->
+      <!--          [showGridLines]="false"-->
+      <!--          [xAxisLabel]="xaxisLabelBar"-->
+      <!--          [yAxisLabel]="yaxisLabelBar"-->
+      <!--        >-->
+      <!--        </ngx-charts-bar-vertical>-->
+      <!--      </div>-->
       <!--    <div class="w-50-m"></div>-->
       <!--  <div class="row justify-content-start">-->
-      <div class="col-md-3">
+      <div class="col-md-4">
         <!--   artist trend    -->
         <ngx-charts-line-chart
-          [results]="artistTrendLine"
+          [results]="artistsListenedLineWeek"
           [yAxis]="true"
           [showGridLines]="false"
           [legend]="true"
           [showYAxisLabel]="true"
-          [yAxisLabel]="yaxisLabelLine"
+          [yAxisLabel]="'Hours'"
           [trimYAxisTicks]="true"
           [autoScale]="true"
           [legendPosition]="below"
-          [legendTitle]="artistLineChartTitle"
+          [legendTitle]="'Artists'"
         >
         </ngx-charts-line-chart>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <!--  Album listened to    -->
         <ngx-charts-bar-vertical
-          [results]="albumsListenedBar"
+          [results]="albumsListenedBarWeek"
           [showXAxisLabel]="true"
           [showYAxisLabel]="true"
           [rotateXAxisTicks]="true"
@@ -79,8 +79,8 @@
           [xAxis]="true"
           [yAxis]="true"
           [showGridLines]="false"
-          [xAxisLabel]="xaxisLabelBarAlbum"
-          [yAxisLabel]="yaxisLableBarAlbum"
+          [xAxisLabel]="'Albums'"
+          [yAxisLabel]="'Frequency'"
         >
         </ngx-charts-bar-vertical>
       </div>
@@ -110,20 +110,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>4</td>
+            <tr *ngFor="let artist of artistsListenedLineWeek | slice: 0:3; let i = index">
+              <td>{{ artist.name }}</td>
+              <td>{{ artist.value }}</td>
             </tr>
           </tbody>
         </table>
@@ -138,20 +127,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>4</td>
+            <tr *ngFor="let genre of genrePieChartWeek | slice: 0:3; let i = index">
+              <td>{{ genre.name }}</td>
+              <td>{{ genre.value }}</td>
             </tr>
           </tbody>
         </table>
@@ -166,20 +144,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>4</td>
+            <tr *ngFor="let song of songChartWeek | slice: 0:3; let i = index">
+              <td>{{ song.name }}</td>
+              <td>{{ song.value }}</td>
             </tr>
           </tbody>
         </table>
@@ -194,20 +161,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Larry</td>
-              <td>4</td>
+            <tr *ngFor="let decade of decadeChartWeek | slice: 0:3; let i = index">
+              <td>{{ decade.name }}</td>
+              <td>{{ decade.value }}</td>
             </tr>
           </tbody>
         </table>

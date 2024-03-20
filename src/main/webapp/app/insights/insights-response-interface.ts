@@ -37,7 +37,7 @@ export interface StreamInsightsResponse {
   };
 }
 
-interface Entry {
+export interface Entry {
   metric: ISong | IGenre | IAlbum | IArtist | string;
   value: number;
 }

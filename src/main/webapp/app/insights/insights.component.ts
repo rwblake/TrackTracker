@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
-import { LegendPosition } from '@swimlane/ngx-charts';
+import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { AccountService } from '../core/auth/account.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
@@ -13,6 +13,8 @@ import {
   GenreMapResponse,
   GraphDataResponse,
   AlbumMapResponse,
+  StreamInsightsResponse,
+  Entry,
 } from './insights-response-interface';
 import { IPlaylist } from '../entities/playlist/playlist.model';
 import { IStream } from '../entities/stream/stream.model';
@@ -29,18 +31,21 @@ export class InsightsComponent implements OnInit {
   recentStreams: IStream[] = [];
   hasStreams: boolean = false;
 
-  genrePieChartTitle = 'Genres Listened To';
   pieLimit: number = 10;
+
+  showByWeek: boolean = true;
+  showByMonth: boolean = true;
+  showByYear: boolean = true;
+  showByAllTime: boolean = true;
 
   below = LegendPosition.Below;
 
-  xaxisLabelBar = 'Time period';
-  yaxisLabelBar = 'Hours';
-
-  listenedTimeBarWeek: { name: string; value: number }[] = [];
-  listenedTimeBarMonth: { name: string; value: number }[] = [];
-  listenedTimeBarYear: { name: string; value: number }[] = [];
-  listenedTimeBarAllTime: { name: string; value: number }[] = [];
+  chartScheme: Color = {
+    name: 'pieSchemeA',
+    selectable: true,
+    group: ScaleType.Ordinal,
+    domain: ['#7825BC', '#B237EC', '#EA3AC1', '#EA002B', '#FF3407', '#FF6528', '#FF8E16', '#FFB219', '#FFD54C', '#FFEFA3'],
+  };
 
   genrePieChartWeek: { name: string; value: number }[] = [];
   genrePieChartMonth: { name: string; value: number }[] = [];
@@ -52,114 +57,20 @@ export class InsightsComponent implements OnInit {
   albumsListenedBarYear: { name: string; value: number }[] = [];
   albumsListenedBarAllTime: { name: string; value: number }[] = [];
 
-  yaxisLabelLine = 'Hours';
-  artistLineChartTitle = 'Artists';
-  artistTrendLine = [
-    {
-      name: 'Ye',
-      series: [
-        {
-          value: 5361,
-          name: '2016-09-14T23:29:01.071Z',
-        },
-        {
-          value: 3341,
-          name: '2016-09-13T08:28:01.209Z',
-        },
-        {
-          value: 6061,
-          name: '2016-09-16T12:47:22.021Z',
-        },
-        {
-          value: 4908,
-          name: '2016-09-17T09:20:13.122Z',
-        },
-        {
-          value: 4610,
-          name: '2016-09-20T04:00:11.673Z',
-        },
-      ],
-    },
-    {
-      name: 'Bob Marley',
-      series: [
-        {
-          value: 3553,
-          name: '2016-09-14T23:29:01.071Z',
-        },
-        {
-          value: 3010,
-          name: '2016-09-13T08:28:01.209Z',
-        },
-        {
-          value: 5654,
-          name: '2016-09-16T12:47:22.021Z',
-        },
-        {
-          value: 4126,
-          name: '2016-09-17T09:20:13.122Z',
-        },
-        {
-          value: 6917,
-          name: '2016-09-20T04:00:11.673Z',
-        },
-      ],
-    },
-    {
-      name: 'Beyonce',
-      series: [
-        {
-          value: 5138,
-          name: '2016-09-14T23:29:01.071Z',
-        },
-        {
-          value: 2450,
-          name: '2016-09-13T08:28:01.209Z',
-        },
-        {
-          value: 2911,
-          name: '2016-09-16T12:47:22.021Z',
-        },
-        {
-          value: 5931,
-          name: '2016-09-17T09:20:13.122Z',
-        },
-        {
-          value: 4958,
-          name: '2016-09-20T04:00:11.673Z',
-        },
-      ],
-    },
-    {
-      name: 'The Red Hot Chilli Peppers',
-      series: [
-        {
-          value: 2415,
-          name: '2016-09-14T23:29:01.071Z',
-        },
-        {
-          value: 4848,
-          name: '2016-09-13T08:28:01.209Z',
-        },
-        {
-          value: 3448,
-          name: '2016-09-16T12:47:22.021Z',
-        },
-        {
-          value: 3079,
-          name: '2016-09-17T09:20:13.122Z',
-        },
-        {
-          value: 5848,
-          name: '2016-09-20T04:00:11.673Z',
-        },
-      ],
-    },
-  ];
+  artistsListenedLineWeek: { name: string; value: number }[] = [];
+  artistsListenedLineMonth: { name: string; value: number }[] = [];
+  artistsListenedLineYear: { name: string; value: number }[] = [];
+  artistsListenedLineAllTime: { name: string; value: number }[] = [];
 
-  xaxisLabelBarAlbum = 'Albums';
-  yaxisLableBarAlbum = 'Frequency';
-  albumsListenedBar: { name: string; value: number }[] = [];
+  songChartWeek: { name: string; value: number }[] = [];
+  songChartMonth: { name: string; value: number }[] = [];
+  songChartYear: { name: string; value: number }[] = [];
+  songChartAllTime: { name: string; value: number }[] = [];
+
+  decadeChartWeek: { name: string; value: number }[] = [];
+  decadeChartMonth: { name: string; value: number }[] = [];
+  decadeChartYear: { name: string; value: number }[] = [];
+  decadeChartAllTime: { name: string; value: number }[] = [];
 
   selectedTimePeriod?: TimePeriod;
   // view: number[] = [];
@@ -171,7 +82,7 @@ export class InsightsComponent implements OnInit {
   showErrorMessage: boolean = false;
 
   constructor(private titleService: Title, private accountService: AccountService, private insightsService: InsightsService) {}
-  response: InsightsResponse | undefined;
+  response: StreamInsightsResponse | undefined;
 
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Insights');
@@ -186,7 +97,7 @@ export class InsightsComponent implements OnInit {
     this.insightsService.retrieveStreamInsights().subscribe({
       next: response => {
         if (response === null) console.error('No response given');
-        else console.log(response);
+        else this.onStreamRetrievalSuccess(response);
       },
       error: e => console.error(e),
       // this.onStreamRetrievalFailure(e),
@@ -197,12 +108,28 @@ export class InsightsComponent implements OnInit {
   //   this.showErrorMessage = true;
   // }
 
-  onStreamRetrievalSuccess(val: InsightsResponse) {
+  onStreamRetrievalSuccess(val: StreamInsightsResponse) {
     this.response = val;
-    this.addGenresToChartWeek(this.response.graphData.genreMapsWeek);
-    this.addGenresToChartMonth(this.response.graphData.genreMapsMonth);
-    this.addGenresToChartYear(this.response.graphData.genreMapsYear);
-    this.addGenresToChartAllTime(this.response.graphData.genreMapsAllTime);
+    this.addGenresToChartWeek(this.response.genreCounter.byWeek);
+    this.addGenresToChartMonth(this.response.genreCounter.byMonth);
+    this.addGenresToChartYear(this.response.genreCounter.byYear);
+    this.addGenresToChartAllTime(this.response.genreCounter.byAllTime);
+    this.addAlbumsToChartWeek(this.response.albumCounter.byWeek);
+    this.addAlbumsToChartMonth(this.response.albumCounter.byMonth);
+    this.addAlbumsToChartYear(this.response.albumCounter.byYear);
+    this.addAlbumsToChartAllTime(this.response.albumCounter.byAllTime);
+    this.addArtistsToChartWeek(this.response.artistCounter.byWeek);
+    this.addArtistsToChartMonth(this.response.artistCounter.byMonth);
+    this.addArtistsToChartYear(this.response.artistCounter.byYear);
+    this.addArtistsToChartAllTime(this.response.artistCounter.byAllTime);
+    this.addSongToChartWeek(this.response.songCounter.byWeek);
+    this.addSongToChartMonth(this.response.songCounter.byMonth);
+    this.addSongToChartYear(this.response.songCounter.byYear);
+    this.addSongToChartAllTime(this.response.songCounter.byAllTime);
+    this.addDecToChartWeek(this.response.songCounter.byWeek);
+    this.addDecToChartMonth(this.response.songCounter.byMonth);
+    this.addDecToChartYear(this.response.songCounter.byYear);
+    this.addDecToChartAllTime(this.response.songCounter.byAllTime);
   }
   // constructor(private titleService: Title, private insightsService: InsightsService) {}
   // response: InsightsResponse | undefined;
@@ -227,7 +154,112 @@ export class InsightsComponent implements OnInit {
   //   }
   // }
 
-  addGenresToChartWeek(genresToCounts: GenreMapResponse[]) {
+  addDecToChartWeek(decadeToCounts: Entry[]) {
+    this.decadeChartWeek = [];
+
+    for (let i: number = decadeToCounts.length - 1; i >= 0; i--) {
+      if (i < decadeToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.decadeChartWeek.push({
+        name: decadeToCounts[i].metric.toString(),
+        value: decadeToCounts[i].value,
+      });
+    }
+  }
+  addDecToChartMonth(decadeToCounts: Entry[]) {
+    this.decadeChartMonth = [];
+
+    for (let i: number = decadeToCounts.length - 1; i >= 0; i--) {
+      if (i < decadeToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.decadeChartMonth.push({
+        name: decadeToCounts[i].metric.toString(),
+        value: decadeToCounts[i].value,
+      });
+    }
+  }
+  addDecToChartYear(decadeToCounts: Entry[]) {
+    this.decadeChartYear = [];
+
+    for (let i: number = decadeToCounts.length - 1; i >= 0; i--) {
+      if (i < decadeToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.decadeChartYear.push({
+        name: decadeToCounts[i].metric.toString(),
+        value: decadeToCounts[i].value,
+      });
+    }
+  }
+  addDecToChartAllTime(decadeToCounts: Entry[]) {
+    this.decadeChartAllTime = [];
+
+    for (let i: number = decadeToCounts.length - 1; i >= 0; i--) {
+      if (i < decadeToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.decadeChartAllTime.push({
+        name: decadeToCounts[i].metric.toString(),
+        value: decadeToCounts[i].value,
+      });
+    }
+  }
+  addSongToChartWeek(songsToCounts: Entry[]) {
+    this.songChartWeek = [];
+
+    for (let i: number = songsToCounts.length - 1; i >= 0; i--) {
+      if (i < songsToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.songChartWeek.push({
+        name: songsToCounts[i].metric.toString(),
+        value: songsToCounts[i].value,
+      });
+    }
+  }
+  addSongToChartMonth(songsToCounts: Entry[]) {
+    this.songChartMonth = [];
+
+    for (let i: number = songsToCounts.length - 1; i >= 0; i--) {
+      if (i < songsToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.songChartMonth.push({
+        name: songsToCounts[i].metric.toString(),
+        value: songsToCounts[i].value,
+      });
+    }
+  }
+  addSongToChartYear(songsToCounts: Entry[]) {
+    this.songChartYear = [];
+
+    for (let i: number = songsToCounts.length - 1; i >= 0; i--) {
+      if (i < songsToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.songChartYear.push({
+        name: songsToCounts[i].metric.toString(),
+        value: songsToCounts[i].value,
+      });
+    }
+  }
+  addSongToChartAllTime(songsToCounts: Entry[]) {
+    this.songChartAllTime = [];
+
+    for (let i: number = songsToCounts.length - 1; i >= 0; i--) {
+      if (i < songsToCounts.length - this.pieLimit) {
+        break;
+      }
+      this.songChartAllTime.push({
+        name: songsToCounts[i].metric.toString(),
+        value: songsToCounts[i].value,
+      });
+    }
+  }
+
+  addGenresToChartWeek(genresToCounts: Entry[]) {
     this.genrePieChartWeek = [];
 
     for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
@@ -235,12 +267,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.genrePieChartWeek.push({
-        name: genresToCounts[i].genreName,
-        value: genresToCounts[i].occurrencesInPlaylist,
+        name: genresToCounts[i].metric.toString(),
+        value: genresToCounts[i].value,
       });
     }
   }
-  addGenresToChartMonth(genresToCounts: GenreMapResponse[]) {
+
+  addGenresToChartMonth(genresToCounts: Entry[]) {
     this.genrePieChartMonth = [];
 
     for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
@@ -248,12 +281,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.genrePieChartMonth.push({
-        name: genresToCounts[i].genreName,
-        value: genresToCounts[i].occurrencesInPlaylist,
+        name: genresToCounts[i].metric.toString(),
+        value: genresToCounts[i].value,
       });
     }
   }
-  addGenresToChartYear(genresToCounts: GenreMapResponse[]) {
+
+  addGenresToChartYear(genresToCounts: Entry[]) {
     this.genrePieChartYear = [];
 
     for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
@@ -261,12 +295,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.genrePieChartYear.push({
-        name: genresToCounts[i].genreName,
-        value: genresToCounts[i].occurrencesInPlaylist,
+        name: genresToCounts[i].metric.toString(),
+        value: genresToCounts[i].value,
       });
     }
   }
-  addGenresToChartAllTime(genresToCounts: GenreMapResponse[]) {
+
+  addGenresToChartAllTime(genresToCounts: Entry[]) {
     this.genrePieChartAllTime = [];
 
     for (let i: number = genresToCounts.length - 1; i >= 0; i--) {
@@ -274,13 +309,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.genrePieChartAllTime.push({
-        name: genresToCounts[i].genreName,
-        value: genresToCounts[i].occurrencesInPlaylist,
+        name: genresToCounts[i].metric.toString(),
+        value: genresToCounts[i].value,
       });
     }
   }
 
-  addAlbumsToChartWeek(albumsToProportions: AlbumMapResponse[]) {
+  addAlbumsToChartWeek(albumsToProportions: Entry[]) {
     this.albumsListenedBarWeek = [];
 
     for (let i = albumsToProportions.length - 1; i >= 0; i--) {
@@ -288,12 +323,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.albumsListenedBarWeek.push({
-        name: albumsToProportions[i].albumName,
-        value: albumsToProportions[i].occurrencesInPlaylist,
+        name: albumsToProportions[i].metric.toString(),
+        value: albumsToProportions[i].value,
       });
     }
   }
-  addAlbumsToChartMonth(albumsToProportions: AlbumMapResponse[]) {
+
+  addAlbumsToChartMonth(albumsToProportions: Entry[]) {
     this.albumsListenedBarMonth = [];
 
     for (let i = albumsToProportions.length - 1; i >= 0; i--) {
@@ -301,12 +337,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.albumsListenedBarMonth.push({
-        name: albumsToProportions[i].albumName,
-        value: albumsToProportions[i].occurrencesInPlaylist,
+        name: albumsToProportions[i].metric.toString(),
+        value: albumsToProportions[i].value,
       });
     }
   }
-  addAlbumsToChartYear(albumsToProportions: AlbumMapResponse[]) {
+
+  addAlbumsToChartYear(albumsToProportions: Entry[]) {
     this.albumsListenedBarYear = [];
 
     for (let i = albumsToProportions.length - 1; i >= 0; i--) {
@@ -314,12 +351,13 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.albumsListenedBarYear.push({
-        name: albumsToProportions[i].albumName,
-        value: albumsToProportions[i].occurrencesInPlaylist,
+        name: albumsToProportions[i].metric.toString(),
+        value: albumsToProportions[i].value,
       });
     }
   }
-  addAlbumsToChartAllTime(albumsToProportions: AlbumMapResponse[]) {
+
+  addAlbumsToChartAllTime(albumsToProportions: Entry[]) {
     this.albumsListenedBarAllTime = [];
 
     for (let i = albumsToProportions.length - 1; i >= 0; i--) {
@@ -327,14 +365,70 @@ export class InsightsComponent implements OnInit {
         break;
       }
       this.albumsListenedBarAllTime.push({
-        name: albumsToProportions[i].albumName,
-        value: albumsToProportions[i].occurrencesInPlaylist,
+        name: albumsToProportions[i].metric.toString(),
+        value: albumsToProportions[i].value,
+      });
+    }
+  }
+  addArtistsToChartWeek(artiststToProportions: Entry[]) {
+    this.artistsListenedLineWeek = [];
+
+    for (let i = artiststToProportions.length - 1; i >= 0; i--) {
+      if (i < artiststToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarWeek.push({
+        name: artiststToProportions[i].metric.toString(),
+        value: artiststToProportions[i].value,
+      });
+    }
+  }
+  addArtistsToChartMonth(artiststToProportions: Entry[]) {
+    this.artistsListenedLineMonth = [];
+
+    for (let i = artiststToProportions.length - 1; i >= 0; i--) {
+      if (i < artiststToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarMonth.push({
+        name: artiststToProportions[i].metric.toString(),
+        value: artiststToProportions[i].value,
+      });
+    }
+  }
+  addArtistsToChartYear(artiststToProportions: Entry[]) {
+    this.artistsListenedLineYear = [];
+
+    for (let i = artiststToProportions.length - 1; i >= 0; i--) {
+      if (i < artiststToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarYear.push({
+        name: artiststToProportions[i].metric.toString(),
+        value: artiststToProportions[i].value,
+      });
+    }
+  }
+  addArtistsToChartAllTime(artiststToProportions: Entry[]) {
+    this.artistsListenedLineAllTime = [];
+
+    for (let i = artiststToProportions.length - 1; i >= 0; i--) {
+      if (i < artiststToProportions.length - this.pieLimit) {
+        break;
+      }
+      this.albumsListenedBarAllTime.push({
+        name: artiststToProportions[i].metric.toString(),
+        value: artiststToProportions[i].value,
       });
     }
   }
 
   onTimePeriodChange(period: TimePeriod): void {
     this.selectedTimePeriod = period;
+    this.showByWeek = period.label === 'Week';
+    this.showByMonth = period.label === 'Month';
+    this.showByYear = period.label === 'Year';
+    this.showByAllTime = period.label === 'All Time';
   }
 
   // async sendTime(){
