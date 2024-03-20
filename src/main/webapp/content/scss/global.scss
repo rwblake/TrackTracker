@@ -25,7 +25,7 @@ h4,
 
 h1 {
   font-size: 2.2em;
-  font-weight: 400;
+  font-weight: 700;
   text-align: center;
   letter-spacing: 0.01em;
 }
@@ -275,6 +275,15 @@ jhi-password-strength-bar {
       margin-bottom: 4px;
     }
   }
+}
+
+.alert-warning {
+  --bs-alert-color: rgb(255, 255, 255);
+  --bs-alert-bg: rgba(17, 6, 17, 0.7);
+  --bs-alert-border-color: rgb(255, 255, 255, 0.2);
+  border-bottom: var(--bs-alert-link-color) solid 2px;
+  --bs-alert-link-color: rgb(227, 141, 255);
+  border-radius: 8px;
 }
 
 /* ==========================================================================

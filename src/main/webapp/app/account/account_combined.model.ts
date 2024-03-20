@@ -32,7 +32,7 @@ export interface FeedCard {
     lastName: string;
   };
 
-  inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update';
+  inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update' | 'new-playlist';
   generatedMessage: string;
   inferredIcon: string;
   linksTo: string;

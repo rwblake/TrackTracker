@@ -12,7 +12,7 @@ public class FeedCardResponse implements Serializable {
 
     /** NOT STORED IN DATABASE:
      * The type of card that can be shown on the frontend.
-     * There are 5 types of inferred type: "friend-request" | "new-friend" | "milestone" | "personal" | "friend-update"
+     * There are 6 types of inferred type: "friend-request" | "new-friend" | "milestone" | "personal" | "friend-update | "new-playlist"
      * <br> For example: <br>
      * The card pertains to another user -> inferredType = "friend" -> The card will be displayed in the
      * frontend as a friend update.

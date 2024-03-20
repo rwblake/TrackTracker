@@ -1,6 +1,7 @@
 package team.bham.service.feed;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,10 @@ public class FeedCardService {
                             return "Not yet implemented";
                     }
                 }
+            case "new-playlist":
+                {
+                    return String.format("You analysed a new playlist: (ID %s)", feedCard.getId());
+                }
             case "personal":
             case "friend-update":
             case "friend-request":
@@ -55,6 +60,8 @@ public class FeedCardService {
 
     /** Infers which icon to show based on the CardType and inferred type */
     String inferIcon(CardType cardType, String inferredType) {
+        if (cardType == CardType.NEW_PLAYLIST) return "queue_music";
+
         return "music_note";
     }
 
@@ -70,6 +77,8 @@ public class FeedCardService {
                 return "friend-request";
             case NEW_FRIEND:
                 return "new-friend";
+            case NEW_PLAYLIST:
+                return "new-playlist";
         }
 
         // there is now no timeframe, and card is not a friend update (or request / new friend)

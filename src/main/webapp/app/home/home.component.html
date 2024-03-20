@@ -1,5 +1,15 @@
-<!--LOGGED-IN--->
-<div *ngIf="account_data !== null" class="root">
+<!--LOADING UI--->
+<div [@fadeIn]="loading" *ngIf="loading && account != null" class="root app-loading">
+  <h2>Loading</h2>
+  <div class="load">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</div>
+
+<!--AppUser-logged-in--->
+<div [@fadeIn]="loading" *ngIf="!loading && account_data !== null" class="root">
   <header class="greeting">
     <h1>Welcome back, {{ getNames()[0] }}!</h1>
     <p class="lead">{{ getLastUpdateMessage() }}</p>
@@ -58,27 +68,19 @@
   </section>
 </div>
 
-<!--ACCOUNT HAS NO APP_USER-->
-<div *ngIf="account !== null && account_data === null" class="root">
-  <div class="alert alert-success">
-    <span id="home-logged-message">You are logged in as user "{{ account.login }}".</span>
-  </div>
-
-  <div class="alert alert-warning">
-    <strong>Account not set up properly!</strong>
-    This account does not have its AppUser entity properly set up in the database. Please ask an admin to fix this.
-  </div>
-</div>
-
-<!--LOGGED-OUT-->
-<div *ngIf="account == null" class="root">
+<!--AppUser-logged-out-->
+<div [@fadeIn]="account != null" *ngIf="account_data == null" class="root">
   <div class="greeting">
     <h1>Welcome to {{ APP_NAME }}</h1>
     <p class="lead">Your music tastes, <em>connected</em></p>
   </div>
 
   <div class="messages">
-    <div class="alert alert-warning">
+    <div class="alert alert-success" *ngIf="account != null">
+      <span id="home-logged-message">You are logged in as user "{{ account.login }}".</span>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="account == null">
       <span>You can access </span><a class="alert-link" routerLink="/insights/playlist">Playlist Insights</a>
       <span>
         without an account, but if <br />
@@ -89,4 +91,13 @@
       <a class="alert-link" routerLink="/login">log in.</a>
     </div>
   </div>
+
+  <!--  <section>-->
+  <!--    <h2>Features</h2>-->
+  <!--    <p>This is a paragraph</p>-->
+  <!--    <ul>-->
+  <!--      <li>Playlist Analyser</li>-->
+  <!--      <li>Insights</li>-->
+  <!--    </ul>-->
+  <!--  </section>-->
 </div>
