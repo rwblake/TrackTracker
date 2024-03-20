@@ -9,31 +9,31 @@ export interface StreamInsightsResponse {
     byWeek: Entry[];
     byMonth: Entry[];
     byYear: Entry[];
-    byAllTime: Entry[];
+    ofAllTime: Entry[];
   };
   artistCounter: {
     byWeek: Entry[];
     byMonth: Entry[];
     byYear: Entry[];
-    byAllTime: Entry[];
+    ofAllTime: Entry[];
   };
   decadeCounter: {
     byWeek: Entry[];
     byMonth: Entry[];
     byYear: Entry[];
-    byAllTime: Entry[];
+    ofAllTime: Entry[];
   };
   genreCounter: {
     byWeek: Entry[];
     byMonth: Entry[];
     byYear: Entry[];
-    byAllTime: Entry[];
+    ofAllTime: Entry[];
   };
   albumCounter: {
     byWeek: Entry[];
     byMonth: Entry[];
     byYear: Entry[];
-    byAllTime: Entry[];
+    ofAllTime: Entry[];
   };
 }
 

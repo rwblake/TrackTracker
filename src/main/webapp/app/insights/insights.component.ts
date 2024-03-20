@@ -110,26 +110,27 @@ export class InsightsComponent implements OnInit {
 
   onStreamRetrievalSuccess(val: StreamInsightsResponse) {
     this.response = val;
+    console.log('onStreamRetrievalSuccess', val);
     this.addGenresToChartWeek(this.response.genreCounter.byWeek);
     this.addGenresToChartMonth(this.response.genreCounter.byMonth);
     this.addGenresToChartYear(this.response.genreCounter.byYear);
-    this.addGenresToChartAllTime(this.response.genreCounter.byAllTime);
+    this.addGenresToChartAllTime(this.response.genreCounter.ofAllTime);
     this.addAlbumsToChartWeek(this.response.albumCounter.byWeek);
     this.addAlbumsToChartMonth(this.response.albumCounter.byMonth);
     this.addAlbumsToChartYear(this.response.albumCounter.byYear);
-    this.addAlbumsToChartAllTime(this.response.albumCounter.byAllTime);
+    this.addAlbumsToChartAllTime(this.response.albumCounter.ofAllTime);
     this.addArtistsToChartWeek(this.response.artistCounter.byWeek);
     this.addArtistsToChartMonth(this.response.artistCounter.byMonth);
     this.addArtistsToChartYear(this.response.artistCounter.byYear);
-    this.addArtistsToChartAllTime(this.response.artistCounter.byAllTime);
+    this.addArtistsToChartAllTime(this.response.artistCounter.ofAllTime);
     this.addSongToChartWeek(this.response.songCounter.byWeek);
     this.addSongToChartMonth(this.response.songCounter.byMonth);
     this.addSongToChartYear(this.response.songCounter.byYear);
-    this.addSongToChartAllTime(this.response.songCounter.byAllTime);
+    this.addSongToChartAllTime(this.response.songCounter.ofAllTime);
     this.addDecToChartWeek(this.response.songCounter.byWeek);
     this.addDecToChartMonth(this.response.songCounter.byMonth);
     this.addDecToChartYear(this.response.songCounter.byYear);
-    this.addDecToChartAllTime(this.response.songCounter.byAllTime);
+    this.addDecToChartAllTime(this.response.songCounter.ofAllTime);
   }
   // constructor(private titleService: Title, private insightsService: InsightsService) {}
   // response: InsightsResponse | undefined;
@@ -161,8 +162,15 @@ export class InsightsComponent implements OnInit {
       if (i < decadeToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof decadeToCounts[i].metric === 'string'
+          ? decadeToCounts[i].metric
+          : // @ts-ignore
+            decadeToCounts[i].metric.name;
+
       this.decadeChartWeek.push({
-        name: decadeToCounts[i].metric.toString(),
+        name: name,
         value: decadeToCounts[i].value,
       });
     }
@@ -213,8 +221,15 @@ export class InsightsComponent implements OnInit {
       if (i < songsToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof songsToCounts[i].metric === 'string'
+          ? songsToCounts[i].metric
+          : // @ts-ignore
+            songsToCounts[i].metric.name;
+
       this.songChartWeek.push({
-        name: songsToCounts[i].metric.toString(),
+        name: name,
         value: songsToCounts[i].value,
       });
     }
@@ -266,8 +281,15 @@ export class InsightsComponent implements OnInit {
       if (i < genresToCounts.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof genresToCounts[i].metric === 'string'
+          ? genresToCounts[i].metric
+          : // @ts-ignore
+            genresToCounts[i].metric.name;
+
       this.genrePieChartWeek.push({
-        name: genresToCounts[i].metric.toString(),
+        name: name,
         value: genresToCounts[i].value,
       });
     }
@@ -322,8 +344,15 @@ export class InsightsComponent implements OnInit {
       if (i < albumsToProportions.length - this.pieLimit) {
         break;
       }
+
+      const name =
+        typeof albumsToProportions[i].metric === 'string'
+          ? albumsToProportions[i].metric
+          : // @ts-ignore
+            albumsToProportions[i].metric.name;
+
       this.albumsListenedBarWeek.push({
-        name: albumsToProportions[i].metric.toString(),
+        name: name,
         value: albumsToProportions[i].value,
       });
     }
@@ -377,8 +406,15 @@ export class InsightsComponent implements OnInit {
       if (i < artiststToProportions.length - this.pieLimit) {
         break;
       }
-      this.albumsListenedBarWeek.push({
-        name: artiststToProportions[i].metric.toString(),
+
+      const name =
+        typeof artiststToProportions[i].metric === 'string'
+          ? artiststToProportions[i].metric
+          : // @ts-ignore
+            artiststToProportions[i].metric.name;
+
+      this.artistsListenedLineWeek.push({
+        name: name,
         value: artiststToProportions[i].value,
       });
     }
