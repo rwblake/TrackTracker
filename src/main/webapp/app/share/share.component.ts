@@ -43,12 +43,22 @@ export class SpotifyStatsComponent implements OnInit {
 
     /*public class SpotifyStatsController {
 
-    @PostMapping("/spotify-stats/share")
+    ("/spotify-stats/share")
     public ResponseEntity<Void> shareStats(@RequestBody String username) {
         // Implement logic to share stats with other users
         return ResponseEntity.ok().build();
     }
 }*/
+
+    /* public class CardData {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+    private String description;
+    // Add more fields as needed*/
   }
 
   ngOnInit(): void {
