@@ -20,6 +20,26 @@ export class ShareComponent implements OnInit {
       return new SpotifyStats(username,  stats  );
     }
 */
+
+    /*    selector: 'app-spotify-stats',
+    templateUrl: './spotify-stats.component.html',
+    styleUrls: ['./spotify-stats.component.scss']
+})
+export class SpotifyStatsComponent implements OnInit {
+    stats: any; // Define appropriate type
+
+    constructor(private spotifyService: SpotifyService) { }
+
+    ngOnInit(): void {
+        this.loadStats();
+    }
+
+    loadStats() {
+        this.spotifyService.getUserStats().subscribe((response) => {
+            this.stats = response;
+        });
+    }
+}*/
   }
 
   ngOnInit(): void {
