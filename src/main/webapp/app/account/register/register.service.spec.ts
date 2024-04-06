@@ -27,6 +27,8 @@ describe('RegisterService Service', () => {
   describe('Service methods', () => {
     it('should call register endpoint with correct values', () => {
       // GIVEN
+      const firstName = 'firstname';
+      const lastName = 'lastname';
       const login = 'abc';
       const email = 'test@test.com';
       const password = 'pass';
@@ -34,8 +36,7 @@ describe('RegisterService Service', () => {
       const bio = 'This is my bio';
       const spotifyAuthCode = 'code';
       const spotifyAuthState = 'state';
-      const langKey = 'FR';
-      const registration = new Registration(login, email, password, spotifyID, bio, spotifyAuthCode, spotifyAuthState, langKey);
+      const registration = new Registration(firstName, lastName, login, email, password, spotifyID, spotifyAuthCode, spotifyAuthState);
 
       // WHEN
       service.save(registration).subscribe();
@@ -46,7 +47,16 @@ describe('RegisterService Service', () => {
       });
 
       // THEN
-      expect(testRequest.request.body).toEqual({ email, langKey, login, password, spotifyID, bio, credentials });
+      expect(testRequest.request.body).toEqual({
+        firstName,
+        lastName,
+        login,
+        email,
+        password,
+        spotifyID,
+        spotifyAuthCode,
+        spotifyAuthState,
+      });
     });
   });
 });

@@ -24,9 +24,66 @@
   <div class="d-flex justify-content-center">
     <div class="col-md-8">
       <div class="mt-3 alert alert-warning">
-        <span
-          ><b>If you blocked cookies:</b> the data you enter may be reset after linking your Spotify Account. This is because cookies allows
-          us to store your data temporarily between page redirects.</span
+        <span>
+          <b>If you blocked cookies:</b> the data you enter may be reset after linking your Spotify Account. This is because cookies allows
+          us to store your data temporarily between page redirects.
+        </span>
+        <!-- First name -->
+        <div class="mb-3">
+          <label class="form-label" for="firstName">First name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            name="firstName"
+            placeholder="Your first name"
+            formControlName="firstName"
+            data-cy="firstName"
+          />
+
+          <ul
+            class="errors"
+            *ngIf="
+              registerForm.get('firstName')!.invalid && (registerForm.get('firstName')!.dirty || registerForm.get('firstName')!.touched)
+            "
+          >
+            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.required">Your first name is required.</li>
+
+            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.invalidName">Your first name is invalid.</li>
+
+            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.maxlength">
+              Your last name cannot be longer than 120 characters.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Last name -->
+        <div class="mb-3">
+          <label class="form-label" for="lastName">Last name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            name="lastName"
+            placeholder="Your last name"
+            formControlName="lastName"
+            data-cy="lastName"
+          />
+
+          <ul
+            class="errors"
+            *ngIf="registerForm.get('lastName')!.invalid && (registerForm.get('lastName')!.dirty || registerForm.get('lastName')!.touched)"
+          >
+            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.required">Your last name is required.</li>
+
+            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.invalidName">Your first name is invalid.</li>
+
+            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.maxlength">
+              Your last name cannot be longer than 120 characters.
+            </li>
+          </ul>
+        </div>
+
         >
       </div>
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
@@ -87,26 +144,26 @@
               Your email is required to be at least 5 characters.
             </li>
 
-            <small class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.maxlength">
+            <li class="form-text text-danger" *ngIf="registerForm.get('email')?.errors?.maxlength">
               Your email cannot be longer than 50 characters.
-            </small>
+            </li>
           </ul>
         </div>
 
-        <!--Biography-->
-        <div class="mb-3">
-          <label class="form-label" for="bio">About me</label>
-          <textarea
-            type="text"
-            class="form-control"
-            rows="4"
-            id="bio"
-            name="bio"
-            placeholder="Tell others a little bit about you and your tastes"
-            formControlName="bio"
-            data-cy="bio"
-          ></textarea>
-        </div>
+        <!--        &lt;!&ndash;Biography&ndash;&gt;-->
+        <!--        <div class="mb-3">-->
+        <!--          <label class="form-label" for="bio">About me</label>-->
+        <!--          <textarea-->
+        <!--            type="text"-->
+        <!--            class="form-control"-->
+        <!--            rows="4"-->
+        <!--            id="bio"-->
+        <!--            name="bio"-->
+        <!--            placeholder="Tell others a little bit about you and your tastes"-->
+        <!--            formControlName="bio"-->
+        <!--            data-cy="bio"-->
+        <!--          ></textarea>-->
+        <!--        </div>-->
 
         <!--Password-->
         <div class="mb-3">
@@ -143,7 +200,7 @@
         </div>
 
         <!--Confirm password-->
-        <div class="mb-5">
+        <div class="mb-3">
           <label class="form-label" for="confirmPassword">Password confirmation</label>
           <input
             type="password"
@@ -176,88 +233,6 @@
           </ul>
         </div>
 
-        <!--        <hr class="mb-5" />-->
-        <!---->
-        <!--        &lt;!&ndash;Spotify ID&ndash;&gt;-->
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="bio">Spotify Account ID</label>-->
-        <!--          <input-->
-        <!--            type="text"-->
-        <!--            class="form-control"-->
-        <!--            id="spotifyID"-->
-        <!--            name="spotifyID"-->
-        <!--            placeholder="Your account ID (the name at the end of your profile URL)"-->
-        <!--            formControlName="spotifyID"-->
-        <!--            data-cy="spotifyID"-->
-        <!--          />-->
-
-        <!--          <div-->
-        <!--            *ngIf="-->
-        <!--              registerForm.get('spotifyID')!.invalid && (registerForm.get('spotifyID')!.dirty || registerForm.get('spotifyID')!.touched)-->
-        <!--            "-->
-        <!--          >-->
-        <!--            <small class="form-text text-danger" *ngIf="registerForm.get('spotifyID')?.errors?.required">-->
-        <!--              Your Spotify Account ID is required.-->
-        <!--            </small>-->
-        <!--          </div>-->
-        <!--        </div>-->
-
-        <!--        &lt;!&ndash;Access Token&ndash;&gt;-->
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="accessToken">Access Token</label>-->
-        <!--          <input-->
-        <!--            type="text"-->
-        <!--            class="form-control"-->
-        <!--            id="accessToken"-->
-        <!--            name="accessToken"-->
-        <!--            placeholder="Your Spotify account's access token for this app"-->
-        <!--            formControlName="accessToken"-->
-        <!--            data-cy="accessToken"-->
-        <!--          />-->
-        <!--        </div>-->
-
-        <!--        &lt;!&ndash;Token Type&ndash;&gt;-->
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="accessToken">Token Type</label>-->
-        <!--          <input-->
-        <!--            type="text"-->
-        <!--            class="form-control"-->
-        <!--            id="tokenType"-->
-        <!--            name="tokenType"-->
-        <!--            placeholder="The type of token generated"-->
-        <!--            formControlName="tokenType"-->
-        <!--            data-cy="tokenType"-->
-        <!--          />-->
-        <!--        </div>-->
-
-        <!--        &lt;!&ndash;Token Expiry Date&ndash;&gt;-->
-        <!--        <div class="mb-3">-->
-        <!--          <label class="form-label" for="bio">Token Expiry Date</label>-->
-        <!--          <input-->
-        <!--            type="datetime-local"-->
-        <!--            class="form-control"-->
-        <!--            id="expiresIn"-->
-        <!--            name="expiresIn"-->
-        <!--            placeholder="When the token expires, and needs to be refreshed"-->
-        <!--            formControlName="expiresIn"-->
-        <!--            data-cy="expiresIn"-->
-        <!--          />-->
-        <!--        </div>-->
-
-        <!--        &lt;!&ndash;Refresh Type&ndash;&gt;-->
-        <!--        <div class="mb-5">-->
-        <!--          <label class="form-label" for="refreshToken">Refresh Token</label>-->
-        <!--          <input-->
-        <!--            type="text"-->
-        <!--            class="form-control"-->
-        <!--            id="refreshToken"-->
-        <!--            name="refreshToken"-->
-        <!--            placeholder="The token used to refresh the access token"-->
-        <!--            formControlName="refreshToken"-->
-        <!--            data-cy="refreshToken"-->
-        <!--          />-->
-        <!--        </div>-->
-
         <!--Spotify Authentication-->
         <div class="mb-5">
           <button
@@ -273,7 +248,7 @@
           </button>
         </div>
 
-        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary" data-cy="submit">Create account</button>
+        <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary mb-5" data-cy="submit">Create account</button>
       </form>
     </div>
   </div>

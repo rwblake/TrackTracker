@@ -1,16 +1,21 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE, SPOTIFY_ID_ALREADY_USED_TYPE } from 'app/config/error.constants';
 import { RegisterService } from './register.service';
+
+function nameValidator(control: AbstractControl): { [key: string]: any } | null {
+  const valid = /^[a-zA-Z]*$/.test(control.value);
+  return valid ? null : { invalidName: true };
+}
 
 @Component({
   selector: 'jhi-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements AfterViewInit {
+export class RegisterComponent implements OnInit, AfterViewInit {
   @ViewChild('login', { static: false })
   login?: ElementRef;
 
@@ -22,6 +27,14 @@ export class RegisterComponent implements AfterViewInit {
   success = false;
 
   registerForm = new FormGroup({
+    firstName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(1), Validators.maxLength(120), nameValidator],
+    }),
+    lastName: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(1), Validators.maxLength(120), nameValidator],
+    }),
     login: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -35,10 +48,10 @@ export class RegisterComponent implements AfterViewInit {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email],
     }),
-    bio: new FormControl('', {
-      nonNullable: false,
-      validators: [Validators.maxLength(200)],
-    }),
+    // bio: new FormControl('', {
+    //   nonNullable: false,
+    //   validators: [Validators.maxLength(200)],
+    // }),
     password: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.minLength(4), Validators.maxLength(50)],
@@ -97,13 +110,14 @@ export class RegisterComponent implements AfterViewInit {
     if (password !== confirmPassword) {
       this.doNotMatch = true;
     } else {
-      const { login, email, bio, spotifyAuthState, spotifyAuthCode } = this.registerForm.getRawValue();
+      const { firstName, lastName, login, email, spotifyAuthState, spotifyAuthCode } = this.registerForm.getRawValue();
       this.registerService
         .save({
+          firstName,
+          lastName,
           login,
           email,
           password,
-          bio,
           spotifyAuthCode,
           spotifyAuthState,
           langKey: 'en',

@@ -1,7 +1,6 @@
 package team.bham.web.rest.vm;
 
 import javax.validation.constraints.Size;
-import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import team.bham.service.dto.AdminUserDTO;
 
 /**
@@ -20,8 +19,11 @@ public class ManagedAppUserVM extends AdminUserDTO {
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 
-    @Size(max = BIO_MAX_LENGTH)
-    private String bio;
+    @Size(max = 120)
+    private String firstName;
+
+    @Size(max = 120)
+    private String lastName;
 
     private String spotifyAuthCode;
 
@@ -37,14 +39,6 @@ public class ManagedAppUserVM extends AdminUserDTO {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
     }
 
     public String getSpotifyAuthCode() {
@@ -67,5 +61,21 @@ public class ManagedAppUserVM extends AdminUserDTO {
     @Override
     public String toString() {
         return "ManagedAppUserVM{" + super.toString() + "} ";
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 }

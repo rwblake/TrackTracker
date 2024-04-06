@@ -154,7 +154,7 @@ public class AppUserService extends team.bham.service.UserService {
         // Create an AppUser
         AppUser newAppUser = new AppUser();
         newAppUser.setSpotifyID(spotifyID);
-        newAppUser.setBio(appUserVM.getBio());
+        //        newAppUser.setBio(appUserVM.getBio());
         newAppUser.setSpotifyUsername(spotifyDisplayName);
         newAppUser.setName("UNUSED FIELD");
         if (spotifyUser.getImages() != null && spotifyUser.getImages().length != 0) {
