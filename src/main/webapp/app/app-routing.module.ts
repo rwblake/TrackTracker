@@ -36,9 +36,18 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           path: 'profile/user-preferences',
           loadChildren: () => import('./profile/user-preferences/user-preferences.module').then(m => m.UserPreferencesModule),
         },
-        { path: 'profile/:spotifyUsername', loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule) },
-        { path: 'friends', loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule) },
-        { path: 'insights', loadChildren: () => import('./insights/insights.module').then(m => m.InsightsModule) },
+        {
+          path: 'profile/:spotifyUsername',
+          loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+        },
+        {
+          path: 'friends',
+          loadChildren: () => import('./friends/friends.module').then(m => m.FriendsModule),
+        },
+        {
+          path: 'insights',
+          loadChildren: () => import('./insights/insights.module').then(m => m.InsightsModule),
+        },
         {
           path: 'insights/playlist',
           loadChildren: () => import('./playlist-insights/playlist-insights.module').then(m => m.PlaylistInsightsModule),

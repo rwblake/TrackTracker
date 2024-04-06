@@ -382,19 +382,19 @@
           </a>
           <ul class="dropdown-menu profile-menu" id="dropdown">
             <li>
-              <button class="dropdown-item" (click)="toProfile()">Profile page</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile page </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="toFriends()">Friends</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./friends']"> Friends </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="edit()">Edit</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./profile/edit-profile']"> Edit </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="toSettings()">Settings</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/settings']"> Settings </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="toChangePassword()">Change Password</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/password']"> Change Password </a>
             </li>
             <li>
               <button class="dropdown-item" id="helpBtn" (click)="showModal()">Help</button>
@@ -410,7 +410,7 @@
               </div>
             </li>
             <li>
-              <button class="dropdown-item" id="gdprBtn" (click)="navigateToGDPR()">GDPR</button>
+              <a class="dropdown-item" id="gdprBtn" (click)="collapseNavbar()" [routerLink]="['/gdpr-policy']"> GDPR </a>
             </li>
             <li>
               <button class="dropdown-item" (click)="logout()">Logout</button>
