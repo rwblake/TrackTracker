@@ -159,6 +159,7 @@ server:
     session:
       cookie:
         http-only: true
+      timeout: 1800 # 30 minutes
 
 springdoc:
   show-actuator: true

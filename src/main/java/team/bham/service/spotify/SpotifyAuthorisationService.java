@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
+import javax.servlet.http.HttpSession;
 import org.apache.hc.core5.http.ParseException;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
@@ -38,10 +39,12 @@ public class SpotifyAuthorisationService {
 
     private final UserService userService;
     private final AppUserRepository appUserRepository;
+    private final HttpSession httpSession; // Allows access to each Http session
 
-    public SpotifyAuthorisationService(UserService userService, AppUserRepository appUserRepository) {
+    public SpotifyAuthorisationService(UserService userService, AppUserRepository appUserRepository, HttpSession httpSession) {
         this.userService = userService;
         this.appUserRepository = appUserRepository;
+        this.httpSession = httpSession;
     }
 
     /** Get the URI for the page which allows a user to connect their Spotify account to our app.
@@ -49,7 +52,11 @@ public class SpotifyAuthorisationService {
      *  @return The url which links to the spotify page to permit/deny access */
     public URI getAuthorisationCodeUri(String origin) throws RuntimeException {
         // Get redirectUri
-        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/spotify-callback/");
+        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/account/register/");
+        // Generate state
+        String state = generateAlphaNumericString(11);
+        // Store state in HttpSession, to access later
+        httpSession.setAttribute("spotifyState", state);
 
         System.out.println(redirectUri.toString());
 
@@ -61,7 +68,7 @@ public class SpotifyAuthorisationService {
 
         AuthorizationCodeUriRequest authorizationCodeUriRequest = spotifyApiForAuthentication
             .authorizationCodeUri()
-            .state(generateAlphaNumericString(11)) // A random number challenge which the client must return
+            .state(state) // A random number challenge which the client must return
             .scope(scope) // The different types of permission requested
             .show_dialog(true) // Whether the dialog is shown for users who have already granted permission
             .build();
@@ -78,7 +85,21 @@ public class SpotifyAuthorisationService {
      */
     public AuthorizationCodeCredentials initialiseCredentials(String spotifyAuthCode, String spotifyAuthState, URI redirectUri) {
         try {
-            // TODO: Should check for state equality here but dont know how to store state on backend throughout a transaction.
+            // Retrieve state from session
+            String storedState = (String) httpSession.getAttribute("spotifyState");
+            System.out.println("Comparing Spotify states: '" + spotifyAuthState + "', '" + storedState + "'");
+
+            // Check whether State is invalid
+            if (storedState == null || !storedState.equals(spotifyAuthState)) {
+                // State is invalid, throw an error
+                //                throw new RuntimeException("Invalid Spotify state");
+                System.out.println("Invalid Spotify state");
+                return null;
+            }
+
+            // State is valid, proceed with authentication
+            // Clear the state from session to prevent reuse
+            httpSession.removeAttribute("spotifyState");
 
             SpotifyApi spotifyApiForAuthentication = new SpotifyApi.Builder()
                 .setClientId(clientId)

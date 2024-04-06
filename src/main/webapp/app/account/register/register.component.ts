@@ -59,28 +59,34 @@ export class RegisterComponent implements AfterViewInit {
 
   constructor(private registerService: RegisterService) {}
 
-  ngAfterViewInit(): void {
-    if (this.login) {
+  public ngOnInit(): void {
+    // Access previous form data
+    const formData = localStorage.getItem('registrationFormData');
+    if (formData) {
+      const parsedFormData = JSON.parse(formData);
+      // Populate the registration form with the persisted data
+      this.registerForm.patchValue(parsedFormData);
+      // Clear the stored form data after populating the form
+      localStorage.removeItem('registrationFormData');
+    }
+
+    // Check if callback URL contains authorization code and state
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+
+    // Handle authorization code and state
+    if (code && state) this.registerForm.patchValue({ spotifyAuthCode: code, spotifyAuthState: state });
+  }
+
+  public ngAfterViewInit(): void {
+    if (this.login)
+      // Initially focus on the first field of the form
       this.login.nativeElement.focus();
-    }
   }
 
-  @HostListener('window:message', ['$event'])
-  onMessage(event: MessageEvent): void {
-    if (typeof event.data === 'string') {
-      const pattern = /^code=(.*)&state=(.*)$/;
-      if (pattern.test(event.data)) {
-        const results = pattern.exec(event.data);
-        if (results !== null) {
-          const code = results[1],
-            state = results[2];
-          this.registerForm.patchValue({ spotifyAuthCode: code, spotifyAuthState: state });
-        }
-      }
-    }
-  }
-
-  register(): void {
+  // Attempts to register user - final stage
+  public register(): void {
     this.doNotMatch = false;
     this.error = false;
     this.errorEmailExists = false;
@@ -106,12 +112,16 @@ export class RegisterComponent implements AfterViewInit {
     }
   }
 
-  openSpotifyAuthPopup(): void {
+  // Opens the Spotify Auth Popup
+  public openSpotifyAuthPopup(): void {
     const { password, confirmPassword } = this.registerForm.getRawValue();
     if (password !== confirmPassword) {
       this.doNotMatch = true;
       return;
     }
+
+    const formData = this.registerForm.getRawValue();
+    localStorage.setItem('registrationFormData', JSON.stringify(formData));
 
     this.registerService.getAuthenticationURI().subscribe({
       next: this.processAuthenticationURIResponse,
@@ -125,23 +135,7 @@ export class RegisterComponent implements AfterViewInit {
       console.error('An error occurred attempting to fetch the spotify authentication URI: response.body=null');
       return;
     }
-
-    // Open Spotify authentication URI as popup
-    const authorisationURL = response.body.toString();
-    const popupFeatures = Object.entries({
-      popup: true,
-      width: 500,
-      height: window.innerHeight,
-      left: window.innerWidth / 2 - 250,
-    })
-      .map(([key, val]) => `${key}=${val.toString()}`)
-      .join(',');
-
-    const newWindow = window.open(authorisationURL, '', popupFeatures);
-    if (newWindow == null) {
-      console.error('An error occured attempting to open the spotify authentication popup');
-      this.error = true;
-    }
+    window.location.href = response.body.toString();
   }
 
   private processAuthenticationURIError(response: HttpErrorResponse): void {

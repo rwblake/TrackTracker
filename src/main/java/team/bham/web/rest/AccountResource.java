@@ -110,12 +110,12 @@ public class AccountResource {
         URI requestUri = URI.create(request.getRequestURL().toString());
         String origin = requestUri.getScheme() + "://" + requestUri.getAuthority();
 
-        // Regenerate redirectUri for SpotifyAPI
-        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/spotify-callback/");
-
         if (isPasswordLengthInvalid(managedAppUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
+
+        // Regenerate redirectUri for SpotifyAPI
+        URI redirectUri = SpotifyHttpManager.makeUri(origin + "/account/register/");
 
         // attempt to generate credentials
         AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(
@@ -123,6 +123,7 @@ public class AccountResource {
             managedAppUserVM.getSpotifyAuthState(),
             redirectUri
         );
+
         if (credentials == null) {
             throw new Error(
                 "Could not initialise Credentials given: " +
