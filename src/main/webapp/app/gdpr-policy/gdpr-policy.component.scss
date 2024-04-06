@@ -72,6 +72,8 @@
 
   .response-buttons {
     margin-top: 40px;
-    display: inline;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
   }
 }

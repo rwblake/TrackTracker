@@ -382,13 +382,14 @@
           </a>
           <ul class="dropdown-menu profile-menu" id="dropdown">
             <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile page </a>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile </a>
             </li>
             <li>
               <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./friends']"> Friends </a>
             </li>
+            <hr />
             <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./profile/edit-profile']"> Edit </a>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./profile/edit-profile']"> Edit Profile </a>
             </li>
             <li>
               <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/settings']"> Settings </a>
@@ -396,6 +397,7 @@
             <li>
               <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/password']"> Change Password </a>
             </li>
+            <hr />
             <li>
               <button class="dropdown-item" id="helpBtn" (click)="showModal()">Help</button>
               <div id="myModal" class="modal">
@@ -410,7 +412,7 @@
               </div>
             </li>
             <li>
-              <a class="dropdown-item" id="gdprBtn" (click)="collapseNavbar()" [routerLink]="['/gdpr-policy']"> GDPR </a>
+              <a class="dropdown-item" id="gdprBtn" (click)="collapseNavbar()" [routerLink]="['/gdpr-policy']"> GDPR Policy </a>
             </li>
             <li>
               <button class="dropdown-item" (click)="logout()">Logout</button>
