@@ -16,8 +16,8 @@ function nameValidator(control: AbstractControl): { [key: string]: any } | null 
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit, AfterViewInit {
-  @ViewChild('login', { static: false })
-  login?: ElementRef;
+  @ViewChild('focusStart', { static: false })
+  focusStart?: ElementRef;
 
   doNotMatch = false;
   error = false;
@@ -93,9 +93,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    if (this.login)
+    if (this.focusStart)
       // Initially focus on the first field of the form
-      this.login.nativeElement.focus();
+      this.focusStart.nativeElement.focus();
   }
 
   // Attempts to register user - final stage

@@ -7,3 +7,13 @@
 .small-margin {
   margin-bottom: 0.75rem;
 }
+
+.logo-img {
+  height: 24px;
+  width: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  background: url('../../../content/images/spotify-logo.png') no-repeat center center;
+  background-size: contain;
+  margin-left: 8px;
+}

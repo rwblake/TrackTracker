@@ -41,6 +41,7 @@
             placeholder="Your first name"
             formControlName="firstName"
             data-cy="firstName"
+            #focusStart
           />
 
           <ul
@@ -97,7 +98,6 @@
             placeholder="Your username"
             formControlName="login"
             data-cy="username"
-            #login
           />
 
           <ul
@@ -199,7 +199,7 @@
         </div>
 
         <!--Confirm password-->
-        <div class="mb-3">
+        <div class="mb-4">
           <label class="form-label" for="confirmPassword">Password confirmation</label>
           <input
             type="password"
@@ -236,14 +236,16 @@
         <div class="mb-5">
           <button
             type="button"
-            class="btn btn-primary"
+            class="button secondary"
             [disabled]="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"
             (click)="openSpotifyAuthPopup()"
           >
             <span *ngIf="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"> Account Linked! </span>
-            <span *ngIf="registerForm.get('spotifyAuthCode')!.invalid || registerForm.get('spotifyAuthState')!.invalid">
-              Link your Spotify account
-            </span>
+
+            <div *ngIf="registerForm.get('spotifyAuthCode')!.invalid || registerForm.get('spotifyAuthState')!.invalid">
+              <span>Link Spotify account</span>
+              <span class="logo-img"></span>
+            </div>
           </button>
         </div>
 
