@@ -532,7 +532,7 @@ export class InsightsComponent implements OnInit {
           : // @ts-ignore
             artiststToProportions[i].metric.name;
 
-      this.albumsListenedBarMonth.push({
+      this.artistsListenedLineMonth.push({
         name: name,
         value: artiststToProportions[i].value,
       });
@@ -552,7 +552,7 @@ export class InsightsComponent implements OnInit {
           : // @ts-ignore
             artiststToProportions[i].metric.name;
 
-      this.albumsListenedBarYear.push({
+      this.artistsListenedLineYear.push({
         name: name,
         value: artiststToProportions[i].value,
       });
@@ -572,7 +572,7 @@ export class InsightsComponent implements OnInit {
           : // @ts-ignore
             artiststToProportions[i].metric.name;
 
-      this.albumsListenedBarAllTime.push({
+      this.artistsListenedLineAllTime.push({
         name: name,
         value: artiststToProportions[i].value,
       });

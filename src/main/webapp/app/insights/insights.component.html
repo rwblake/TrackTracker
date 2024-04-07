@@ -54,20 +54,34 @@
       <!--  <div class="row justify-content-start">-->
       <div class="col-md-4" #artistTrendChart>
         <!--   artist trend    -->
-        <ngx-charts-line-chart
+        <!--        <ngx-charts-line-chart-->
+        <!--          [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"-->
+        <!--          [results]="artistsLine"-->
+        <!--          [yAxis]="true"-->
+        <!--          [showGridLines]="false"-->
+        <!--          [legend]="true"-->
+        <!--          [showYAxisLabel]="true"-->
+        <!--          [yAxisLabel]="'Hours'"-->
+        <!--          [trimYAxisTicks]="true"-->
+        <!--          [autoScale]="true"-->
+        <!--          [legendPosition]="below"-->
+        <!--          [legendTitle]="'Artists'"-->
+        <!--        >-->
+        <!--        </ngx-charts-line-chart>-->
+        <ngx-charts-bar-vertical
           [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
           [results]="artistsLine"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [rotateXAxisTicks]="true"
+          [roundDomains]="true"
+          [xAxis]="true"
           [yAxis]="true"
           [showGridLines]="false"
-          [legend]="true"
-          [showYAxisLabel]="true"
-          [yAxisLabel]="'Hours'"
-          [trimYAxisTicks]="true"
-          [autoScale]="true"
-          [legendPosition]="below"
-          [legendTitle]="'Artists'"
+          [xAxisLabel]="'Artists'"
+          [yAxisLabel]="'Frequency'"
         >
-        </ngx-charts-line-chart>
+        </ngx-charts-bar-vertical>
       </div>
 
       <div class="col-md-4" #albumTrendChart>
