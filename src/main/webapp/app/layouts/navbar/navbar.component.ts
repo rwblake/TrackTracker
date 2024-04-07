@@ -44,24 +44,22 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  showDropdown() {
-    let dropdown = document.getElementById('dropdown');
-    // @ts-ignore
-    dropdown.style.right = '0';
-    // @ts-ignore
-    if (window.getComputedStyle(dropdown).display === 'block') {
-      // @ts-ignore
-      dropdown.style.display = 'none';
-    } else {
-      // @ts-ignore
-      dropdown.style.display = 'block';
-    }
-  }
+  // showDropdown() {
+  //   let dropdown = document.getElementById('dropdown');
+  //   if (!dropdown)
+  //     throw new Error("Could not find dropdown HTML element")
+  //
+  //   dropdown.style.right = '0';
+  //   if (window.getComputedStyle(dropdown).display === 'block')
+  //     dropdown.style.display = 'none';
+  //   else
+  //     dropdown.style.display = 'block';
+  // }
 
   collapseNavbar() {
     this.isNavbarCollapsed = true;
-    const dropdown = document.getElementById('dropdown');
-    if (dropdown !== null) dropdown.style.display = 'none';
+    // const dropdown = document.getElementById('dropdown');
+    // if (dropdown !== null) dropdown.style.display = 'none';
   }
 
   async logout() {

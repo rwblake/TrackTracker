@@ -310,7 +310,7 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu" data-cy="adminMenu">
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle id="admin-menu" data-cy="adminMenu">
             <span>
               <fa-icon icon="users-cog" [fixedWidth]="true"></fa-icon>
               <span>Administration</span>
@@ -375,12 +375,18 @@
           </ul>
         </li>
 
-        <li class="nav-item profile" routerLinkActive="active" *ngSwitchCase="true" [routerLinkActiveOptions]="{ exact: true }">
-          <!-- profile routerLink will need to be changed when the model for spotifyUsername is available -->
-          <a class="nav-link" (click)="showDropdown()" data-cy="profile">
+        <li
+          *ngSwitchCase="true"
+          ngbDropdown
+          class="nav-item dropdown profile"
+          display="dynamic"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu">
             <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
           </a>
-          <ul class="dropdown-menu profile-menu" id="dropdown">
+          <ul class="dropdown-menu profile-menu" ngbDropdownMenu aria-labelledby="profile-menu" id="dropdown">
             <li>
               <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile </a>
             </li>
