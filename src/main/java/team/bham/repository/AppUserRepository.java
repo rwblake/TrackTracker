@@ -36,6 +36,8 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
 
     Optional<AppUser> findOneByInternalUser(User internalUser);
 
+    Optional<AppUser> findOneById(long id);
+
     public boolean existsByInternalUser(User user);
 
     public AppUser getAppUserByInternalUser(User user);

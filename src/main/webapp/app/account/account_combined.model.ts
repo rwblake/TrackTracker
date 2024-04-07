@@ -35,7 +35,7 @@ export interface FeedCard {
   inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update' | 'new-playlist';
   generatedMessage: string;
   inferredIcon: string;
-  linksTo: string;
+  href: URL;
 
   // timeFrame?: string | null;
   // metricValue?: number | null;

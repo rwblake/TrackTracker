@@ -1,6 +1,7 @@
 package team.bham.service.feed;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.time.Instant;
 
 public class FeedCardResponse implements Serializable {
@@ -29,9 +30,15 @@ public class FeedCardResponse implements Serializable {
      * */
     private String inferredIcon;
 
-    private String linksTo = "#";
+    private URI href;
 
-    public FeedCardResponse(team.bham.domain.FeedCard feedCard, String inferredType, String generatedMessage, String inferredIcon) {
+    public FeedCardResponse(
+        team.bham.domain.FeedCard feedCard,
+        String inferredType,
+        String generatedMessage,
+        String inferredIcon,
+        URI href
+    ) {
         id = feedCard.getId();
         liked = feedCard.getLiked();
         timeGenerated = feedCard.getCard().getTimeGenerated();
@@ -39,6 +46,7 @@ public class FeedCardResponse implements Serializable {
         this.inferredType = inferredType;
         this.generatedMessage = generatedMessage;
         this.inferredIcon = inferredIcon;
+        this.href = href;
 
         belongsTo =
             new BelongsTo(
@@ -104,12 +112,12 @@ public class FeedCardResponse implements Serializable {
         this.inferredIcon = inferredIcon;
     }
 
-    public String getLinksTo() {
-        return linksTo;
+    public URI getHref() {
+        return href;
     }
 
-    public void setLinksTo(String linksTo) {
-        this.linksTo = linksTo;
+    public void setHref(URI href) {
+        this.href = href;
     }
 }
 
