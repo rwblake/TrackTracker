@@ -33,6 +33,23 @@
         >
         </ngx-charts-pie-chart>
       </div>
+      <div class="col-md-4" #albumTrendChart>
+        <!--  Album listened to    -->
+        <ngx-charts-bar-vertical
+          [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 0.9]"
+          [results]="albumsBar"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [rotateXAxisTicks]="true"
+          [roundDomains]="true"
+          [xAxis]="true"
+          [yAxis]="true"
+          [showGridLines]="false"
+          [xAxisLabel]="'Albums'"
+          [yAxisLabel]="'Frequency'"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
 
       <!--      <div #containerRef class="col-md-3">-->
       <!--        &lt;!&ndash;   Listened time bar chart   [results]="listenedTimeBar" &ndash;&gt;-->
@@ -68,38 +85,16 @@
         <!--          [legendTitle]="'Artists'"-->
         <!--        >-->
         <!--        </ngx-charts-line-chart>-->
-        <ngx-charts-bar-vertical
+        <ngx-charts-pie-chart
           [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
           [results]="artistsLine"
-          [showXAxisLabel]="true"
-          [showYAxisLabel]="true"
-          [rotateXAxisTicks]="true"
-          [roundDomains]="true"
-          [xAxis]="true"
-          [yAxis]="true"
-          [showGridLines]="false"
-          [xAxisLabel]="'Artists'"
-          [yAxisLabel]="'Frequency'"
+          [legendPosition]="below"
+          [legend]="true"
+          [legendTitle]="'Artists'"
+          [scheme]="chartScheme"
+          [doughnut]="true"
         >
-        </ngx-charts-bar-vertical>
-      </div>
-
-      <div class="col-md-4" #albumTrendChart>
-        <!--  Album listened to    -->
-        <ngx-charts-bar-vertical
-          [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 0.9]"
-          [results]="albumsBar"
-          [showXAxisLabel]="true"
-          [showYAxisLabel]="true"
-          [rotateXAxisTicks]="true"
-          [roundDomains]="true"
-          [xAxis]="true"
-          [yAxis]="true"
-          [showGridLines]="false"
-          [xAxisLabel]="'Albums'"
-          [yAxisLabel]="'Frequency'"
-        >
-        </ngx-charts-bar-vertical>
+        </ngx-charts-pie-chart>
       </div>
     </div>
 
