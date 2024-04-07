@@ -32,7 +32,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.entitiesNavbarItems = EntityNavbarItems;
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction = profileInfo.inProduction;
@@ -42,11 +42,6 @@ export class NavbarComponent implements OnInit {
     this.accountService.getAuthenticationState().subscribe(account => {
       this.account = account;
     });
-  }
-
-  toProfile() {
-    this.collapseNavbar();
-    this.router.navigate(['/profile', this.account?.firstName]);
   }
 
   showDropdown() {
@@ -63,31 +58,18 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  collapseNavbar(): void {
+  collapseNavbar() {
     this.isNavbarCollapsed = true;
     const dropdown = document.getElementById('dropdown');
     if (dropdown !== null) dropdown.style.display = 'none';
   }
 
-  login(): void {
-    this.router.navigate(['/login']);
-  }
-
-  logout(): void {
+  async logout() {
     this.collapseNavbar();
     this.loginService.logout();
-    this.router.navigate(['']);
+    await this.router.navigate(['']);
   }
 
-  edit(): void {
-    this.collapseNavbar();
-    this.router.navigate(['./profile/edit-profile']);
-  }
-
-  toFriends(): void {
-    this.collapseNavbar();
-    this.router.navigate(['./friends']);
-  }
   showModal() {
     this.collapseNavbar();
     let modal = document.getElementById('myModal') as HTMLElement | null;
@@ -105,22 +87,8 @@ export class NavbarComponent implements OnInit {
       console.error('Modal element not found');
     }
   }
-  navigateToGDPR() {
-    this.collapseNavbar();
-    this.router.navigate(['/gdpr-policy']);
-  }
 
-  toSettings() {
-    this.collapseNavbar();
-    this.router.navigate(['/account/settings']);
-  }
-
-  toChangePassword() {
-    this.collapseNavbar();
-    this.router.navigate(['/account/password']);
-  }
-
-  toggleNavbar(): void {
+  toggleNavbar() {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
