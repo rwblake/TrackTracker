@@ -1,5 +1,4 @@
 import dayjs from 'dayjs/esm';
-import { CardType } from '../entities/enumerations/card-type.model';
 import { IAppUser } from '../entities/app-user/app-user.model';
 
 // This interface combines all the relevant data for an account
