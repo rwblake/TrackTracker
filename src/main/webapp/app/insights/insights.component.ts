@@ -137,10 +137,10 @@ export class InsightsComponent implements OnInit {
     this.addSongToChartMonth(this.response.songCounter.byMonth);
     this.addSongToChartYear(this.response.songCounter.byYear);
     this.addSongToChartAllTime(this.response.songCounter.ofAllTime);
-    this.addDecToChartWeek(this.response.songCounter.byWeek);
-    this.addDecToChartMonth(this.response.songCounter.byMonth);
-    this.addDecToChartYear(this.response.songCounter.byYear);
-    this.addDecToChartAllTime(this.response.songCounter.ofAllTime);
+    this.addDecToChartWeek(this.response.decadeCounter.byWeek);
+    this.addDecToChartMonth(this.response.decadeCounter.byMonth);
+    this.addDecToChartYear(this.response.decadeCounter.byYear);
+    this.addDecToChartAllTime(this.response.decadeCounter.ofAllTime);
     this.albumsBar = this.albumsListenedBarWeek;
     this.genrePie = this.genrePieChartWeek;
     this.artistsLine = this.artistsListenedLineWeek;
