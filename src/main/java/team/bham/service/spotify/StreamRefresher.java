@@ -14,34 +14,40 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.AppUser;
+import team.bham.domain.Feed;
 import team.bham.domain.Song;
 import team.bham.domain.Stream;
 import team.bham.repository.AppUserRepository;
+import team.bham.repository.FeedRepository;
 import team.bham.repository.StreamRepository;
 import team.bham.service.SongService;
 import team.bham.service.StreamService;
+import team.bham.service.feed.FeedService;
 
 @Service
 @Transactional
 public class StreamRefresher {
 
-    public final int refreshIntervalMinutes = 25;
+    private final int refreshIntervalMinutes = 25;
 
-    public final AppUserRepository appUserRepository;
-    public final StreamRepository streamRepository;
-    public final StreamService streamService;
-    public final SongService songService;
+    private final AppUserRepository appUserRepository;
+    private final StreamRepository streamRepository;
+    private final StreamService streamService;
+    private final SongService songService;
+    public final FeedService feedService;
 
     public StreamRefresher(
         AppUserRepository appUserRepository,
         StreamRepository streamRepository,
         StreamService streamService,
-        SongService songService
+        SongService songService,
+        FeedService feedService
     ) {
         this.appUserRepository = appUserRepository;
         this.streamRepository = streamRepository;
         this.streamService = streamService;
         this.songService = songService;
+        this.feedService = feedService;
     }
 
     @Scheduled(fixedRate = 25 * 60 * 1000)
@@ -106,6 +112,9 @@ public class StreamRefresher {
             for (int i = 0; i < mySongs.size(); i++) {
                 this.streamService.createStream(playHistory[i], mySongs.get(i), appUser);
             }
+
+            // Mark that the user's music profile has just been updated
+            feedService.updateMusicProfile(appUser);
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             // If any of the requests fail, we will still execute the other ones
             System.out.println("Failed to get streams for an appUser, Error: " + e.getMessage());

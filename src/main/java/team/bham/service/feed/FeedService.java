@@ -1,7 +1,9 @@
 package team.bham.service.feed;
 
+import java.time.Instant;
 import java.util.Set;
 import org.springframework.stereotype.Service;
+import team.bham.domain.AppUser;
 import team.bham.domain.Card;
 import team.bham.domain.Feed;
 import team.bham.domain.FeedCard;
@@ -32,6 +34,12 @@ public class FeedService {
         // add feedCard to user's feed
         feed.addCard(feedCard);
         // save changes
+        feedRepository.save(feed);
+    }
+
+    public void updateUsersMusicProfile(AppUser appUser) {
+        Feed feed = appUser.getFeed();
+        feed.setLastUpdated(Instant.now());
         feedRepository.save(feed);
     }
 }
