@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { APP_NAME, VERSION } from 'app/app.constants';
@@ -7,6 +7,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-navbar',
@@ -20,6 +21,7 @@ export class NavbarComponent implements OnInit {
   version = '';
   account: Account | null = null;
   entitiesNavbarItems: any[] = [];
+  private modalService = inject(NgbModal);
 
   constructor(
     private loginService: LoginService,
@@ -42,6 +44,10 @@ export class NavbarComponent implements OnInit {
     this.accountService.getAuthenticationState().subscribe(account => {
       this.account = account;
     });
+  }
+
+  openModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { scrollable: true });
   }
 
   // showDropdown() {
@@ -68,23 +74,23 @@ export class NavbarComponent implements OnInit {
     await this.router.navigate(['']);
   }
 
-  showModal() {
-    this.collapseNavbar();
-    let modal = document.getElementById('myModal') as HTMLElement | null;
-    if (modal) {
-      modal.style.display = 'block';
-    } else {
-      console.error('Modal element not found');
-    }
-  }
-  closeModal() {
-    let modal = document.getElementById('myModal') as HTMLElement | null;
-    if (modal) {
-      modal.style.display = 'none';
-    } else {
-      console.error('Modal element not found');
-    }
-  }
+  // showModal() {
+  //   this.collapseNavbar();
+  //   let modal = document.getElementById('myModal') as HTMLElement | null;
+  //   if (modal) {
+  //     modal.style.display = 'block';
+  //   } else {
+  //     console.error('Modal element not found');
+  //   }
+  // }
+  // closeModal() {
+  //   let modal = document.getElementById('myModal') as HTMLElement | null;
+  //   if (modal) {
+  //     modal.style.display = 'none';
+  //   } else {
+  //     console.error('Modal element not found');
+  //   }
+  // }
 
   toggleNavbar() {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;

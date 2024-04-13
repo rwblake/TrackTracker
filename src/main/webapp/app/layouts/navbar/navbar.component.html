@@ -405,17 +405,28 @@
             </li>
             <hr />
             <li>
-              <button class="dropdown-item" id="helpBtn" (click)="showModal()">Help</button>
-              <div id="myModal" class="modal">
-                <div class="modal-content">
-                  <span class="close" (click)="closeModal()">&times;</span>
-                  <p>For help, contact the team:</p>
-                  <p>Frederick: fxr233@student.bham.ac.uk, Reuben: rxb208@student.bham.ac.uk</p>
-                  <p>Robert: rxb256@student.bham.ac.uk, Joseph: jfh245@student.bham.ac.uk</p>
-                  <p>Shoaib: sxh1499@student.bham.ac.uk, Matthew: mxh1131@student.bham.ac.uk</p>
-                  <p>Chris: cxw298@student.bham.ac.uk</p>
+              <button class="dropdown-item" id="helpBtn" (click)="openModal(helpModal)">Help</button>
+              <ng-template #helpModal let-modal>
+                <div class="modal-header">
+                  <h4 class="modal-title">Help</h4>
+                  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
                 </div>
-              </div>
+                <div class="modal-body">
+                  <p>If you need any help, please contact any member of the team:</p>
+                  <ul>
+                    <li>Frederick: fxr233@student.bham.ac.uk</li>
+                    <li>Reuben: rxb208@student.bham.ac.uk</li>
+                    <li>Robert: rxb256@student.bham.ac.uk</li>
+                    <li>Joseph: jfh245@student.bham.ac.uk</li>
+                    <li>Shoaib: sxh1499@student.bham.ac.uk</li>
+                    <li>Matthew: mxh1131@student.bham.ac.uk</li>
+                    <li>Chris: cxw298@student.bham.ac.uk</li>
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>
+                </div>
+              </ng-template>
             </li>
             <li>
               <a class="dropdown-item" id="gdprBtn" (click)="collapseNavbar()" [routerLink]="['/gdpr-policy']"> GDPR Policy </a>
