@@ -114,7 +114,7 @@ public class StreamRefresher {
             }
 
             // Mark that the user's music profile has just been updated
-            feedService.updateMusicProfile(appUser);
+            feedService.updateUsersMusicProfile(appUser);
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             // If any of the requests fail, we will still execute the other ones
             System.out.println("Failed to get streams for an appUser, Error: " + e.getMessage());
