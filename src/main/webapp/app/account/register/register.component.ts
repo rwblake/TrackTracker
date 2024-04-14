@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE, SPOTIFY_ID_ALREADY_USED_TYPE } from 'app/config/error.constants';
 import { RegisterService } from './register.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
 function nameValidator(control: AbstractControl): { [key: string]: any } | null {
   const valid = /^[a-zA-Z]*$/.test(control.value);
@@ -74,7 +75,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }),
   });
 
-  constructor(private registerService: RegisterService, private modalService: NgbModal) {}
+  constructor(private registerService: RegisterService, private modalService: NgbModal, private router: Router) {}
 
   public ngOnInit(): void {
     // Access previous form data
@@ -145,6 +146,14 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       next: this.processAuthenticationURIResponse,
       error: this.processAuthenticationURIError,
     });
+  }
+
+  // Unlinks a user's account from the login, allowing them to re-link with another
+  public unlinkAccount(): void {
+    // Strip the URL of the query params, and remove the auth codes
+    this.router.navigateByUrl(this.router.url.split('?')[0]);
+    this.registerForm.get('spotifyAuthCode')?.setValue('');
+    this.registerForm.get('spotifyAuthState')?.setValue('');
   }
 
   private processAuthenticationURIResponse(response: HttpResponse<URL>): void {

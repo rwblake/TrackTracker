@@ -243,6 +243,16 @@
               <span class="logo-img"></span>
             </div>
           </button>
+
+          <button
+            *ngIf="registerForm.get('spotifyAuthCode')!.valid && registerForm.get('spotifyAuthState')!.valid"
+            type="button"
+            class="button secondary"
+            (click)="unlinkAccount()"
+          >
+            <span>Unlink Spotify account</span>
+            <span class="logo-img"></span>
+          </button>
         </div>
 
         <div class="form-check mb-3">
