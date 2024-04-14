@@ -187,7 +187,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: teamproject@localhost
+    from: TrackTracker <team53project@outlook.com>
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**

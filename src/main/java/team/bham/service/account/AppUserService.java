@@ -131,7 +131,7 @@ public class AppUserService extends team.bham.service.UserService {
         newUser.setImageUrl(appUserVM.getImageUrl());
         newUser.setLangKey(appUserVM.getLangKey());
         // new user is not active
-        newUser.setActivated(true); // TODO: change this to deactivated so that you need to receive an email
+        newUser.setActivated(false); // TODO: change this to deactivated so that you need to receive an email
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
@@ -154,7 +154,6 @@ public class AppUserService extends team.bham.service.UserService {
         // Create an AppUser
         AppUser newAppUser = new AppUser();
         newAppUser.setSpotifyID(spotifyID);
-        //        newAppUser.setBio(appUserVM.getBio());
         newAppUser.setSpotifyUsername(spotifyDisplayName);
         newAppUser.setName("UNUSED FIELD");
         if (spotifyUser.getImages() != null && spotifyUser.getImages().length != 0) {

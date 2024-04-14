@@ -147,8 +147,8 @@ public class AccountResource {
             spotifyDisplayName,
             credentials
         );
-        // Send email to verify account TODO: Uncomment this once authorisation via email works
-        //        mailService.sendActivationEmail(appUser.getInternalUser());
+        // Send email to verify account
+        mailService.sendActivationEmail(appUser.getInternalUser());
     }
 
     /**
