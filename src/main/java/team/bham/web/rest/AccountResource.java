@@ -1,6 +1,5 @@
 package team.bham.web.rest;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -172,7 +171,7 @@ public class AccountResource {
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key) {
         Optional<User> user = userService.activateRegistration(key);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this activation key");
         }
     }
@@ -229,9 +228,7 @@ public class AccountResource {
 
         List<FeedCardResponse> frontendFeedCards = this.feedCardService.generateFrontendCards(feedCards);
 
-        AccountCombinedResponse response = new AccountCombinedResponse(appUser.get(), friends, frontendFeedCards, pinnedFriends);
-
-        return response;
+        return new AccountCombinedResponse(appUser.get(), friends, frontendFeedCards, pinnedFriends);
     }
 
     @GetMapping("/account-user")
@@ -316,7 +313,7 @@ public class AccountResource {
         }
         Optional<User> user = userService.completePasswordReset(keyAndPassword.getNewPassword(), keyAndPassword.getKey());
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new AccountResourceException("No user was found for this reset key");
         }
     }

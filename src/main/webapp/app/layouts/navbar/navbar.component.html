@@ -383,9 +383,9 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu">
+          <button class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu">
             <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
-          </a>
+          </button>
           <ul class="dropdown-menu profile-menu" ngbDropdownMenu aria-labelledby="profile-menu" id="dropdown">
             <li>
               <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile </a>
@@ -406,42 +406,9 @@
             <hr />
             <li>
               <button class="dropdown-item" id="helpBtn" (click)="openModal(helpModal)">Help</button>
-              <ng-template #helpModal let-modal>
-                <div class="modal-header">
-                  <h4 class="modal-title">Help</h4>
-                  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-                </div>
-                <div class="modal-body">
-                  <p>If you need any help, please contact any member of the team:</p>
-                  <ul>
-                    <li>Frederick: fxr233@student.bham.ac.uk</li>
-                    <li>Reuben: rxb208@student.bham.ac.uk</li>
-                    <li>Robert: rxb256@student.bham.ac.uk</li>
-                    <li>Joseph: jfh245@student.bham.ac.uk</li>
-                    <li>Shoaib: sxh1499@student.bham.ac.uk</li>
-                    <li>Matthew: mxh1131@student.bham.ac.uk</li>
-                    <li>Chris: cxw298@student.bham.ac.uk</li>
-                  </ul>
-                </div>
-                <!--                <div class="modal-footer">-->
-                <!--                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>-->
-                <!--                </div>-->
-              </ng-template>
             </li>
             <li>
               <button class="dropdown-item" id="gdprBtn" (click)="openModal(gdprModal)">GDPR Policy</button>
-              <ng-template #gdprModal let-modal>
-                <div class="modal-header">
-                  <h4 class="modal-title">GDPR Privacy Policy</h4>
-                  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-                </div>
-                <div class="modal-body">
-                  <jhi-gdpr-policy></jhi-gdpr-policy>
-                </div>
-                <!--                <div class="modal-footer">-->
-                <!--                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>-->
-                <!--                </div>-->
-              </ng-template>
             </li>
             <li>
               <button class="dropdown-item" (click)="logout()">Logout</button>
@@ -549,3 +516,38 @@
     </div>
   </div>
 </nav>
+
+<ng-template #helpModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Help</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>If you need any help, please contact any member of the team:</p>
+    <ul>
+      <li>Frederick: fxr233@student.bham.ac.uk</li>
+      <li>Reuben: rxb208@student.bham.ac.uk</li>
+      <li>Robert: rxb256@student.bham.ac.uk</li>
+      <li>Joseph: jfh245@student.bham.ac.uk</li>
+      <li>Shoaib: sxh1499@student.bham.ac.uk</li>
+      <li>Matthew: mxh1131@student.bham.ac.uk</li>
+      <li>Chris: cxw298@student.bham.ac.uk</li>
+    </ul>
+  </div>
+  <!--                <div class="modal-footer">-->
+  <!--                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>-->
+  <!--                </div>-->
+</ng-template>
+
+<ng-template #gdprModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">GDPR Privacy Policy</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <jhi-gdpr-policy></jhi-gdpr-policy>
+  </div>
+  <!--                <div class="modal-footer">-->
+  <!--                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>-->
+  <!--                </div>-->
+</ng-template>

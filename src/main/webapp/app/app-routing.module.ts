@@ -73,7 +73,7 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
         navbarRoute,
         ...errorRoute,
       ],
-      { enableTracing: DEBUG_INFO_ENABLED }
+      { enableTracing: false } // Set as true to view the router info on the console
     ),
   ],
   exports: [RouterModule],

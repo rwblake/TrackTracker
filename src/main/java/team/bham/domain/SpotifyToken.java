@@ -71,8 +71,6 @@ public class SpotifyToken implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    /** @deprecated Prefer the new constructor which initialises required fields of the entity */
-    @Deprecated
     public SpotifyToken() {}
 
     /** Used to establish initial required variables */
