@@ -341,6 +341,10 @@ jhi-password-strength-bar {
   }
 }
 
+.modal-body {
+  scroll-behavior: smooth;
+}
+
 /* ==========================================================================
 angular-cli removes postcss-rtl processed inline css, processed rules must be added here instead
 ========================================================================== */
