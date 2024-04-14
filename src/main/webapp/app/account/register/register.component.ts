@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 
 import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE, SPOTIFY_ID_ALREADY_USED_TYPE } from 'app/config/error.constants';
 import { RegisterService } from './register.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 function nameValidator(control: AbstractControl): { [key: string]: any } | null {
   const valid = /^[a-zA-Z]*$/.test(control.value);
@@ -68,9 +69,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
+    agreeGdpr: new FormControl(false, {
+      validators: [Validators.requiredTrue],
+    }),
   });
 
-  constructor(private registerService: RegisterService) {}
+  constructor(private registerService: RegisterService, private modalService: NgbModal) {}
 
   public ngOnInit(): void {
     // Access previous form data
@@ -162,5 +166,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     } else {
       this.error = true;
     }
+  }
+
+  openModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { scrollable: true });
   }
 }

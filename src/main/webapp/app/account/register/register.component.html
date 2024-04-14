@@ -245,8 +245,29 @@
           </button>
         </div>
 
+        <div class="form-check mb-3">
+          <label class="form-check-label" for="agreeGdpr">
+            <input class="form-check-input" type="checkbox" name="agreeGdpr" id="agreeGdpr" formControlName="agreeGdpr" />
+            <span>I agree to the </span>
+          </label>
+          <a class="link" (click)="openModal(gdprModal)">GDPR Privacy Policy</a>
+        </div>
+
         <button type="submit" [disabled]="registerForm.invalid" class="button primary mb-5" data-cy="submit">Create account</button>
       </form>
     </div>
   </div>
 </div>
+
+<ng-template #gdprModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">GDPR Privacy Policy</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <jhi-gdpr-policy></jhi-gdpr-policy>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
