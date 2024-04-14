@@ -47,6 +47,7 @@ export class NavbarComponent implements OnInit {
   }
 
   openModal(content: TemplateRef<any>) {
+    this.collapseNavbar();
     this.modalService.open(content, { scrollable: true });
   }
 

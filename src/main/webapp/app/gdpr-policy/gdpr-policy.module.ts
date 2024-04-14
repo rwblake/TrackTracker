@@ -7,5 +7,6 @@ import { GdprPolicyComponent } from './gdpr-policy.component';
 @NgModule({
   declarations: [GdprPolicyComponent],
   imports: [CommonModule, GdprPolicyRoutingModule],
+  exports: [GdprPolicyComponent],
 })
 export class GdprPolicyModule {}

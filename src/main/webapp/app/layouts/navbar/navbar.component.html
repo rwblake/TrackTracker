@@ -429,7 +429,19 @@
               </ng-template>
             </li>
             <li>
-              <a class="dropdown-item" id="gdprBtn" (click)="collapseNavbar()" [routerLink]="['/gdpr-policy']"> GDPR Policy </a>
+              <button class="dropdown-item" id="gdprBtn" (click)="openModal(gdprModal)">GDPR Policy</button>
+              <ng-template #gdprModal let-modal>
+                <div class="modal-header">
+                  <h4 class="modal-title">GDPR Privacy Policy</h4>
+                  <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+                </div>
+                <div class="modal-body">
+                  <jhi-gdpr-policy></jhi-gdpr-policy>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="button secondary" (click)="modal.close('Close click')">Close</button>
+                </div>
+              </ng-template>
             </li>
             <li>
               <button class="dropdown-item" (click)="logout()">Logout</button>
