@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './footer.component.html',
 })
 export class FooterComponent {
-  private modalService = inject(NgbModal);
+  constructor(private modalService: NgbModal) {}
 
   openModal(content: TemplateRef<any>) {
     this.modalService.open(content, { scrollable: true });

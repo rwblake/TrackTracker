@@ -2,15 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
 import { Router } from '@angular/router';
-import { LoginService } from 'app/login/login.service';
 import { IAppUser } from '../entities/app-user/app-user.model';
 import { takeUntil } from 'rxjs/operators';
 import { AccountService } from '../core/auth/account.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Account } from 'app/core/auth/account.model';
-import { PlaylistService } from '../entities/playlist/service/playlist.service';
 import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { IFriend } from '../friends/friend.model';
 
 @Component({
@@ -43,14 +41,14 @@ export class ProfileComponent implements OnInit {
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => (this.account = account));
-    this.accountService.fetchUser().subscribe(
-      (data: IAppUser) => {
+    this.accountService.fetchUser().subscribe({
+      next: (data: IAppUser) => {
         this.user = data;
       },
-      error => {
+      error: error => {
         console.error('Error fetching user bio:', error);
-      }
-    );
+      },
+    });
     const playlists$ = this.playlistInsightsService.retrieveUserPlaylists();
     playlists$.subscribe(playlists => {
       if (Array.isArray(playlists)) {
@@ -65,7 +63,7 @@ export class ProfileComponent implements OnInit {
     this.http.get<IFriend[]>('/api/friends').subscribe({ next: v => (this.friends = v) });
   }
 
-  goToPlaylist(id: number) {
-    this.router.navigate(['/insights/playlist'], { queryParams: { playlistID: id } });
+  async goToPlaylist(id: number) {
+    await this.router.navigate(['/insights/playlist'], { queryParams: { playlistID: id } });
   }
 }
