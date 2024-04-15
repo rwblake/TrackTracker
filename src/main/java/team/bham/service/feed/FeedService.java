@@ -37,8 +37,10 @@ public class FeedService {
         feedRepository.save(feed);
     }
 
+    /** Refreshes the user's feed with new cards, and updates the timestamp for last Music Profile update */
     public void updateUsersMusicProfile(AppUser appUser) {
         Feed feed = appUser.getFeed();
+
         feed.setLastUpdated(Instant.now());
         feedRepository.save(feed);
     }

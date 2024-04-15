@@ -90,7 +90,7 @@ public class StreamRefresher {
             lastStream = lastStream.plusSeconds(1); // Stops issues with duplicate tracks around this time
 
             // Setup API object
-            SpotifyApi spotifyApi = spotifyAuthorisationService.getAPI(appUser);
+            SpotifyApi spotifyApi = spotifyAuthorisationService.getApi(appUser);
 
             // Get streams
             PlayHistory[] playHistory = spotifyApi

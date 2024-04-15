@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.FriendRequest;
 import team.bham.repository.FriendRequestRepository;
+import team.bham.service.FriendService;
 import team.bham.web.rest.errors.BadRequestAlertException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -35,9 +36,11 @@ public class FriendRequestResource {
     private String applicationName;
 
     private final FriendRequestRepository friendRequestRepository;
+    private final FriendService friendService;
 
-    public FriendRequestResource(FriendRequestRepository friendRequestRepository) {
+    public FriendRequestResource(FriendRequestRepository friendRequestRepository, FriendService friendService) {
         this.friendRequestRepository = friendRequestRepository;
+        this.friendService = friendService;
     }
 
     /**
@@ -50,10 +53,14 @@ public class FriendRequestResource {
     @PostMapping("/friend-requests")
     public ResponseEntity<FriendRequest> createFriendRequest(@Valid @RequestBody FriendRequest friendRequest) throws URISyntaxException {
         log.debug("REST request to save FriendRequest : {}", friendRequest);
-        if (friendRequest.getId() != null) {
-            throw new BadRequestAlertException("A new friendRequest cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        FriendRequest result = friendRequestRepository.save(friendRequest);
+        if (friendRequest.getId() != null) throw new BadRequestAlertException(
+            "A new friendRequest cannot already have an ID",
+            ENTITY_NAME,
+            "idexists"
+        );
+
+        FriendRequest result = friendService.createFriendRequest(friendRequest);
+
         return ResponseEntity
             .created(new URI("/api/friend-requests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))

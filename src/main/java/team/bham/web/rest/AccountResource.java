@@ -130,7 +130,7 @@ public class AccountResource {
             );
         }
 
-        SpotifyApi spotifyApi = spotifyAuthorisationService.getAPI(credentials);
+        SpotifyApi spotifyApi = spotifyAuthorisationService.getApi(credentials);
 
         System.out.println("Created Spotify API object with Access Token: " + spotifyApi.getAccessToken());
 

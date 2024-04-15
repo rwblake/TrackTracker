@@ -20,6 +20,7 @@ import team.bham.domain.*;
 import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.*;
 import team.bham.security.AuthoritiesConstants;
+import team.bham.service.UserService;
 import team.bham.service.spotify.SpotifyAuthorisationService;
 import team.bham.web.rest.vm.ManagedAppUserVM;
 import tech.jhipster.security.RandomUtil;
@@ -30,13 +31,9 @@ import tech.jhipster.security.RandomUtil;
 public class AppUserService extends team.bham.service.UserService {
 
     private final Logger log = LoggerFactory.getLogger(AppUserService.class);
-
-    // Required repositories (entities) go here:
     private final AppUserRepository appUserRepository;
-    private final SpotifyTokenRepository spotifyTokenRepository;
-    private final UserPreferencesRepository userPreferencesRepository;
-    private final FeedRepository feedRepository;
     private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final UserService userService;
 
     public AppUserService(
         UserRepository userRepository,
@@ -44,17 +41,13 @@ public class AppUserService extends team.bham.service.UserService {
         AuthorityRepository authorityRepository,
         CacheManager cacheManager,
         AppUserRepository appUserRepository,
-        SpotifyTokenRepository spotifyTokenRepository,
-        UserPreferencesRepository userPreferencesRepository,
-        FeedRepository feedRepository,
-        SpotifyAuthorisationService spotifyAuthorisationService
+        SpotifyAuthorisationService spotifyAuthorisationService,
+        UserService userService
     ) {
         super(userRepository, passwordEncoder, authorityRepository, cacheManager);
         this.appUserRepository = appUserRepository;
-        this.spotifyTokenRepository = spotifyTokenRepository;
-        this.userPreferencesRepository = userPreferencesRepository;
-        this.feedRepository = feedRepository;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.userService = userService;
     }
 
     protected boolean removeNonActivatedAppUser(AppUser existingUser) {
@@ -147,7 +140,7 @@ public class AppUserService extends team.bham.service.UserService {
         spotifyToken.setRefreshToken(spotifyCredentials.getRefreshToken());
 
         // Get profile information from SpotifyAPI
-        SpotifyApi spotifyApi = this.spotifyAuthorisationService.getSpotifyApiForCurrentUser();
+        SpotifyApi spotifyApi = this.spotifyAuthorisationService.getApiForCurrentUser();
         spotifyApi.setAccessToken(spotifyToken.getAccessToken());
         se.michaelthelin.spotify.model_objects.specification.User spotifyUser = spotifyApi.getUsersProfile(spotifyID).build().execute();
 
@@ -192,5 +185,17 @@ public class AppUserService extends team.bham.service.UserService {
         log.debug("Created Information for AppUser: {}", newAppUser);
 
         return newAppUser;
+    }
+
+    /** Find the current user and check they have an associated AppUser entity */
+    public AppUser getCurrentAppUser() throws NoAppUserException {
+        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
+            // Logged in
+            return this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
+        } else {
+            // Not logged in
+            throw new NoAppUserException();
+        }
     }
 }

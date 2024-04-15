@@ -2,18 +2,8 @@ package team.bham.web.rest;
 
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.hc.core5.http.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.*;
-import team.bham.domain.Card;
-import team.bham.domain.PlaylistStats;
-import team.bham.repository.AppUserRepository;
-import team.bham.repository.PlaylistRepository;
 import team.bham.service.PlaylistService;
-import team.bham.service.PlaylistStatsService;
 import team.bham.service.UserService;
 import team.bham.service.account.AppUserService;
-import team.bham.service.account.NoAppUserException;
 import team.bham.service.feed.CardService;
 import team.bham.service.spotify.*;
 
@@ -38,10 +22,7 @@ import team.bham.service.spotify.*;
 @Transactional
 public class PlaylistInsightsResource {
 
-    private final Logger log = LoggerFactory.getLogger(PlaylistInsightsResource.class);
-
     private final PlaylistService playlistService;
-    private final PlaylistRepository playlistRepository;
     private final SpotifyAuthorisationService spotifyAuthorisationService;
     private final CardService cardService;
     private final UserService userService;
@@ -49,14 +30,12 @@ public class PlaylistInsightsResource {
 
     public PlaylistInsightsResource(
         PlaylistService playlistService,
-        PlaylistRepository playlistRepository,
         SpotifyAuthorisationService spotifyAuthorisationService,
         CardService cardService,
         UserService userService,
         AppUserService appUserService
     ) {
         this.playlistService = playlistService;
-        this.playlistRepository = playlistRepository;
         this.spotifyAuthorisationService = spotifyAuthorisationService;
         this.cardService = cardService;
         this.userService = userService;
@@ -86,7 +65,7 @@ public class PlaylistInsightsResource {
     }
 
     private team.bham.domain.Playlist createPlaylistEntity(String spotifyID) throws IOException, ParseException, SpotifyWebApiException {
-        SpotifyApi spotifyApi = this.spotifyAuthorisationService.getSpotifyApiForCurrentUser();
+        SpotifyApi spotifyApi = spotifyAuthorisationService.getApiForCurrentUser();
         Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
 
         return playlistService.createPlaylist(playlist, spotifyApi);

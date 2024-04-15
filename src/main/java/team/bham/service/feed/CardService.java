@@ -3,21 +3,22 @@ package team.bham.service.feed;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
-import javax.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import team.bham.domain.AppUser;
 import team.bham.domain.Card;
 import team.bham.domain.Feed;
-import team.bham.domain.FeedCard;
 import team.bham.domain.enumeration.CardType;
 import team.bham.repository.CardRepository;
-import team.bham.repository.FeedRepository;
+import team.bham.service.account.AppUserService;
 
 @Service
 public class CardService {
 
     private final CardRepository cardRepository;
     private final FeedService feedService;
+    private final Logger log = LoggerFactory.getLogger(CardService.class);
 
     public CardService(CardRepository cardRepository, FeedService feedService) {
         this.cardRepository = cardRepository;
@@ -35,6 +36,7 @@ public class CardService {
      * @return The card once it has been saved in the database*/
     @Deprecated
     public Card createCard(AppUser appUser, CardType cardType, Duration timeFrame, Integer metricValue) {
+        log.debug("Making a new card");
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -54,6 +56,7 @@ public class CardService {
      * @param friendID the AppUser id of the friend
      * @return The card once it has been saved in the database*/
     public Card createNewFriendCard(AppUser appUser, Long friendID) {
+        log.debug("Making a new NewFriend card");
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -76,6 +79,7 @@ public class CardService {
      * @param friendID the AppUser id of the friend who is requesting to follow you
      * @return The card once it has been saved in the database*/
     public Card createFriendRequestCard(AppUser appUser, Long friendID) {
+        log.debug("Making a new FriendRequest card");
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -100,6 +104,8 @@ public class CardService {
      *
      * @return The card once it has been saved in the database, or Empty if the card already exists as a Card for the user.*/
     public Optional<Card> createNewPlaylistCard(AppUser appUser, Long playlistID) {
+        log.debug("Making a new NewPlaylist card");
+
         // Check that the card doesn't already exist in the database
         if (
             cardRepository.findOneByAppUserAndMetricAndMetricValue(appUser, CardType.NEW_PLAYLIST, playlistID.intValue()).isPresent()
@@ -129,6 +135,7 @@ public class CardService {
      *
      * @return The card once it has been saved in the database*/
     public Card createMilestone(AppUser appUser, CardType metric, Integer value) {
+        log.debug("Making a new Milestone card");
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -155,6 +162,8 @@ public class CardService {
      *
      * @return The card once it has been saved in the database*/
     public Card createInsightCard(AppUser appUser, CardType metric, Integer value, Duration timeFrame) {
+        log.debug("Making a new Insight card");
+
         // create a new card
         Card card = new Card();
         // assign the given values
@@ -175,6 +184,8 @@ public class CardService {
      *
      * @return The card once it has been saved in the database*/
     public Card createPinnedFriendCard(AppUser appUser, Long friendID) {
+        log.debug("Making a new PinnedFriend card");
+
         // create a new card
         Card card = new Card();
         // assign the given values

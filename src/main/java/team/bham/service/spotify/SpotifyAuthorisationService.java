@@ -2,13 +2,12 @@ package team.bham.service.spotify;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
 import javax.servlet.http.HttpSession;
 import org.apache.hc.core5.http.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.SpotifyHttpManager;
@@ -16,19 +15,17 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
-import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import team.bham.domain.AppUser;
 import team.bham.domain.SpotifyToken;
 import team.bham.domain.User;
 import team.bham.repository.AppUserRepository;
 import team.bham.service.UserService;
-import team.bham.service.account.AppUserService;
+import team.bham.service.account.NoAppUserException;
 
 /** Handles authorising a spotify account, getting tokens and refreshing tokens. */
 @Service
 public class SpotifyAuthorisationService {
 
-    // Static - can be shared between authentication requests
     private static final String clientId = CredentialsParser.parseCredentials()[0];
     private static final String clientSecret = CredentialsParser.parseCredentials()[1];
 
@@ -38,22 +35,22 @@ public class SpotifyAuthorisationService {
         "user-read-recently-played, user-library-read, " +
         "user-read-email";
 
-    // Non-Static - specific to each authentication request
-    private final UserService userService;
-    private final AppUserRepository appUserRepository;
+    private final Logger log = LoggerFactory.getLogger(SpotifyAuthorisationService.class);
     private final TokenRefresher tokenRefresher;
     private final HttpSession httpSession; // Allows access to each Http session
+    private final UserService userService;
+    private final AppUserRepository appUserRepository;
 
     public SpotifyAuthorisationService(
-        UserService userService,
-        AppUserRepository appUserRepository,
         TokenRefresher tokenRefresher,
-        HttpSession httpSession
+        HttpSession httpSession,
+        UserService userService,
+        AppUserRepository appUserRepository
     ) {
-        this.userService = userService;
-        this.appUserRepository = appUserRepository;
         this.tokenRefresher = tokenRefresher;
         this.httpSession = httpSession;
+        this.userService = userService;
+        this.appUserRepository = appUserRepository;
     }
 
     /** Get the URI for the page which allows a user to connect their Spotify account to our app.
@@ -130,18 +127,18 @@ public class SpotifyAuthorisationService {
 
             return authorisationCodeCredentials;
         } catch (IOException | ParseException | SpotifyWebApiException e) {
-            e.printStackTrace();
+            log.error("There was an error whilst initialising credentials.", e);
             return null;
         }
     }
 
     /**
-     * Creates a new API object, given credentials (used during initial account authorisation).
+     * Creates a new API object, given credentials from initial account authorisation.
      *
      * @param credentials The access credentials for a user
      * @return A new SpotifyAPI object (null, if there was an error)
      */
-    public SpotifyApi getAPI(AuthorizationCodeCredentials credentials) {
+    public SpotifyApi getApi(AuthorizationCodeCredentials credentials) {
         SpotifyApi spotifyApi = SpotifyApi.builder().setClientId(clientId).setClientSecret(clientSecret).build();
         spotifyApi.setAccessToken(credentials.getAccessToken());
         spotifyApi.setRefreshToken(credentials.getRefreshToken());
@@ -155,7 +152,7 @@ public class SpotifyAuthorisationService {
      * @param appUser The appUser to be logged into the API
      * @return A new SpotifyAPI object (null, if there was an error)
      */
-    public SpotifyApi getAPI(AppUser appUser) throws IOException, ParseException, SpotifyWebApiException {
+    public SpotifyApi getApi(AppUser appUser) throws IOException, ParseException, SpotifyWebApiException {
         SpotifyToken spotifyToken = appUser.getSpotifyToken();
 
         // Setup API object
@@ -176,26 +173,39 @@ public class SpotifyAuthorisationService {
         return spotifyApi;
     }
 
-    /** Create a SpotifyAPI object that is either authenticated with the current user, or for public access */
-    public SpotifyApi getSpotifyApiForCurrentUser() throws IOException, ParseException, SpotifyWebApiException {
-        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
+    /**
+     * Creates a new API object using the Client Credentials Flow.
+     * @return A new SpotifyAPI object (null, if there was an error)
+     */
+    public SpotifyApi getApi() throws IOException, ParseException, SpotifyWebApiException {
         String[] credentials = CredentialsParser.parseCredentials();
+
+        // Create new spotifyApi
         SpotifyApi spotifyApi = SpotifyApi.builder().setClientId(credentials[0]).setClientSecret(credentials[1]).build();
-        String accessToken;
 
-        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
-            // Logged in
-            // Return API object with Authorisation Code Flow
-            accessToken = appUserRepository.getAppUserByInternalUser(userMaybe.get()).getSpotifyToken().getAccessToken();
-        } else {
-            // Not logged in
-            // Return API object with Client Credentials Flow
-            ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
-            ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-            accessToken = clientCredentials.getAccessToken();
+        // Return API object with Client Credentials Flow
+        // Update the SpotifyApi object with Client's access token
+        ClientCredentials clientCredentials = spotifyApi.clientCredentials().build().execute();
+
+        // Update the SpotifyApi object with Client's access token
+        spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+
+        return spotifyApi;
+    }
+
+    /** Create a SpotifyAPI object that is either authenticated with the current user, or for public access */
+    public SpotifyApi getApiForCurrentUser() throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyApi spotifyApi;
+
+        try {
+            // Get the current AppUser
+            AppUser currentAppUser = getCurrentAppUser();
+            // Get Spotify Api (refreshing the tokens if necessary)
+            spotifyApi = getApi(currentAppUser);
+        } catch (NoAppUserException e) {
+            // Get api using Client Credentials Flow
+            spotifyApi = getApi();
         }
-
-        spotifyApi.setAccessToken(accessToken);
 
         return spotifyApi;
     }
@@ -208,15 +218,25 @@ public class SpotifyAuthorisationService {
         StringBuilder sb = new StringBuilder(n);
 
         for (int i = 0; i < n; i++) {
-            // generate a random number between 0 to AlphaNumericString variable length
+            // Generate a random number between 0 to AlphaNumericString variable length
             int index = (int) (AlphaNumericString.length() * Math.random());
 
-            // add Character one by one in end of sb
+            // Add Character one by one in end of sb
             sb.append(AlphaNumericString.charAt(index));
         }
 
-        //        System.out.println("generated string: " + sb);
         return sb.toString();
+    }
+
+    private AppUser getCurrentAppUser() throws NoAppUserException {
+        Optional<User> userMaybe = userService.getUserWithAuthorities();
+        if (userMaybe.isPresent() && appUserRepository.existsByInternalUser(userMaybe.get())) {
+            // Logged in
+            return appUserRepository.getAppUserByInternalUser(userMaybe.get());
+        } else {
+            // Not logged in
+            throw new NoAppUserException();
+        }
     }
     // TODO: getter for access token - useful or storing in database or accessing from other areas of codebase
     //    public String getAccessToken() {

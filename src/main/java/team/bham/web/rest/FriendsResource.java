@@ -5,9 +5,10 @@ import static java.util.stream.Stream.concat;
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -16,52 +17,42 @@ import team.bham.domain.enumeration.CardType;
 import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.*;
 import team.bham.service.FriendService;
-import team.bham.service.UserService;
+import team.bham.service.account.AppUserService;
+import team.bham.service.account.NoAppUserException;
 
 @RestController
 @RequestMapping("/api")
 @Transactional
 public class FriendsResource {
 
+    private final Logger log = LoggerFactory.getLogger(FriendsResource.class);
     private final FriendRequestRepository friendRequestRepository;
     private final AppUserRepository appUserRepository;
-    private final UserService userService;
     private final FriendshipRepository friendshipRepository;
     private final CardRepository cardRepository;
     private final FriendService friendService;
+    private final AppUserService appUserService;
 
     public FriendsResource(
         FriendRequestRepository friendRequestRepository,
         AppUserRepository appUserRepository,
-        UserService userService,
         FriendshipRepository friendshipRepository,
         CardRepository cardRepository,
-        FriendService friendService
+        FriendService friendService,
+        AppUserService appUserService
     ) {
         this.friendRequestRepository = friendRequestRepository;
         this.appUserRepository = appUserRepository;
-        this.userService = userService;
         this.friendshipRepository = friendshipRepository;
         this.cardRepository = cardRepository;
         this.friendService = friendService;
-    }
-
-    /** Find the current user and check they have an associated AppUser entity */
-    private AppUser getCurrentUser() throws Exception {
-        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
-        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
-            // Logged in
-            return this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
-        } else {
-            // Not logged in
-            throw new Exception("Current User is not related to an AppUser.");
-        }
+        this.appUserService = appUserService;
     }
 
     @GetMapping("/friends/appUsers")
-    public List<AppUser> getAppUsers() throws Exception {
+    public List<AppUser> getAppUsers() throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         List<Long> badIds = new ArrayList<>();
 
         // Only return users that aren't
@@ -112,25 +103,25 @@ public class FriendsResource {
     }
 
     @GetMapping("/friends")
-    public List<Friend> getFriendships() throws Exception {
+    public List<Friend> getFriendships() throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         return this.friendService.getFriends(currentUser);
     }
 
     @GetMapping("/friends/requests")
-    public List<FriendRequest> getFriendRequests() throws Exception {
+    public List<FriendRequest> getFriendRequests() throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         // Get the friend requests from database
         return friendRequestRepository.findAllByToAppUser(currentUser);
     }
 
     @GetMapping("/friends/blocked")
-    public List<AppUser> getBlocked() throws Exception {
+    public List<AppUser> getBlocked() throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
-        return currentUser.getBlockedUsers().stream().collect(Collectors.toList());
+        AppUser currentUser = appUserService.getCurrentAppUser();
+        return new ArrayList<>(currentUser.getBlockedUsers());
     }
 
     private HashMap<String, Integer> genreFrequencies(AppUser appUser) {
@@ -171,9 +162,9 @@ public class FriendsResource {
     }
 
     @GetMapping("/friends/recommendations")
-    public List<FriendRecommendation> getRecommendations() throws Exception {
+    public List<FriendRecommendation> getRecommendations() throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
 
         // Get available app users (not already friends/ blocked)
         List<AppUser> appUsers = getAppUsers();
@@ -190,36 +181,21 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/accept")
-    public List<FriendRequest> acceptFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
-        // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
-
-        // Find the friend request
-        FriendRequest friendRequest = this.friendRequestRepository.getReferenceById(friendRequestId);
-        AppUser requestUser = friendRequest.getInitiatingAppUser();
-
-        // Check they are the recipient of the friend request
-        if (currentUser.getId() != friendRequest.getToAppUser().getId()) {
-            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
+    public List<FriendRequest> acceptFriendRequest(@Valid @RequestBody Long friendRequestId) throws NoAppUserException {
+        try {
+            friendService.acceptFriendRequest(friendRequestId);
+        } catch (NoAppUserException e) {
+            log.error("No AppUser was logged in");
+        } catch (IllegalArgumentException e) {
+            log.error("Cannot accept a friend request which was not directed toward the logged in AppUser");
         }
-
-        // Create the friendship
-        Friendship myFriendship = new Friendship();
-        myFriendship.setCreatedAt(Instant.now());
-        myFriendship.setFriendAccepting(currentUser);
-        myFriendship.setFriendInitiating(requestUser);
-        this.friendshipRepository.save(myFriendship);
-
-        // Delete the friend request
-        this.friendRequestRepository.delete(friendRequest);
-
         return getFriendRequests();
     }
 
     @PostMapping("/friends/block")
-    public ResponseEntity<Void> blockUser(@Valid @RequestBody Long appUserId) throws Exception {
+    public ResponseEntity<Void> blockUser(@Valid @RequestBody Long appUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         AppUser otherUser = this.appUserRepository.getReferenceById(appUserId);
 
         // Add to blocked list
@@ -239,9 +215,9 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/unblock")
-    public ResponseEntity<Void> unblockUser(@Valid @RequestBody Long appUserId) throws Exception {
+    public ResponseEntity<Void> unblockUser(@Valid @RequestBody Long appUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         AppUser otherUser = this.appUserRepository.getReferenceById(appUserId);
 
         // Remove from blocked list
@@ -254,9 +230,9 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/delete")
-    public ResponseEntity<Void> deleteFriend(@Valid @RequestBody Long friendAppUserId) throws Exception {
+    public ResponseEntity<Void> deleteFriend(@Valid @RequestBody Long friendAppUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
 
         // Delete friendship
         this.friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(currentUser.getId(), friendAppUserId);
@@ -269,9 +245,9 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/reject")
-    public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws Exception {
+    public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
 
         // Find the friend request
         FriendRequest friendRequest = this.friendRequestRepository.getReferenceById(friendRequestId);
@@ -289,9 +265,9 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/pin")
-    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws Exception {
+    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         Card myCard = new Card();
         myCard.setAppUser(currentUser);
         myCard.setMetric(CardType.PINNED_FRIEND);
@@ -302,9 +278,9 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/unpin")
-    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws Exception {
+    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
         this.cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(
                 currentUser.getId(),
                 CardType.PINNED_FRIEND,
@@ -315,7 +291,7 @@ public class FriendsResource {
     @PostMapping("/friends")
     public ResponseEntity<FriendRequest> createFriendRequest(@Valid @RequestBody Long otherAppUserId) throws Exception {
         // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = getCurrentUser();
+        AppUser currentUser = appUserService.getCurrentAppUser();
 
         // Find the user they want to be friends with
         AppUser requestUser;
