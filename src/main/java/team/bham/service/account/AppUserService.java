@@ -131,7 +131,7 @@ public class AppUserService extends team.bham.service.UserService {
         newUser.setImageUrl(appUserVM.getImageUrl());
         newUser.setLangKey(appUserVM.getLangKey());
         // new user is not active
-        newUser.setActivated(false); // TODO: change this to deactivated so that you need to receive an email
+        newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();

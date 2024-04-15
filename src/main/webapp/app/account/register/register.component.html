@@ -26,61 +26,65 @@
         >
       </div>
       <form name="form" role="form" (ngSubmit)="register()" [formGroup]="registerForm" *ngIf="!success">
-        <!-- First name -->
-        <div class="mb-3">
-          <label class="form-label" for="firstName">First name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="firstName"
-            name="firstName"
-            placeholder="Your first name"
-            formControlName="firstName"
-            data-cy="firstName"
-            #focusStart
-          />
+        <div class="row mb-3">
+          <!-- First name -->
+          <div class="col">
+            <label class="form-label" for="firstName">First name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              name="firstName"
+              placeholder="Your first name"
+              formControlName="firstName"
+              data-cy="firstName"
+              #focusStart
+            />
 
-          <ul
-            class="errors"
-            *ngIf="
-              registerForm.get('firstName')!.invalid && (registerForm.get('firstName')!.dirty || registerForm.get('firstName')!.touched)
-            "
-          >
-            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.required">Your first name is required.</li>
+            <ul
+              class="errors mb-0"
+              *ngIf="
+                registerForm.get('firstName')!.invalid && (registerForm.get('firstName')!.dirty || registerForm.get('firstName')!.touched)
+              "
+            >
+              <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.required">Your first name is required.</li>
 
-            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.invalidName">Your first name is invalid.</li>
+              <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.invalidName">Your first name is invalid.</li>
 
-            <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.maxlength">
-              Your last name cannot be longer than 120 characters.
-            </li>
-          </ul>
-        </div>
+              <li class="form-text text-danger" *ngIf="registerForm.get('firstName')?.errors?.maxlength">
+                Your last name cannot be longer than 120 characters.
+              </li>
+            </ul>
+          </div>
 
-        <!-- Last name -->
-        <div class="mb-3">
-          <label class="form-label" for="lastName">Last name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="lastName"
-            name="lastName"
-            placeholder="Your last name"
-            formControlName="lastName"
-            data-cy="lastName"
-          />
+          <!-- Last name -->
+          <div class="col">
+            <label class="form-label" for="lastName">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              name="lastName"
+              placeholder="Your last name"
+              formControlName="lastName"
+              data-cy="lastName"
+            />
 
-          <ul
-            class="errors"
-            *ngIf="registerForm.get('lastName')!.invalid && (registerForm.get('lastName')!.dirty || registerForm.get('lastName')!.touched)"
-          >
-            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.required">Your last name is required.</li>
+            <ul
+              class="errors mb-0"
+              *ngIf="
+                registerForm.get('lastName')!.invalid && (registerForm.get('lastName')!.dirty || registerForm.get('lastName')!.touched)
+              "
+            >
+              <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.required">Your last name is required.</li>
 
-            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.invalidName">Your first name is invalid.</li>
+              <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.invalidName">Your first name is invalid.</li>
 
-            <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.maxlength">
-              Your last name cannot be longer than 120 characters.
-            </li>
-          </ul>
+              <li class="form-text text-danger" *ngIf="registerForm.get('lastName')?.errors?.maxlength">
+                Your last name cannot be longer than 120 characters.
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!--Login (Username)-->

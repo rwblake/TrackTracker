@@ -112,7 +112,10 @@
     </div>
 
     <div *ngSwitchCase="false">
-      <p>You haven't made any friends yet. Find people you know on the <a routerLink="friends">Friends Page</a></p>
+      <p>
+        You haven't made any friends yet. Find people you know on the
+        <a routerLink="friends" (click)="modal.close('Cancel click')">Friends Page</a>
+      </p>
     </div>
   </div>
   <div class="modal-footer">
