@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.apache.hc.core5.http.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,7 @@ public class StreamRefresher {
     private final StreamService streamService;
     private final SongService songService;
     private final FeedService feedService;
+    private final SpotifyAuthorisationService spotifyAuthorisationService;
     private final Logger log = LoggerFactory.getLogger(StreamRefresher.class);
 
     public StreamRefresher(
@@ -43,13 +43,15 @@ public class StreamRefresher {
         StreamRepository streamRepository,
         StreamService streamService,
         SongService songService,
-        FeedService feedService
+        FeedService feedService,
+        SpotifyAuthorisationService spotifyAuthorisationService
     ) {
         this.appUserRepository = appUserRepository;
         this.streamRepository = streamRepository;
         this.streamService = streamService;
         this.songService = songService;
         this.feedService = feedService;
+        this.spotifyAuthorisationService = spotifyAuthorisationService;
     }
 
     @Scheduled(fixedRate = 25 * 60 * 1000)
@@ -69,6 +71,7 @@ public class StreamRefresher {
         }
     }
 
+    /** Refreshes the streams for a given AppUser */
     public void refreshStreamsForUser(AppUser appUser) {
         try {
             // Find last stream (and when it was) to avoid duplication
@@ -87,16 +90,7 @@ public class StreamRefresher {
             lastStream = lastStream.plusSeconds(1); // Stops issues with duplicate tracks around this time
 
             // Setup API object
-            String accessToken = appUser.getSpotifyToken().getAccessToken();
-            String refreshToken = appUser.getSpotifyToken().getRefreshToken();
-            String[] credentials = CredentialsParser.parseCredentials();
-            SpotifyApi spotifyApi = SpotifyApi
-                .builder()
-                .setClientId(credentials[0])
-                .setClientSecret(credentials[1])
-                .setAccessToken(accessToken)
-                .setRefreshToken(refreshToken)
-                .build();
+            SpotifyApi spotifyApi = spotifyAuthorisationService.getAPI(appUser);
 
             // Get streams
             PlayHistory[] playHistory = spotifyApi

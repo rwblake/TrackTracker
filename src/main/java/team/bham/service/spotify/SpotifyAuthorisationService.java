@@ -2,6 +2,8 @@ package team.bham.service.spotify;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
@@ -15,6 +17,8 @@ import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCrede
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import team.bham.domain.AppUser;
+import team.bham.domain.SpotifyToken;
 import team.bham.domain.User;
 import team.bham.repository.AppUserRepository;
 import team.bham.service.UserService;
@@ -35,15 +39,20 @@ public class SpotifyAuthorisationService {
         "user-read-email";
 
     // Non-Static - specific to each authentication request
-    private final SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret).build();
-
     private final UserService userService;
     private final AppUserRepository appUserRepository;
+    private final TokenRefresher tokenRefresher;
     private final HttpSession httpSession; // Allows access to each Http session
 
-    public SpotifyAuthorisationService(UserService userService, AppUserRepository appUserRepository, HttpSession httpSession) {
+    public SpotifyAuthorisationService(
+        UserService userService,
+        AppUserRepository appUserRepository,
+        TokenRefresher tokenRefresher,
+        HttpSession httpSession
+    ) {
         this.userService = userService;
         this.appUserRepository = appUserRepository;
+        this.tokenRefresher = tokenRefresher;
         this.httpSession = httpSession;
     }
 
@@ -127,7 +136,7 @@ public class SpotifyAuthorisationService {
     }
 
     /**
-     * Creates a new API object, given credentials.
+     * Creates a new API object, given credentials (used during initial account authorisation).
      *
      * @param credentials The access credentials for a user
      * @return A new SpotifyAPI object (null, if there was an error)
@@ -136,6 +145,34 @@ public class SpotifyAuthorisationService {
         SpotifyApi spotifyApi = SpotifyApi.builder().setClientId(clientId).setClientSecret(clientSecret).build();
         spotifyApi.setAccessToken(credentials.getAccessToken());
         spotifyApi.setRefreshToken(credentials.getRefreshToken());
+
+        return spotifyApi;
+    }
+
+    /**
+     * Creates a new API object given an AppUser, refreshing their access/refresh tokens if necessary.
+     *
+     * @param appUser The appUser to be logged into the API
+     * @return A new SpotifyAPI object (null, if there was an error)
+     */
+    public SpotifyApi getAPI(AppUser appUser) throws IOException, ParseException, SpotifyWebApiException {
+        SpotifyToken spotifyToken = appUser.getSpotifyToken();
+
+        // Setup API object
+        String accessToken = spotifyToken.getAccessToken();
+        String refreshToken = spotifyToken.getRefreshToken();
+        String[] credentials = CredentialsParser.parseCredentials();
+        SpotifyApi spotifyApi = SpotifyApi
+            .builder()
+            .setClientId(credentials[0])
+            .setClientSecret(credentials[1])
+            .setAccessToken(accessToken)
+            .setRefreshToken(refreshToken)
+            .build();
+
+        // If the token has expired, refresh it
+        if (spotifyToken.getExpires().isBefore(Instant.now())) spotifyApi = tokenRefresher.refreshToken(spotifyApi, spotifyToken);
+
         return spotifyApi;
     }
 
