@@ -1,24 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject, switchMap } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { APP_NAME } from '../app.constants';
-import { IAppUser } from '../entities/app-user/app-user.model';
-import { IUser } from '../entities/user/user.model';
-import { IUserPreferences } from '../entities/user-preferences/user-preferences.model';
-import { IFeed } from '../entities/feed/feed.model';
-import { ICard } from '../entities/card/card.model';
 import dayjs from 'dayjs/esm';
-import { CardType } from '../entities/enumerations/card-type.model';
-import { Account_Combined } from '../account/account_combined.model';
+import { Account_Combined, Friendship } from '../account/account_combined.model';
 import { Account } from '../core/auth/account.model';
-import { error } from '@angular/compiler-cli/src/transformers/util';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import { FriendsService } from '../friends/friends.service';
 
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { trigger, style, transition, animate } from '@angular/animations';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'jhi-home',
@@ -35,10 +29,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   account_data: Account_Combined | null = null;
   loading = true;
+  modalRef: NgbModalRef | undefined;
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private accountService: AccountService, private router: Router, private friendsService: FriendsService) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private friendsService: FriendsService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.loading = true; // enable the loading ui
@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasMaxPinned() {
     if (this.account_data === null) return false;
 
-    return this.account_data && this.account_data.pinnedFriends.length >= 5;
+    return this.account_data && this.getPinnedFriends().length >= 5;
   }
 
   getLastUpdateMessage() {
@@ -122,6 +122,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   unpin(appUserId: number) {
     this.friendsService.unpin(appUserId);
+  }
+
+  getPinnedFriends(): Friendship[] {
+    if (this.account_data) {
+      return this.account_data.friends.filter(friend => friend.pinned);
+    }
+    return [];
+  }
+
+  openModal(content: TemplateRef<any>) {
+    this.modalRef = this.modalService.open(content, { scrollable: true });
+  }
+
+  savePinnedFriends() {
+    if (!this.modalRef) return;
+    this.modalRef.close('Save click');
+    console.log('need to save the pinned and unpinned friends here');
   }
 
   protected readonly APP_NAME = APP_NAME;

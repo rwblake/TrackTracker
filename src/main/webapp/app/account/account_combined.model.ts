@@ -12,10 +12,9 @@ export interface Account_Combined {
   userPreferencesID: number;
   feed: Feed;
   friends: Friendship[];
-  pinnedFriends: Pick<IAppUser, 'id' | 'internalUser' | 'avatarURL' | 'spotifyUsername'>[];
 }
 
-interface Feed {
+export interface Feed {
   id: number;
   lastUpdated: dayjs.Dayjs;
   cards: FeedCard[];
@@ -41,7 +40,7 @@ export interface FeedCard {
   // metric?: CardType | null;
 }
 
-interface InternalUser {
+export interface InternalUser {
   id: number;
   firstName: string;
   lastName: string;
@@ -49,10 +48,11 @@ interface InternalUser {
   email: string;
 }
 
-interface Friendship {
+export interface Friendship {
   createdAt: dayjs.Dayjs;
   friendID: number;
   firstName: string;
   lastName: string;
   avatarURL: string;
+  pinned: boolean;
 }

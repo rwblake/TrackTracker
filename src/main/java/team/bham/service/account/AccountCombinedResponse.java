@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import team.bham.domain.*;
+import team.bham.domain.enumeration.CardType;
 import team.bham.service.feed.FeedCardResponse;
 
 public class AccountCombinedResponse implements Serializable {
@@ -19,7 +20,6 @@ public class AccountCombinedResponse implements Serializable {
     private Long userPreferencesID;
     private FeedResponse feed;
     private List<FriendshipResponse> friends;
-    private List<AppUser> pinnedFriends;
 
     public AccountCombinedResponse(
         AppUser appUser,
@@ -36,8 +36,17 @@ public class AccountCombinedResponse implements Serializable {
         userPreferencesID = appUser.getUserPreferences().getId();
         feed = new FeedResponse(appUser.getFeed());
         feed.setCards(feedCards);
-        this.friends = friends.stream().map(friend -> new FriendshipResponse(friend, appUser.getId())).collect(Collectors.toList());
-        this.pinnedFriends = pinnedFriends;
+
+        this.friends =
+            friends
+                .stream()
+                .map(friend -> {
+                    FriendshipResponse fr = new FriendshipResponse(friend, appUser.getId());
+                    boolean isPinned = pinnedFriends.stream().anyMatch(appUser1 -> appUser1.getId() == fr.getFriendID());
+                    fr.setPinned(isPinned);
+                    return fr;
+                })
+                .collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -110,14 +119,6 @@ public class AccountCombinedResponse implements Serializable {
 
     public void setFriends(List<FriendshipResponse> friends) {
         this.friends = friends;
-    }
-
-    public List<AppUser> getPinnedFriends() {
-        return pinnedFriends;
-    }
-
-    public void setPinnedFriends(List<AppUser> pinnedFriends) {
-        this.pinnedFriends = pinnedFriends;
     }
 }
 
@@ -221,11 +222,12 @@ class FriendshipResponse implements Serializable {
     private String firstName;
     private String lastName;
     private String avatarURL;
+    private boolean pinned;
 
-    public FriendshipResponse(team.bham.domain.Friendship friendship, Long me) {
+    public FriendshipResponse(team.bham.domain.Friendship friendship, Long myId) {
         createdAt = friendship.getCreatedAt();
         AppUser otherPerson;
-        if (friendship.getFriendAccepting().getId().longValue() != me.longValue()) {
+        if (friendship.getFriendAccepting().getId().longValue() != myId.longValue()) {
             otherPerson = friendship.getFriendAccepting();
         } else {
             otherPerson = friendship.getFriendInitiating();
@@ -274,5 +276,13 @@ class FriendshipResponse implements Serializable {
 
     public void setAvatarURL(String avatarURL) {
         this.avatarURL = avatarURL;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 }

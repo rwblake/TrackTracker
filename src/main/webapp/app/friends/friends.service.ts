@@ -58,10 +58,12 @@ export class FriendsService {
     return this.http.post<IFriendRequest[]>(this.resourceUrl + '/reject', id);
   }
 
+  // pins a friend (given their id) for the current user
   pin(id: number) {
     this.http.post(this.resourceUrl + '/pin', id);
   }
 
+  // unpins a friend (given their id) for the current user
   unpin(id: number) {
     this.http.post(this.resourceUrl + '/unpin', id);
   }
