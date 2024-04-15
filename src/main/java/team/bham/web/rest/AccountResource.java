@@ -232,11 +232,11 @@ public class AccountResource {
     }
 
     @GetMapping("/account-user")
-    public AppUser getAccountUser() {
+    public AppUser getAccountUser() throws NoSuchElementException {
         User internalAppUser = userService
             .getUserWithAuthorities()
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
-        return appUserService.getAppUser(internalAppUser).get();
+        return appUserService.getAppUser(internalAppUser).orElseThrow();
     }
 
     /**

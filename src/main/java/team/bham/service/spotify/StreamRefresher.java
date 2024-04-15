@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.hc.core5.http.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +17,9 @@ import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import team.bham.domain.AppUser;
-import team.bham.domain.Feed;
 import team.bham.domain.Song;
 import team.bham.domain.Stream;
 import team.bham.repository.AppUserRepository;
-import team.bham.repository.FeedRepository;
 import team.bham.repository.StreamRepository;
 import team.bham.service.SongService;
 import team.bham.service.StreamService;
@@ -34,7 +35,8 @@ public class StreamRefresher {
     private final StreamRepository streamRepository;
     private final StreamService streamService;
     private final SongService songService;
-    public final FeedService feedService;
+    private final FeedService feedService;
+    private final Logger log = LoggerFactory.getLogger(StreamRefresher.class);
 
     public StreamRefresher(
         AppUserRepository appUserRepository,
@@ -52,11 +54,18 @@ public class StreamRefresher {
 
     @Scheduled(fixedRate = 25 * 60 * 1000)
     public void refreshAllUsersStreams() {
-        // Get all AppUsers
-        List<AppUser> appUsers = this.appUserRepository.findAll();
-        // Refresh streams for each AppUser
-        for (AppUser appUser : appUsers) {
-            refreshStreamsForUser(appUser);
+        try {
+            // Get all AppUsers
+            List<AppUser> appUsers = this.appUserRepository.findAll();
+            // Refresh streams for each AppUser
+            for (AppUser appUser : appUsers) {
+                refreshStreamsForUser(appUser);
+                log.debug("Updating " + appUser.getId() + "'s last updated timestamp");
+                // Mark that the user's music profile has just been updated
+                feedService.updateUsersMusicProfile(appUser);
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error", e);
         }
     }
 
@@ -79,12 +88,14 @@ public class StreamRefresher {
 
             // Setup API object
             String accessToken = appUser.getSpotifyToken().getAccessToken();
+            String refreshToken = appUser.getSpotifyToken().getRefreshToken();
             String[] credentials = CredentialsParser.parseCredentials();
             SpotifyApi spotifyApi = SpotifyApi
                 .builder()
                 .setClientId(credentials[0])
                 .setClientSecret(credentials[1])
                 .setAccessToken(accessToken)
+                .setRefreshToken(refreshToken)
                 .build();
 
             // Get streams
@@ -112,12 +123,9 @@ public class StreamRefresher {
             for (int i = 0; i < mySongs.size(); i++) {
                 this.streamService.createStream(playHistory[i], mySongs.get(i), appUser);
             }
-
-            // Mark that the user's music profile has just been updated
-            feedService.updateUsersMusicProfile(appUser);
-        } catch (IOException | SpotifyWebApiException | ParseException e) {
+        } catch (IOException | SpotifyWebApiException | ParseException | IllegalStateException e) {
             // If any of the requests fail, we will still execute the other ones
-            System.out.println("Failed to get streams for an appUser, Error: " + e.getMessage());
+            log.error("Failed to get streams for an appUser", e);
         }
     }
 }
