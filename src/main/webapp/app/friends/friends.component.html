@@ -9,7 +9,7 @@
     <div class="userList" *ngIf="search != ''">
       <!-- Show friends -->
       <div *ngFor="let friend of friends">
-        <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
 
           <div class="details">
@@ -24,7 +24,7 @@
       </div>
       <!-- Show new users -->
       <div *ngFor="let user of users">
-        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="user?.avatarURL" />
 
           <div class="details">
@@ -42,7 +42,7 @@
       </div>
       <!-- Show blocked users -->
       <div *ngFor="let user of blocked">
-        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="user?.avatarURL" />
 
           <div class="details">
