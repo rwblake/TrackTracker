@@ -47,7 +47,6 @@ public class FriendRecommendation implements Serializable {
     @NotNull
     @JsonIgnoreProperties(
         value = {
-            "internalUser",
             "userPreferences",
             "spotifyToken",
             "feed",
