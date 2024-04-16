@@ -67,6 +67,11 @@ export class FriendsComponent implements OnInit {
     }
   }
 
+  toPercent(n: number | null | undefined): number {
+    // @ts-ignore
+    return n * 100;
+  }
+
   loadFriendRequests(): void {
     this.friendsService.getFriendRequests().subscribe({
       next: v => (this.friendRequests = v),
