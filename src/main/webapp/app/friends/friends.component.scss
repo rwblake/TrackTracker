@@ -88,6 +88,7 @@ section {
     gap: 4px;
     font-size: 1rem;
     overflow-wrap: anywhere;
+    text-overflow: clip;
 
     p {
       margin-bottom: 10px;
