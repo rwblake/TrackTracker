@@ -1,14 +1,11 @@
 $translucent-border: rgb(255, 255, 255, 0.5);
 $translucent-bg: rgb(255, 255, 255, 0.1);
 
-* {
-  box-sizing: border-box;
-}
-
 h2 {
   text-align: left;
-  max-width: 500px;
+  max-width: 1050px;
   margin: auto;
+  margin-bottom: 32px;
 }
 
 section {
@@ -27,36 +24,17 @@ section {
 .searchBar {
   display: flex;
   width: 100%;
-  max-width: 800px;
+  max-width: 400px;
   margin: auto;
-
-  button {
-    margin-left: 16px;
-  }
+  margin-bottom: 32px;
 }
 
 .userList {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  justify-content: space-between;
-  row-gap: 32px;
-}
-
-.dropdown {
-  //background: rgb(255, 255, 255, 0.2);
-  //transition: background-color 50ms ease-out;
-  //border: solid 1px rgb(255, 255, 255, 0.5);
-  padding: 16px 16px;
-  border-radius: 8px;
-  width: 100%;
-  //max-width: 400px;
-  margin: auto;
-
-  input {
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-  }
+  display: flex;
+  //grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  flex-wrap: wrap;
+  //justify-content: space-between;
+  gap: 32px;
 }
 
 .userCard {
@@ -72,7 +50,6 @@ section {
   transition: background-color 50ms ease-out;
   border: solid 1px rgb(255, 255, 255, 0.5);
   margin: auto;
-  margin-top: 32px;
 
   img {
     width: 64px;
@@ -90,7 +67,7 @@ section {
     align-items: flex-start;
     gap: 4px;
     font-size: 1rem;
-    overflow-wrap: anywhere;
+    overflow-x: hidden;
     text-overflow: clip;
 
     p {
@@ -116,5 +93,28 @@ section {
       color: rgb(255, 255, 255, 0.75);
       white-space: nowrap;
     }
+  }
+}
+
+.dropdown {
+  //background: rgb(255, 255, 255, 0.2);
+  //transition: background-color 50ms ease-out;
+  //border: solid 1px rgb(255, 255, 255, 0.5);
+  //padding: 16px 16px;
+  //border-radius: 8px;
+  width: 100%;
+  //max-width: 400px;
+  margin: auto;
+
+  .userList {
+    margin: auto;
+    width: 100%;
+    max-width: 500px;
+    justify-content: center;
+    gap: 0px;
+  }
+
+  .userCard {
+    margin-bottom: 32px;
   }
 }
