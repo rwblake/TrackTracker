@@ -66,7 +66,7 @@
         <img [src]="rec.aboutAppUser?.avatarURL" />
         <div class="details">
           <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
-          <p class="other">{{ toPercent(rec.similarity)?.toFixed(0) }}% similar</p>
+          <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
         </div>
         <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
           <fa-icon icon="plus"></fa-icon>
@@ -108,10 +108,10 @@
           <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
           <p>
             <a class="song-name" [href]="'https://open.spotify.com/track/' + friend?.mostRecentSong?.spotifyID" target="_blank">
-              {{ friend?.mostRecentSong?.name }}
-              <div *ngFor="let artist of friend.mostRecentSong?.artists">
-                {{ artist.name }}
-              </div>
+              {{ friend?.mostRecentSong?.name }} •
+              <span *ngFor="let artist of friend?.mostRecentSong?.artists; let isLast = last"
+                >{{ artist?.name }}{{ isLast ? '' : ', ' }}</span
+              >
             </a>
             <br />
             <a class="album-name" [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID" target="_blank">{{
