@@ -31,12 +31,12 @@
             <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
           </div>
 
-          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
-            <fa-icon icon="plus"></fa-icon>
-          </button>
-
           <button type="submit" class="btn btn-secondary" (click)="block(user.id)">
             <fa-icon icon="ban"></fa-icon>
+          </button>
+
+          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
+            <fa-icon icon="plus"></fa-icon>
           </button>
         </div>
       </div>
