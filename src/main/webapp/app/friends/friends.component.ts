@@ -144,4 +144,6 @@ export class FriendsComponent implements OnInit {
   delete(friend: IFriend) {
     this.friendsService.delete(friend).subscribe(() => this.reload());
   }
+
+  protected readonly Number = Number;
 }
