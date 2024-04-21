@@ -2,16 +2,18 @@ package team.bham.service.feed;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import team.bham.domain.AppUser;
 import team.bham.domain.Card;
 import team.bham.domain.Feed;
+import team.bham.domain.FeedCard;
 import team.bham.domain.enumeration.CardType;
 import team.bham.repository.CardRepository;
-import team.bham.service.account.AppUserService;
 
 @Service
 public class CardService {
@@ -73,6 +75,16 @@ public class CardService {
         return card;
     }
 
+    /**Delete any cards notifying a given AppUser of a new friend request from a given friendID.
+     * <br>The friend request card automatically gets added to the user's feed.
+     * @param appUser the user to whom this card belongs.
+     * @param friendID the AppUser id of the friend who is requesting to follow you
+     */
+    public void deleteNewFriendCards(AppUser appUser, Long friendID) {
+        log.debug("Deleting specified NewFriend cards");
+        cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(appUser.getId(), CardType.NEW_FRIEND, friendID.intValue());
+    }
+
     /**Create a card notifying a given AppUser of a new friend request from a given friendID.
      * <br>The friend request card automatically gets added to the user's feed.
      * @param appUser the user to whom this card belongs.
@@ -94,6 +106,16 @@ public class CardService {
         Feed feed = appUser.getFeed();
         feedService.addCardToFeed(card, feed);
         return card;
+    }
+
+    /**Delete any cards notifying a given AppUser of a new friend request from a given friendID.
+     * <br>The friend request card automatically gets added to the user's feed.
+     * @param appUser the user to whom this card belongs.
+     * @param friendID the AppUser id of the friend who is requesting to follow you
+     */
+    public void deleteFriendRequestCards(AppUser appUser, Long friendID) {
+        log.debug("Deleting specified FriendRequest cards");
+        cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(appUser.getId(), CardType.FRIEND_REQUEST, friendID.intValue());
     }
 
     /**Create a card for a new playlist the user has just analysed.
@@ -196,5 +218,14 @@ public class CardService {
         card.setTimeGenerated(Instant.now()); // card generated now
         // save in database and return the response
         return cardRepository.save(card);
+    }
+
+    /**Unpin a friend for a user.
+     * @param appUser the user to whom the card to be deleted belongs.
+     * @param friendID the friend that is pinned.
+     */
+    public void deletePinnedFriendCard(AppUser appUser, Long friendID) {
+        log.debug("Deleting specified PinnedFriend card");
+        cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(appUser.getId(), CardType.PINNED_FRIEND, friendID.intValue());
     }
 }
