@@ -29,6 +29,11 @@ a:hover {
   border: solid 1px $translucent-border;
 }
 
+.alert-danger {
+  width: 100%;
+  max-width: 800px;
+}
+
 // Used to ensure the page scales properly at higher resolutions.
 .playlist-analysis-wrapper {
   width: 100%;

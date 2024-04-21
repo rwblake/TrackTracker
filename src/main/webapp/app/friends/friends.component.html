@@ -2,14 +2,14 @@
   <h1>Friends</h1>
 
   <!-- View all visible users -->
-  <section class="dropdown" (focusin)="toggledialog()">
+  <div class="dropdown" (focusin)="toggledialog()">
     <div class="searchBar">
       <input class="form-control mr-sm-2" type="search" placeholder="Search for users" aria-label="Search" [(ngModel)]="search" />
     </div>
     <div class="userList" *ngIf="search != ''">
       <!-- Show friends -->
       <div *ngFor="let friend of friends">
-        <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
 
           <div class="details">
@@ -24,25 +24,25 @@
       </div>
       <!-- Show new users -->
       <div *ngFor="let user of users">
-        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="user?.avatarURL" />
 
           <div class="details">
             <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
           </div>
 
-          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
-            <fa-icon icon="plus"></fa-icon>
-          </button>
-
           <button type="submit" class="btn btn-secondary" (click)="block(user.id)">
             <fa-icon icon="ban"></fa-icon>
+          </button>
+
+          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(user.id)">
+            <fa-icon icon="plus"></fa-icon>
           </button>
         </div>
       </div>
       <!-- Show blocked users -->
       <div *ngFor="let user of blocked">
-        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).startsWith(search)">
+        <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <img [src]="user?.avatarURL" />
 
           <div class="details">
@@ -56,21 +56,23 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- List recommendations -->
   <section *ngIf="recommendations && recommendations.length > 0">
     <h2>Friend Recommendations</h2>
     <div class="userList">
       <div class="userCard" *ngFor="let rec of recommendations">
-        <img [src]="rec.aboutAppUser?.avatarURL" />
-        <div class="details">
-          <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
-          <p class="other">{{ rec.similarity?.toFixed(2) }}</p>
+        <div *ngIf="!Number.isNaN(rec.similarity)">
+          <img [src]="rec.aboutAppUser?.avatarURL" />
+          <div class="details">
+            <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
+            <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
+          </div>
+          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
+            <fa-icon icon="plus"></fa-icon>
+          </button>
         </div>
-        <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
-          <fa-icon icon="plus"></fa-icon>
-        </button>
       </div>
     </div>
   </section>
@@ -108,15 +110,15 @@
           <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
           <p>
             <a class="song-name" [href]="'https://open.spotify.com/track/' + friend?.mostRecentSong?.spotifyID" target="_blank">
-              {{ friend?.mostRecentSong?.name }}
-              <div *ngFor="let artist of friend.mostRecentSong?.artists">
-                {{ artist.name }}
-              </div>
+              {{ friend?.mostRecentSong?.name }} •
+              <span *ngFor="let artist of friend?.mostRecentSong?.artists; let isLast = last"
+                >{{ artist?.name }}{{ isLast ? '' : ', ' }}</span
+              >
             </a>
             <br />
-            <a class="album-name" [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID" target="_blank">{{
-              friend.mostRecentSong?.album?.name
-            }}</a>
+            <a class="album-name" [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID" target="_blank">
+              {{ friend.mostRecentSong?.album?.name }}</a
+            >
           </p>
         </div>
         <button type="submit" class="btn btn-secondary" (click)="delete(friend)">

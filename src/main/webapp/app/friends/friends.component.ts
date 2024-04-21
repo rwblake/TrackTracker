@@ -67,6 +67,11 @@ export class FriendsComponent implements OnInit {
     }
   }
 
+  toPercent(n: number | null | undefined): number {
+    // @ts-ignore
+    return n * 100;
+  }
+
   loadFriendRequests(): void {
     this.friendsService.getFriendRequests().subscribe({
       next: v => (this.friendRequests = v),
@@ -139,4 +144,6 @@ export class FriendsComponent implements OnInit {
   delete(friend: IFriend) {
     this.friendsService.delete(friend).subscribe(() => this.reload());
   }
+
+  protected readonly Number = Number;
 }
