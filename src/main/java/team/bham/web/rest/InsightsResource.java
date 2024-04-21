@@ -1,35 +1,16 @@
 package team.bham.web.rest;
 
-import com.google.gson.Gson;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpResponse;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import team.bham.domain.*;
-import team.bham.domain.enumeration.CardType;
-import team.bham.domain.enumeration.VisibilityPreference;
-import team.bham.repository.*;
 import team.bham.repository.AppUserRepository;
 import team.bham.repository.StreamRepository;
 import team.bham.service.UserService;
 import team.bham.service.account.NoAppUserException;
 import team.bham.service.spotify.MyInsightCalculator;
-import team.bham.service.spotify.MyInsightsHTTPResponse;
-import team.bham.service.spotify.SpotifyAuthorisationService;
+import team.bham.service.spotify.SpotifyService;
 import team.bham.service.spotify.StreamInsightsResponse;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 @RequestMapping("/api")
@@ -39,18 +20,18 @@ public class InsightsResource {
     private final StreamRepository streamRepository;
     private final AppUserRepository appUserRepository;
     private final UserService userService;
-    private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final SpotifyService spotifyService;
 
     public InsightsResource(
         StreamRepository streamRepository,
         AppUserRepository appUserRepository,
         UserService userService,
-        SpotifyAuthorisationService spotifyAuthorisationService
+        SpotifyService spotifyService
     ) {
         this.streamRepository = streamRepository;
         this.appUserRepository = appUserRepository;
         this.userService = userService;
-        this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.spotifyService = spotifyService;
     }
 
     private AppUser getCurrentUser() throws NoAppUserException {

@@ -35,7 +35,7 @@ public class StreamRefresher {
     private final StreamService streamService;
     private final SongService songService;
     private final FeedService feedService;
-    private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final SpotifyService spotifyService;
     private final Logger log = LoggerFactory.getLogger(StreamRefresher.class);
 
     public StreamRefresher(
@@ -44,17 +44,17 @@ public class StreamRefresher {
         StreamService streamService,
         SongService songService,
         FeedService feedService,
-        SpotifyAuthorisationService spotifyAuthorisationService
+        SpotifyService spotifyService
     ) {
         this.appUserRepository = appUserRepository;
         this.streamRepository = streamRepository;
         this.streamService = streamService;
         this.songService = songService;
         this.feedService = feedService;
-        this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.spotifyService = spotifyService;
     }
 
-    @Scheduled(fixedRate = 25 * 60 * 1000)
+    @Scheduled(fixedRate = refreshIntervalMinutes * 60 * 1000)
     public void refreshAllUsersStreams() {
         try {
             // Get all AppUsers
@@ -90,7 +90,7 @@ public class StreamRefresher {
             lastStream = lastStream.plusSeconds(1); // Stops issues with duplicate tracks around this time
 
             // Setup API object
-            SpotifyApi spotifyApi = spotifyAuthorisationService.getApi(appUser);
+            SpotifyApi spotifyApi = spotifyService.getApi(appUser);
 
             // Get streams
             PlayHistory[] playHistory = spotifyApi

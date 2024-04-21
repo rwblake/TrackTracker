@@ -23,20 +23,20 @@ import team.bham.service.spotify.*;
 public class PlaylistInsightsResource {
 
     private final PlaylistService playlistService;
-    private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final SpotifyService spotifyService;
     private final CardService cardService;
     private final UserService userService;
     private final AppUserService appUserService;
 
     public PlaylistInsightsResource(
         PlaylistService playlistService,
-        SpotifyAuthorisationService spotifyAuthorisationService,
+        SpotifyService spotifyService,
         CardService cardService,
         UserService userService,
         AppUserService appUserService
     ) {
         this.playlistService = playlistService;
-        this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.spotifyService = spotifyService;
         this.cardService = cardService;
         this.userService = userService;
         this.appUserService = appUserService;
@@ -65,7 +65,7 @@ public class PlaylistInsightsResource {
     }
 
     private team.bham.domain.Playlist createPlaylistEntity(String spotifyID) throws IOException, ParseException, SpotifyWebApiException {
-        SpotifyApi spotifyApi = spotifyAuthorisationService.getApiForCurrentUser();
+        SpotifyApi spotifyApi = spotifyService.getApiForCurrentUser();
         Playlist playlist = spotifyApi.getPlaylist(spotifyID).build().execute();
 
         return playlistService.createPlaylist(playlist, spotifyApi);
