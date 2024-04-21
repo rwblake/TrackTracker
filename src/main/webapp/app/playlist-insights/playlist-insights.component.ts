@@ -118,6 +118,7 @@ export class PlaylistInsightsComponent implements OnInit {
     await this.sendPlaylistURL(url);
   }
 
+  /** Initiates a request to the backend based on the user's playlist input */
   async sendPlaylistURL(URL: string) {
     this.waitingForResponse = true;
     this.pulledData = false;
@@ -149,6 +150,7 @@ export class PlaylistInsightsComponent implements OnInit {
     this.showErrorMessage = true;
   }
 
+  /** Sets values of various variables and adds content to graphs on request success */
   onPlaylistRetrievalSuccess(val: PlaylistInsightsResponse) {
     this.waitingForResponse = false;
     this.showWaitingMessage = false;
@@ -168,6 +170,11 @@ export class PlaylistInsightsComponent implements OnInit {
 
     // Reveal the lower section of the page.
     this.pulledData = true;
+
+    // Update recent playlists.
+    this.playlistInsightsService.retrieveUserPlaylists().subscribe({
+      next: v => this.onRecentlyViewedRetrievalSuccess(v),
+    });
   }
 
   onRecentlyViewedRetrievalSuccess(val: IPlaylist[]) {
