@@ -641,11 +641,11 @@ export class InsightsComponent implements OnInit {
   leaderNameChange(): string {
     switch (this.selectedTimePeriod?.label) {
       case 'Week':
-        return 'Lets look at your leaderboard for this Week';
+        return "Let's look at your leaderboard for this Week";
       case '4 Weeks':
-        return 'Lets look at your leaderboard over 4 Weeks';
+        return "Let's look at your leaderboard over 4 Weeks";
       case 'Year':
-        return 'Lets look at your leaderboard over a Year';
+        return "Let's look at your leaderboard over a Year";
       default:
         return 'Here are your all time leaderboards';
     }
