@@ -28,7 +28,7 @@ import team.bham.service.feed.FeedService;
 @Transactional
 public class StreamRefresher {
 
-    private final int refreshIntervalMinutes = 25;
+    private final int refreshIntervalMinutes = 5;
 
     private final AppUserRepository appUserRepository;
     private final StreamRepository streamRepository;

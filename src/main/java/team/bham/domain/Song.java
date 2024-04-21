@@ -100,32 +100,32 @@ public class Song implements Serializable {
     @JsonIgnoreProperties(value = { "songs", "artists" }, allowSetters = true)
     private Album album;
 
-    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "song")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "song", "appUser" }, allowSetters = true)
     private Set<Stream> streams = new HashSet<>();
 
-    @OneToMany(mappedBy = "happiestSong", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "happiestSong")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "happiestSong", "energeticSong", "sumsUpSong", "anonmalousSong", "playlist" }, allowSetters = true)
     private Set<PlaylistStats> happiestPlaylistStats = new HashSet<>();
 
-    @OneToMany(mappedBy = "energeticSong", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "energeticSong")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "happiestSong", "energeticSong", "sumsUpSong", "anonmalousSong", "playlist" }, allowSetters = true)
     private Set<PlaylistStats> energeticPlaylistStats = new HashSet<>();
 
-    @OneToMany(mappedBy = "sumsUpSong", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sumsUpSong")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "happiestSong", "energeticSong", "sumsUpSong", "anonmalousSong", "playlist" }, allowSetters = true)
     private Set<PlaylistStats> sumsUpPlaylistStats = new HashSet<>();
 
-    @OneToMany(mappedBy = "anonmalousSong", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "anonmalousSong")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "happiestSong", "energeticSong", "sumsUpSong", "anonmalousSong", "playlist" }, allowSetters = true)
     private Set<PlaylistStats> anomalousPlaylistStats = new HashSet<>();
 
-    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "songs")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "playlistStats", "songs", "appUser" }, allowSetters = true)
     private Set<Playlist> playlists = new HashSet<>();
