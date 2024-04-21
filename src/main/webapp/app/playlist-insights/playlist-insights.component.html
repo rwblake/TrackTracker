@@ -23,7 +23,13 @@
                 required
               />
 
-              <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="button primary" [disabled]="linkInput === ''">
+              <button
+                type="submit"
+                id="submit-link"
+                data-cy="entityCreateSaveButton"
+                class="button primary"
+                [disabled]="linkInput === '' || waitingForResponse"
+              >
                 Go!
               </button>
             </div>

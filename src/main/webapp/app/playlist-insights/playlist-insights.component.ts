@@ -141,6 +141,7 @@ export class PlaylistInsightsComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /** Sets values of various variables on an error **/
   onPlaylistRetrievalFailure(error: any) {
     this.waitingForResponse = false;
     this.showWaitingMessage = false;
