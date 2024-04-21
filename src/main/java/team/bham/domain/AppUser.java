@@ -96,7 +96,7 @@ public class AppUser implements Serializable {
      * Blocked users are related to the user who blocked them.
      */
     @Schema(description = "Blocked users are related to the user who blocked them.")
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "rel_app_user__blocked_user",
         joinColumns = @JoinColumn(name = "app_user_id"),

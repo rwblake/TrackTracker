@@ -37,7 +37,7 @@ public class Artist implements Serializable {
     @Column(name = "image_url")
     private String imageURL;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "rel_artist__song", joinColumns = @JoinColumn(name = "artist_id"), inverseJoinColumns = @JoinColumn(name = "song_id"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(
@@ -55,7 +55,7 @@ public class Artist implements Serializable {
     )
     private Set<Song> songs = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "rel_artist__album",
         joinColumns = @JoinColumn(name = "artist_id"),
@@ -65,7 +65,7 @@ public class Artist implements Serializable {
     @JsonIgnoreProperties(value = { "songs", "artists" }, allowSetters = true)
     private Set<Album> albums = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "rel_artist__genre",
         joinColumns = @JoinColumn(name = "artist_id"),

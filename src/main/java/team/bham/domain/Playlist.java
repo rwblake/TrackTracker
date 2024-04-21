@@ -38,7 +38,7 @@ public class Playlist implements Serializable {
     private String imageURL;
 
     @JsonIgnoreProperties(value = { "happiestSong", "energeticSong", "sumsUpSong", "anonmalousSong", "playlist" }, allowSetters = true)
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull
     @JoinColumn(unique = true)
     private PlaylistStats playlistStats;

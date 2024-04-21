@@ -66,7 +66,7 @@ public class SpotifyToken implements Serializable {
         },
         allowSetters = true
     )
-    @OneToOne(mappedBy = "spotifyToken")
+    @OneToOne(mappedBy = "spotifyToken", cascade = CascadeType.ALL)
     private AppUser appUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

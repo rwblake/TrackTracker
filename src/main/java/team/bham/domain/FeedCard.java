@@ -32,12 +32,12 @@ public class FeedCard implements Serializable {
     @Column(name = "liked", nullable = false)
     private Boolean liked;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "cards", "appUser" }, allowSetters = true)
     private Feed feed;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = { "usages", "appUser" }, allowSetters = true)
     private Card card;

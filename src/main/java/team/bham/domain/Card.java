@@ -54,7 +54,7 @@ public class Card implements Serializable {
     @JsonIgnoreProperties(value = { "feed", "card" }, allowSetters = true)
     private Set<FeedCard> usages = new HashSet<>();
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(
         value = {
