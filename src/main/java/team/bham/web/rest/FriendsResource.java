@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import team.bham.domain.*;
-import team.bham.domain.enumeration.CardType;
 import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.*;
 import team.bham.service.FriendService;
@@ -29,7 +28,6 @@ public class FriendsResource {
     private final FriendRequestRepository friendRequestRepository;
     private final AppUserRepository appUserRepository;
     private final FriendshipRepository friendshipRepository;
-    private final CardRepository cardRepository;
     private final FriendService friendService;
     private final AppUserService appUserService;
 
@@ -37,14 +35,12 @@ public class FriendsResource {
         FriendRequestRepository friendRequestRepository,
         AppUserRepository appUserRepository,
         FriendshipRepository friendshipRepository,
-        CardRepository cardRepository,
         FriendService friendService,
         AppUserService appUserService
     ) {
         this.friendRequestRepository = friendRequestRepository;
         this.appUserRepository = appUserRepository;
         this.friendshipRepository = friendshipRepository;
-        this.cardRepository = cardRepository;
         this.friendService = friendService;
         this.appUserService = appUserService;
     }
@@ -192,6 +188,35 @@ public class FriendsResource {
         return getFriendRequests();
     }
 
+    @PostMapping("/friends/reject")
+    public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws NoAppUserException {
+        try {
+            friendService.rejectFriendRequest(friendRequestId);
+        } catch (NoAppUserException e) {
+            log.error("No AppUser was logged in");
+        } catch (IllegalArgumentException e) {
+            log.error("Cannot reject a friend request which was not directed toward the logged in AppUser");
+        }
+
+        return getFriendRequests();
+    }
+
+    @PostMapping("/friends/pin")
+    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
+        friendService.pinFriend(pinAppUserId);
+    }
+
+    @PostMapping("/friends/unpin")
+    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
+        friendService.unpinFriend(pinAppUserId);
+    }
+
+    @PostMapping("/friends/delete")
+    public ResponseEntity<Void> deleteFriend(@Valid @RequestBody Long friendAppUserId) throws NoAppUserException {
+        friendService.deleteFriend(friendAppUserId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/friends/block")
     public ResponseEntity<Void> blockUser(@Valid @RequestBody Long appUserId) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
@@ -227,65 +252,6 @@ public class FriendsResource {
         this.appUserRepository.save(otherUser);
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/friends/delete")
-    public ResponseEntity<Void> deleteFriend(@Valid @RequestBody Long friendAppUserId) throws NoAppUserException {
-        // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = appUserService.getCurrentAppUser();
-
-        // Delete friendship
-        this.friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(currentUser.getId(), friendAppUserId);
-        this.friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(friendAppUserId, currentUser.getId());
-
-        // Delete any pinned friends
-        unpinFriend(friendAppUserId);
-        unpinFriend(currentUser.getId());
-        return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/friends/reject")
-    public List<FriendRequest> rejectFriendRequest(@Valid @RequestBody Long friendRequestId) throws NoAppUserException {
-        // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = appUserService.getCurrentAppUser();
-
-        // Find the friend request
-        FriendRequest friendRequest = this.friendRequestRepository.getReferenceById(friendRequestId);
-        AppUser requestUser = friendRequest.getInitiatingAppUser();
-
-        // Check they are the recipient of the friend request
-        if (currentUser.getId() != friendRequest.getToAppUser().getId()) {
-            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
-        }
-
-        // Delete the friend request
-        this.friendRequestRepository.delete(friendRequest);
-
-        return getFriendRequests();
-    }
-
-    @PostMapping("/friends/pin")
-    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
-        // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = appUserService.getCurrentAppUser();
-        Card myCard = new Card();
-        myCard.setAppUser(currentUser);
-        myCard.setMetric(CardType.PINNED_FRIEND);
-        myCard.setMetricValue(pinAppUserId.intValue()); // Incompatible types (be cautious)
-        myCard.setTimeGenerated(Instant.now());
-        // Not sure what setUsages and setTimeFrame do
-        this.cardRepository.save(myCard);
-    }
-
-    @PostMapping("/friends/unpin")
-    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
-        // Find the current user and check they have an associated AppUser entity
-        AppUser currentUser = appUserService.getCurrentAppUser();
-        this.cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(
-                currentUser.getId(),
-                CardType.PINNED_FRIEND,
-                pinAppUserId.intValue()
-            );
     }
 
     @PostMapping("/friends")
