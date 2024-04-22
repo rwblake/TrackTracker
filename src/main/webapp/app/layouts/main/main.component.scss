@@ -49,11 +49,22 @@
 
 :host:has(.playlist-insights) {
   &::before {
-    filter: blur(120px) hue-rotate(20deg);
+    filter: blur(60px) hue-rotate(20deg);
     top: -500px;
   }
 }
-
+:host:has(.insights) {
+  &::before {
+    filter: blur(60px) hue-rotate(-10deg);
+    top: -200px;
+  }
+}
+:host:has(.feed) {
+  &::before {
+    filter: blur(60px) hue-rotate(50deg);
+    top: -400px;
+  }
+}
 :host:has(.register) {
   &::before {
     filter: blur(60px) hue-rotate(-20deg);
