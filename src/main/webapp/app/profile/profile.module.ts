@@ -5,10 +5,11 @@ import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { Title } from '@angular/platform-browser';
 import { APP_NAME } from '../app.constants';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [ProfileComponent],
-  imports: [CommonModule, ProfileRoutingModule],
+  imports: [CommonModule, ProfileRoutingModule, FontAwesomeModule],
 })
 export class ProfileModule implements OnInit {
   constructor(private titleService: Title) {}

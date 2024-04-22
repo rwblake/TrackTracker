@@ -293,6 +293,9 @@ jhi-password-strength-bar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: white;
+  text-decoration: none;
+
   &:not(:disabled):hover {
     transform: translateY(-1px);
   }
@@ -338,6 +341,50 @@ jhi-password-strength-bar {
       background-color: rgb(255, 255, 255, 0.2);
       border-top: solid 1px rgb(255, 255, 255, 0.2);
     }
+  }
+}
+
+.button-card {
+  cursor: pointer;
+  border-radius: 8px;
+  background: rgb(255, 255, 255, 0.2);
+  border: solid 1px rgb(255, 255, 255, 0.5);
+  transition: background-color 50ms ease-out;
+
+  p {
+    color: white;
+  }
+
+  &:not(:disabled):hover {
+    background: rgb(255, 255, 255, 0.3);
+
+    p:not(.hint) {
+      text-decoration: underline;
+    }
+  }
+
+  &:not(:disabled):active {
+    background: rgb(255, 255, 255, 0.25);
+
+    p:not(.hint) {
+      text-decoration: none;
+    }
+  }
+}
+
+.circle-button {
+  display: flex;
+  height: 54px;
+  width: 54px;
+  margin: 5px;
+  border-radius: 1000px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+
+  fa-icon,
+  span {
+    color: black;
   }
 }
 
