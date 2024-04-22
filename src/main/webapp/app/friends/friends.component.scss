@@ -38,6 +38,7 @@ section {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   padding: 16px 16px;
   border-radius: 8px;
   gap: 16px;
@@ -55,14 +56,16 @@ section {
     border: solid 2px rgb(255, 255, 255, 0.1);
   }
 
-  button {
-    margin-left: auto;
-  }
+  //button {
+  //  margin-left: auto;
+  //}
 
   .details {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
+    //align-items: center;
+    justify-content: center;
+    //gap: 4px;
     font-size: 1rem;
     overflow-x: hidden;
     text-overflow: clip;
@@ -85,9 +88,9 @@ section {
       text-align: left;
     }
 
-    :not(name) {
+    :not(.name) {
       font-size: 1rem;
-      color: rgb(255, 255, 255, 0.75);
+      color: rgb(255, 255, 255, 0.5);
       white-space: nowrap;
     }
   }
