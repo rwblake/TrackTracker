@@ -13,7 +13,7 @@
 
   <div class="w-100"></div>
 
-  <button type="button" class="btn col-2" [disabled]="!canMoveLeft()" (click)="moveLeft()">
+  <button type="button" class="btn col-2" title="Scroll Card Stack Left" [disabled]="!canMoveLeft()" (click)="moveLeft()">
     <fa-icon icon="angle-left"></fa-icon>
   </button>
   <div class="col-8 p-0 row" id="detail">
@@ -28,7 +28,7 @@
       <p class="text-center m-0 text-body-secondary" id="description">{{ card.description }}</p>
     </div>
   </div>
-  <button type="button" class="btn col-2" [disabled]="!canMoveRight()" (click)="moveRight()">
+  <button type="button" class="btn col-2" title="Scroll Card Stack Right" [disabled]="!canMoveRight()" (click)="moveRight()">
     <fa-icon icon="angle-right"></fa-icon>
   </button>
 </div>
