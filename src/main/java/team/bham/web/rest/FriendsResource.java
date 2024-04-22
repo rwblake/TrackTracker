@@ -297,7 +297,8 @@ public class FriendsResource {
         myFriendRequest.setCreatedAt(Instant.now());
         myFriendRequest.setInitiatingAppUser(currentUser);
         myFriendRequest.setToAppUser(requestUser);
-        this.friendRequestRepository.save(myFriendRequest);
+        this.friendService.createFriendRequest(myFriendRequest);
+        //this.friendRequestRepository.save(myFriendRequest);
 
         return ResponseEntity.created(new URI("/api/friends")).body(myFriendRequest);
     }
