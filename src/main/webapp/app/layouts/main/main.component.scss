@@ -21,6 +21,8 @@
   min-height: 100vh;
   //overflow-x: hidden;
   background: linear-gradient(90deg, rgba(24, 2, 25, 1) 0%, rgba(0, 0, 0, 1) 26%, rgba(22, 4, 28, 1) 79%);
+  position: relative;
+  overflow-x: hidden;
 
   &::before {
     all: unset;
