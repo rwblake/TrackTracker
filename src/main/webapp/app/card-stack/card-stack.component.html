@@ -7,7 +7,7 @@
       [ngStyle]="getStylesForIndex(i)"
       (click)="setSelectedIndex(i)"
       [src]="card.image_url"
-      alt="i: {{ i }}, offset: {{ i - getSelectedIndex() }}"
+      alt="#{{ i + 1 }}, {{ card.title }} ({{ card.description }})"
     />
   </div>
 
