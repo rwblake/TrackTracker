@@ -77,7 +77,7 @@ public class FriendService {
 
         // Check they are the recipient of the friend request
         if (currentUser.getId().longValue() != friendRequest.getToAppUser().getId().longValue()) {
-            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
+            throw new IllegalArgumentException("Can't accept friend request that isn't directed to the logged in user.");
         }
 
         // Create the friendship
@@ -93,9 +93,8 @@ public class FriendService {
 
         // Delete the friend request
         friendRequestRepository.delete(friendRequest);
-
         // Delete the friend request card
-        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());
+        //        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());  // TODO: causes errors?
     }
 
     /** Handles the backend logic for rejecting a friend request.

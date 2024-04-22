@@ -57,7 +57,7 @@
     </header>
 
     <div class="card-list">
-      <jhi-card *ngFor="let card of account_data.feed.cards; let i = index; trackBy: trackByCardID" [card]="card"></jhi-card>
+      <jhi-card *ngFor="let card of account_data.feed.cards.reverse(); let i = index; trackBy: trackByCardID" [card]="card"></jhi-card>
     </div>
   </section>
 </div>
@@ -85,15 +85,6 @@
       <a class="alert-link" routerLink="/login">log in.</a>
     </div>
   </div>
-
-  <!--  <section>-->
-  <!--    <h2>Features</h2>-->
-  <!--    <p>This is a paragraph</p>-->
-  <!--    <ul>-->
-  <!--      <li>Playlist Analyser</li>-->
-  <!--      <li>Insights</li>-->
-  <!--    </ul>-->
-  <!--  </section>-->
 </div>
 
 <ng-template #pinFriendsModal let-modal>
