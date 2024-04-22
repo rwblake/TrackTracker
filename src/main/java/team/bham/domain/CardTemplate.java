@@ -44,7 +44,7 @@ public class CardTemplate implements Serializable {
     @Column(name = "font")
     private Font font;
 
-    @OneToMany(mappedBy = "cardTemplate")
+    @OneToMany(mappedBy = "cardTemplate", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "cardTemplate" }, allowSetters = true)
     private Set<CardMetric> metrics = new HashSet<>();

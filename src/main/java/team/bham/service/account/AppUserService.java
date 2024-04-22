@@ -21,7 +21,7 @@ import team.bham.domain.enumeration.VisibilityPreference;
 import team.bham.repository.*;
 import team.bham.security.AuthoritiesConstants;
 import team.bham.service.UserService;
-import team.bham.service.spotify.SpotifyAuthorisationService;
+import team.bham.service.spotify.SpotifyService;
 import team.bham.web.rest.vm.ManagedAppUserVM;
 import tech.jhipster.security.RandomUtil;
 
@@ -32,7 +32,7 @@ public class AppUserService extends team.bham.service.UserService {
 
     private final Logger log = LoggerFactory.getLogger(AppUserService.class);
     private final AppUserRepository appUserRepository;
-    private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final SpotifyService spotifyService;
     private final UserService userService;
 
     public AppUserService(
@@ -41,12 +41,12 @@ public class AppUserService extends team.bham.service.UserService {
         AuthorityRepository authorityRepository,
         CacheManager cacheManager,
         AppUserRepository appUserRepository,
-        SpotifyAuthorisationService spotifyAuthorisationService,
+        SpotifyService spotifyService,
         UserService userService
     ) {
         super(userRepository, passwordEncoder, authorityRepository, cacheManager);
         this.appUserRepository = appUserRepository;
-        this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.spotifyService = spotifyService;
         this.userService = userService;
     }
 
@@ -56,12 +56,12 @@ public class AppUserService extends team.bham.service.UserService {
         }
         appUserRepository.delete(existingUser);
         appUserRepository.flush();
-        this.clearUserCaches(existingUser.getInternalUser());
+        clearUserCaches(existingUser.getInternalUser());
         return true;
     }
 
     public Optional<AppUser> getAppUser(User internalUser) {
-        return this.appUserRepository.findOneByInternalUser(internalUser);
+        return appUserRepository.findOneByInternalUser(internalUser);
     }
 
     /** Performs same actions as UserService, whilst also creating all other linked entities */
@@ -76,29 +76,19 @@ public class AppUserService extends team.bham.service.UserService {
         // If it is, check that the other account is activated, delete account if not.
         userRepository
             .findOneByLogin(appUserVM.getLogin().toLowerCase())
-            .ifPresent(user -> {
-                appUserRepository
-                    .findOneByInternalUser(user)
-                    .ifPresent(appUser -> {
-                        boolean removed = removeNonActivatedAppUser(appUser);
-                        if (!removed) {
-                            throw new UsernameAlreadyUsedException();
-                        }
-                    });
+            .flatMap(appUserRepository::findOneByInternalUser)
+            .ifPresent(appUser -> {
+                boolean removed = removeNonActivatedAppUser(appUser);
+                if (!removed) throw new UsernameAlreadyUsedException();
             });
 
         // Check that email isn't used by anyone else
         userRepository
             .findOneByEmailIgnoreCase(appUserVM.getEmail())
-            .ifPresent(user -> {
-                appUserRepository
-                    .findOneByInternalUser(user)
-                    .ifPresent(appUser -> {
-                        boolean removed = removeNonActivatedAppUser(appUser);
-                        if (!removed) {
-                            throw new EmailAlreadyUsedException();
-                        }
-                    });
+            .flatMap(appUserRepository::findOneByInternalUser)
+            .ifPresent(appUser -> {
+                boolean removed = removeNonActivatedAppUser(appUser);
+                if (!removed) throw new EmailAlreadyUsedException();
             });
 
         // Check that Spotify id isn't used by anyone else
@@ -106,9 +96,7 @@ public class AppUserService extends team.bham.service.UserService {
             .findOneBySpotifyID(spotifyID)
             .ifPresent(appUser -> {
                 boolean removed = removeNonActivatedAppUser(appUser);
-                if (!removed) {
-                    throw new SpotifyIDAlreadyUsedException();
-                }
+                if (!removed) throw new SpotifyIDAlreadyUsedException();
             });
 
         User newUser = new User();
@@ -140,7 +128,7 @@ public class AppUserService extends team.bham.service.UserService {
         spotifyToken.setRefreshToken(spotifyCredentials.getRefreshToken());
 
         // Get profile information from SpotifyAPI
-        SpotifyApi spotifyApi = this.spotifyAuthorisationService.getApiForCurrentUser();
+        SpotifyApi spotifyApi = spotifyService.getApiForCurrentUser();
         spotifyApi.setAccessToken(spotifyToken.getAccessToken());
         se.michaelthelin.spotify.model_objects.specification.User spotifyUser = spotifyApi.getUsersProfile(spotifyID).build().execute();
 
@@ -189,10 +177,10 @@ public class AppUserService extends team.bham.service.UserService {
 
     /** Find the current user and check they have an associated AppUser entity */
     public AppUser getCurrentAppUser() throws NoAppUserException {
-        Optional<User> userMaybe = this.userService.getUserWithAuthorities();
-        if (userMaybe.isPresent() && this.appUserRepository.existsByInternalUser(userMaybe.get())) {
+        Optional<User> userMaybe = userService.getUserWithAuthorities();
+        if (userMaybe.isPresent() && appUserRepository.existsByInternalUser(userMaybe.get())) {
             // Logged in
-            return this.appUserRepository.getAppUserByInternalUser(userMaybe.get());
+            return appUserRepository.getAppUserByInternalUser(userMaybe.get());
         } else {
             // Not logged in
             throw new NoAppUserException();

@@ -96,4 +96,8 @@ public class PlaylistService {
 
         return myPlaylist;
     }
+
+    public void removePlaylist(Playlist playlist) {
+        playlistRepository.deletePlaylistById(playlist.getId());
+    }
 }

@@ -23,7 +23,13 @@
                 required
               />
 
-              <button type="submit" id="submit-link" data-cy="entityCreateSaveButton" class="button primary" [disabled]="linkInput === ''">
+              <button
+                type="submit"
+                id="submit-link"
+                data-cy="entityCreateSaveButton"
+                class="button primary"
+                [disabled]="linkInput === '' || waitingForResponse"
+              >
                 Go!
               </button>
             </div>
@@ -115,29 +121,21 @@
           </div>
 
           <div class="statBox">
-            <a [href]="happiestSongURL" target="_blank">
-              <div class="songCard">
-                <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
-                <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
-              </div>
+            <a [href]="happiestSongURL" target="_blank" class="songCard button-card">
+              <img [src]="response?.happiestSong?.songImageURL" [alt]="'Album artwork for ' + response?.happiestSong?.songTitle" />
+              <p>This playlist's <b>happiest song</b> is {{ response?.happiestSong?.songTitle }}</p>
             </a>
-            <a [href]="energeticSongURL" target="_blank">
-              <div class="songCard">
-                <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
-                <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
-              </div>
+            <a [href]="energeticSongURL" target="_blank" class="songCard button-card">
+              <img [src]="response?.energeticSong?.songImageURL" [alt]="'Album artwork for ' + response?.energeticSong?.songTitle" />
+              <p>This playlist's <b>most energetic song</b> is {{ response?.energeticSong?.songTitle }}</p>
             </a>
-            <a [href]="sumsUpSongURL" target="_blank">
-              <div class="songCard">
-                <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
-                <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
-              </div>
+            <a [href]="sumsUpSongURL" target="_blank" class="songCard button-card">
+              <img [src]="response?.sumsUpSong?.songImageURL" [alt]="'Album artwork for ' + response?.sumsUpSong?.songTitle" />
+              <p>The <b>song that sums this playlist up</b> is {{ response?.sumsUpSong?.songTitle }}</p>
             </a>
-            <a [href]="anomalousSongURL" target="_blank">
-              <div class="songCard">
-                <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
-                <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
-              </div>
+            <a [href]="anomalousSongURL" target="_blank" class="songCard button-card">
+              <img [src]="response?.anomalousSong?.songImageURL" [alt]="'Album artwork for ' + response?.anomalousSong?.songTitle" />
+              <p>This playlist's <b>most anomalous song</b> is {{ response?.anomalousSong?.songTitle }}</p>
             </a>
           </div>
         </div>
@@ -247,18 +245,20 @@
     </div>
 
     <!-- Instant links to recently viewed playlists, shown below all page content -->
-    <div class="container-fluid">
+    <div class="container-fluid mt-4">
       <div class="row">
         <div class="col-md-12">
-          <h3 *ngIf="hasPlaylists">Recently Viewed Playlists</h3>
+          <h3 *ngIf="hasPlaylists" class="mb-4">Recently Viewed Playlists</h3>
           <div class="recentPlaylistList">
-            <a *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index" [href]="constructPlaylistLink(playlist.spotifyID)">
-              <div class="songCard">
-                <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
-                <p>
-                  <b>{{ playlist.name }}</b>
-                </p>
-              </div>
+            <a
+              *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index"
+              [href]="constructPlaylistLink(playlist.spotifyID)"
+              class="songCard button-card"
+            >
+              <img [src]="playlist.imageURL" [alt]="'Playlist icon for ' + playlist.name" />
+              <p>
+                <b>{{ playlist.name }}</b>
+              </p>
             </a>
           </div>
         </div>

@@ -3,11 +3,13 @@ package team.bham.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import team.bham.domain.*;
+import team.bham.repository.AppUserRepository;
 import team.bham.repository.FriendRequestRepository;
 import team.bham.repository.FriendshipRepository;
 import team.bham.repository.StreamRepository;
@@ -24,19 +26,22 @@ public class FriendService {
     private final FriendRequestRepository friendRequestRepository;
     private final CardService cardService;
     private final AppUserService appUserService;
+    private final AppUserRepository appUserRepository;
 
     public FriendService(
         StreamRepository streamRepository,
         FriendshipRepository friendshipRepository,
         FriendRequestRepository friendRequestRepository,
         CardService cardService,
-        AppUserService appUserService
+        AppUserService appUserService,
+        AppUserRepository appUserRepository
     ) {
         this.streamRepository = streamRepository;
         this.friendshipRepository = friendshipRepository;
         this.friendRequestRepository = friendRequestRepository;
         this.cardService = cardService;
         this.appUserService = appUserService;
+        this.appUserRepository = appUserRepository;
     }
 
     /** Handles the backend logic for creating a friend request.
@@ -50,6 +55,7 @@ public class FriendService {
         // Add a new Friend Request card to the recipient's feed
         AppUser toAppUser = friendRequest.getToAppUser();
         AppUser fromAppUser = friendRequest.getInitiatingAppUser();
+
         log.debug("Making a new FriendRequest card");
         cardService.createFriendRequestCard(toAppUser, fromAppUser.getId());
 
@@ -87,6 +93,73 @@ public class FriendService {
 
         // Delete the friend request
         friendRequestRepository.delete(friendRequest);
+
+        // Delete the friend request card
+        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());
+    }
+
+    /** Handles the backend logic for rejecting a friend request.
+     * @param friendRequestId the id of the friend request to be rejected
+     * @throws IllegalArgumentException the logged-in user is not the recipient of the friend request being rejected
+     * @throws NoAppUserException there is no AppUser associated with the logged in account (or no account is logged in)
+     */
+    public void rejectFriendRequest(Long friendRequestId) throws IllegalArgumentException, NoAppUserException {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = appUserService.getCurrentAppUser();
+
+        // Find the friend request
+        FriendRequest friendRequest = friendRequestRepository.getReferenceById(friendRequestId);
+        AppUser requestUser = friendRequest.getInitiatingAppUser();
+
+        // Check they are the recipient of the friend request
+        if (currentUser.getId().longValue() != friendRequest.getToAppUser().getId().longValue()) {
+            throw new IllegalArgumentException("Can't accept friend request that isn't to the logged in user.");
+        }
+
+        // Delete the friend request
+        friendRequestRepository.delete(friendRequest);
+
+        // Delete the friend request card
+        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());
+    }
+
+    /** Handles the backend logic for rejecting a friend request.
+     * @param friendAppUserId the id of the friend to be removed
+     * @throws NoAppUserException there is no AppUser associated with the logged in account (or no account is logged in)
+     * @throws NoSuchElementException friendAppUserId doesn't link to an AppUser
+     */
+    public void deleteFriend(Long friendAppUserId) throws NoAppUserException, NoSuchElementException {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = appUserService.getCurrentAppUser();
+
+        // Delete friendship
+        friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(currentUser.getId(), friendAppUserId);
+        friendshipRepository.deleteAllByFriendAcceptingIdAndFriendInitiatingId(friendAppUserId, currentUser.getId());
+
+        // Find the AppUser of the friend from their id
+        AppUser friend = appUserRepository.findOneById(friendAppUserId).orElseThrow();
+
+        // Delete the NewFriend cards for both friends
+        cardService.deleteNewFriendCards(currentUser, friendAppUserId);
+        cardService.deleteNewFriendCards(friend, currentUser.getId());
+
+        // Delete any pinned friends
+        unpinFriend(friendAppUserId);
+        unpinFriend(currentUser.getId());
+    }
+
+    public void pinFriend(Long pinAppUserId) {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = appUserService.getCurrentAppUser();
+        // Create the card to pin the friend
+        cardService.createPinnedFriendCard(currentUser, pinAppUserId);
+    }
+
+    public void unpinFriend(Long pinAppUserId) {
+        // Find the current user and check they have an associated AppUser entity
+        AppUser currentUser = appUserService.getCurrentAppUser();
+        // Delete the card which pins the friend
+        cardService.deletePinnedFriendCard(currentUser, pinAppUserId);
     }
 
     public List<Friend> getFriends(AppUser me) {

@@ -30,7 +30,7 @@ import team.bham.service.feed.FeedCardResponse;
 import team.bham.service.feed.FeedCardService;
 import team.bham.service.feed.FeedService;
 import team.bham.service.spotify.DeclinedSpotifyAccessException;
-import team.bham.service.spotify.SpotifyAuthorisationService;
+import team.bham.service.spotify.SpotifyService;
 import team.bham.web.rest.errors.*;
 import team.bham.web.rest.errors.EmailAlreadyUsedException;
 import team.bham.web.rest.errors.InvalidPasswordException;
@@ -66,7 +66,7 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    private final SpotifyAuthorisationService spotifyAuthorisationService;
+    private final SpotifyService spotifyService;
     private final CardRepository cardRepository;
     private final FeedCardService feedCardService;
 
@@ -77,7 +77,7 @@ public class AccountResource {
         FriendsService friendsService,
         FeedService feedService,
         MailService mailService,
-        SpotifyAuthorisationService spotifyAuthorisationService,
+        SpotifyService spotifyService,
         CardRepository cardRepository,
         FeedCardService feedCardService
     ) {
@@ -87,7 +87,7 @@ public class AccountResource {
         this.friendsService = friendsService;
         this.feedService = feedService;
         this.mailService = mailService;
-        this.spotifyAuthorisationService = spotifyAuthorisationService;
+        this.spotifyService = spotifyService;
         this.cardRepository = cardRepository;
         this.feedCardService = feedCardService;
     }
@@ -117,7 +117,7 @@ public class AccountResource {
         URI redirectUri = SpotifyHttpManager.makeUri(origin + "/account/register/");
 
         // attempt to generate credentials
-        AuthorizationCodeCredentials credentials = spotifyAuthorisationService.initialiseCredentials(
+        AuthorizationCodeCredentials credentials = spotifyService.initialiseCredentials(
             managedAppUserVM.getSpotifyAuthCode(),
             managedAppUserVM.getSpotifyAuthState(),
             redirectUri
@@ -130,7 +130,7 @@ public class AccountResource {
             );
         }
 
-        SpotifyApi spotifyApi = spotifyAuthorisationService.getApi(credentials);
+        SpotifyApi spotifyApi = spotifyService.getApi(credentials);
 
         System.out.println("Created Spotify API object with Access Token: " + spotifyApi.getAccessToken());
 
@@ -159,7 +159,7 @@ public class AccountResource {
     public URI getAuthenticationURI(HttpServletRequest request) {
         URI requestUri = URI.create(request.getRequestURL().toString());
         String origin = requestUri.getScheme() + "://" + requestUri.getAuthority();
-        return spotifyAuthorisationService.getAuthorisationCodeUri(origin);
+        return spotifyService.getAuthorisationCodeUri(origin);
     }
 
     /**

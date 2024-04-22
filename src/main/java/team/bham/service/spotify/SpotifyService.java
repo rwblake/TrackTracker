@@ -22,9 +22,14 @@ import team.bham.repository.AppUserRepository;
 import team.bham.service.UserService;
 import team.bham.service.account.NoAppUserException;
 
-/** Handles authorising a spotify account, getting tokens and refreshing tokens. */
+/** Handles connecting to Spotify. This service is used for:
+ * <ul>
+ *   <li>Authorising a new Spotify account</li>
+ *   <li>Accessing the API</li>
+ * </ul>
+ */
 @Service
-public class SpotifyAuthorisationService {
+public class SpotifyService {
 
     private static final String clientId = CredentialsParser.parseCredentials()[0];
     private static final String clientSecret = CredentialsParser.parseCredentials()[1];
@@ -35,13 +40,13 @@ public class SpotifyAuthorisationService {
         "user-read-recently-played, user-library-read, " +
         "user-read-email";
 
-    private final Logger log = LoggerFactory.getLogger(SpotifyAuthorisationService.class);
+    private final Logger log = LoggerFactory.getLogger(SpotifyService.class);
     private final TokenRefresher tokenRefresher;
     private final HttpSession httpSession; // Allows access to each Http session
     private final UserService userService;
     private final AppUserRepository appUserRepository;
 
-    public SpotifyAuthorisationService(
+    public SpotifyService(
         TokenRefresher tokenRefresher,
         HttpSession httpSession,
         UserService userService,

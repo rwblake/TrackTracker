@@ -63,7 +63,7 @@ public class Album implements Serializable {
     )
     private Set<Song> songs = new HashSet<>();
 
-    @ManyToMany(mappedBy = "albums")
+    @ManyToMany(mappedBy = "albums", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "songs", "albums", "genres" }, allowSetters = true)
     private Set<Artist> artists = new HashSet<>();

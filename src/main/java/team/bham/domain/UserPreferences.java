@@ -41,7 +41,7 @@ public class UserPreferences implements Serializable {
     @Column(name = "playlist_privacy")
     private VisibilityPreference playlistPrivacy;
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "appUser" }, allowSetters = true)
     private Set<SharingPreference> sharingPreferences = new HashSet<>();
@@ -67,7 +67,7 @@ public class UserPreferences implements Serializable {
         },
         allowSetters = true
     )
-    @OneToOne(mappedBy = "userPreferences")
+    @OneToOne(mappedBy = "userPreferences", cascade = CascadeType.ALL)
     private AppUser appUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

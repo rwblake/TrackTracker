@@ -1,10 +1,9 @@
 package team.bham.service.spotify;
 
+/** This class is used to temporarily store data for a PlaylistInsights HTTP response.
+ * It is converted to JSON before being sent.
+ */
 public class PlaylistInsightsHTTPResponse {
-
-    /** This class is used to temporarily store data for a PlaylistInsights HTTP response.
-     * It is converted to JSON before being sent.
-     */
 
     String playlistTitle;
     String imageURL;

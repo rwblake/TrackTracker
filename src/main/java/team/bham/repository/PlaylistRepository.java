@@ -35,4 +35,6 @@ public interface PlaylistRepository extends PlaylistRepositoryWithBagRelationshi
     public Playlist findPlaylistBySpotifyID(String spotifyID);
 
     public List<Playlist> findPlaylistsByAppUser(AppUser appUser);
+
+    public void deletePlaylistById(long id);
 }
