@@ -16,6 +16,8 @@ import team.bham.repository.StreamRepository;
 import team.bham.service.account.AppUserService;
 import team.bham.service.account.NoAppUserException;
 import team.bham.service.feed.CardService;
+import team.bham.service.feed.FeedCardService;
+import team.bham.service.feed.FeedService;
 
 @Service
 public class FriendService {
@@ -24,24 +26,24 @@ public class FriendService {
     private final StreamRepository streamRepository;
     private final FriendshipRepository friendshipRepository;
     private final FriendRequestRepository friendRequestRepository;
-    private final CardService cardService;
     private final AppUserService appUserService;
     private final AppUserRepository appUserRepository;
+    private final FeedCardService feedCardService;
 
     public FriendService(
         StreamRepository streamRepository,
         FriendshipRepository friendshipRepository,
         FriendRequestRepository friendRequestRepository,
-        CardService cardService,
         AppUserService appUserService,
-        AppUserRepository appUserRepository
+        AppUserRepository appUserRepository,
+        FeedCardService feedCardService
     ) {
         this.streamRepository = streamRepository;
         this.friendshipRepository = friendshipRepository;
         this.friendRequestRepository = friendRequestRepository;
-        this.cardService = cardService;
         this.appUserService = appUserService;
         this.appUserRepository = appUserRepository;
+        this.feedCardService = feedCardService;
     }
 
     /** Handles the backend logic for creating a friend request.
@@ -57,7 +59,7 @@ public class FriendService {
         AppUser fromAppUser = friendRequest.getInitiatingAppUser();
 
         log.debug("Making a new FriendRequest card");
-        cardService.createFriendRequestCard(toAppUser, fromAppUser.getId());
+        feedCardService.createFriendRequestCard(toAppUser, fromAppUser.getId());
 
         return friendRequest;
     }
@@ -88,13 +90,13 @@ public class FriendService {
         friendshipRepository.save(myFriendship);
 
         // Add new cards to each friend's feed, notifying them of the new friendship
-        cardService.createNewFriendCard(currentUser, requestUser.getId());
-        cardService.createNewFriendCard(requestUser, currentUser.getId());
+        feedCardService.createNewFriendCard(currentUser, requestUser.getId());
+        feedCardService.createNewFriendCard(requestUser, currentUser.getId());
 
         // Delete the friend request
         friendRequestRepository.delete(friendRequest);
         // Delete the friend request card
-        //        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());  // TODO: causes errors?
+        //        feedCardService.deleteFriendRequestCards(currentUser, requestUser.getId());  // TODO: causes errors?
     }
 
     /** Handles the backend logic for rejecting a friend request.
@@ -119,7 +121,7 @@ public class FriendService {
         friendRequestRepository.delete(friendRequest);
 
         // Delete the friend request card
-        cardService.deleteFriendRequestCards(currentUser, requestUser.getId());
+        feedCardService.deleteFriendRequestCards(currentUser, requestUser.getId());
     }
 
     /** Handles the backend logic for rejecting a friend request.
@@ -139,8 +141,8 @@ public class FriendService {
         AppUser friend = appUserRepository.findOneById(friendAppUserId).orElseThrow();
 
         // Delete the NewFriend cards for both friends
-        cardService.deleteNewFriendCards(currentUser, friendAppUserId);
-        cardService.deleteNewFriendCards(friend, currentUser.getId());
+        feedCardService.deleteNewFriendCards(currentUser, friendAppUserId);
+        feedCardService.deleteNewFriendCards(friend, currentUser.getId());
 
         // Delete any pinned friends
         unpinFriend(friendAppUserId);
@@ -151,14 +153,14 @@ public class FriendService {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = appUserService.getCurrentAppUser();
         // Create the card to pin the friend
-        cardService.createPinnedFriendCard(currentUser, pinAppUserId);
+        feedCardService.createPinnedFriendCard(currentUser, pinAppUserId);
     }
 
     public void unpinFriend(Long pinAppUserId) {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = appUserService.getCurrentAppUser();
         // Delete the card which pins the friend
-        cardService.deletePinnedFriendCard(currentUser, pinAppUserId);
+        feedCardService.deletePinnedFriendCard(currentUser, pinAppUserId);
     }
 
     public List<Friend> getFriends(AppUser me) {

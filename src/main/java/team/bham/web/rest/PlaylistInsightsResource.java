@@ -18,6 +18,7 @@ import team.bham.service.PlaylistService;
 import team.bham.service.UserService;
 import team.bham.service.account.AppUserService;
 import team.bham.service.feed.CardService;
+import team.bham.service.feed.FeedCardService;
 import team.bham.service.spotify.*;
 
 @RestController
@@ -27,22 +28,22 @@ public class PlaylistInsightsResource {
 
     private final PlaylistService playlistService;
     private final SpotifyService spotifyService;
-    private final CardService cardService;
     private final UserService userService;
     private final AppUserService appUserService;
+    private final FeedCardService feedCardService;
 
     public PlaylistInsightsResource(
         PlaylistService playlistService,
         SpotifyService spotifyService,
-        CardService cardService,
         UserService userService,
-        AppUserService appUserService
+        AppUserService appUserService,
+        FeedCardService feedCardService
     ) {
         this.playlistService = playlistService;
         this.spotifyService = spotifyService;
-        this.cardService = cardService;
         this.userService = userService;
         this.appUserService = appUserService;
+        this.feedCardService = feedCardService;
     }
 
     @PostMapping("/playlist-insights")
@@ -60,7 +61,7 @@ public class PlaylistInsightsResource {
 
         if (user.isPresent()) {
             // save a card which tells the user they have just analysed a new playlist
-            cardService.createNewPlaylistCard(user.get(), myPlaylist.getId());
+            feedCardService.createNewPlaylistCard(user.get(), myPlaylist.getId());
         } else {
             // If we're not logged in, we shouldn't permanently store the playlist.
             playlistService.removePlaylist(myPlaylist);

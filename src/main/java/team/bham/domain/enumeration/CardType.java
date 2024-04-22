@@ -22,6 +22,9 @@ public enum CardType {
     /** The card displays how many different songs a user has listened to */
     NO_OF_SONGS_LISTENED,
 
+    /** The card displays how many different genres a user has listened to */
+    NO_OF_GENRES_LISTENED,
+
     /** The card displays a friend request */
     FRIEND_REQUEST,
 
