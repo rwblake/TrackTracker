@@ -2,11 +2,11 @@
   <h1>Friends</h1>
 
   <!-- View all visible users -->
-  <div class="dropdown" (focusin)="toggledialog()">
+  <div [class]="search === '' ? 'dropdown transparent' : 'dropdown'" (focusin)="toggledialog()">
     <div class="searchBar">
       <input class="form-control mr-sm-2" type="search" placeholder="Search for users" aria-label="Search" [(ngModel)]="search" />
     </div>
-    <div class="userList" *ngIf="search != ''">
+    <div class="userList" *ngIf="search !== ''">
       <!-- Show friends -->
       <div *ngFor="let friend of friends">
         <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
@@ -58,21 +58,21 @@
     </div>
   </div>
 
+  <br />
+
   <!-- List recommendations -->
   <section *ngIf="recommendations && recommendations.length > 0">
     <h2>Friend Recommendations</h2>
     <div class="userList">
       <div class="userCard" *ngFor="let rec of recommendations">
-        <div *ngIf="!Number.isNaN(rec.similarity)">
-          <img [src]="rec.aboutAppUser?.avatarURL" />
-          <div class="details">
-            <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
-            <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
-          </div>
-          <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
-            <fa-icon icon="plus"></fa-icon>
-          </button>
+        <img [src]="rec.aboutAppUser?.avatarURL" />
+        <div class="details">
+          <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
+          <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
         </div>
+        <button type="submit" class="btn btn-primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
+          <fa-icon icon="plus"></fa-icon>
+        </button>
       </div>
     </div>
   </section>

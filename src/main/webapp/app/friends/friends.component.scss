@@ -97,6 +97,7 @@ section {
   background: rgb(255, 255, 255, 0.2);
   transition: background-color 50ms ease-out;
   border: solid 1px rgb(255, 255, 255, 0.5);
+
   padding: 8px 8px;
   border-radius: 8px;
   width: 100%;
@@ -115,4 +116,9 @@ section {
   .userCard {
     margin-top: 16px;
   }
+}
+
+.transparent {
+  background: transparent;
+  border-color: transparent;
 }
