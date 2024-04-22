@@ -40,11 +40,11 @@ export class FriendsComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
-    this.loadRecommendations();
     this.reload();
   }
 
   reload() {
+    this.loadRecommendations();
     this.loadFriendRequests();
     this.loadFriends();
     this.loadUsers();
