@@ -65,6 +65,12 @@
     top: -400px;
   }
 }
+:host:has(.profile-page) {
+  &::before {
+    filter: blur(60px) hue-rotate(35deg);
+    top: -300px;
+  }
+}
 :host:has(.register) {
   &::before {
     filter: blur(60px) hue-rotate(-20deg);
