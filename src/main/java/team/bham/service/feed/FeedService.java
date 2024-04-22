@@ -7,6 +7,7 @@ import team.bham.domain.AppUser;
 import team.bham.domain.Card;
 import team.bham.domain.Feed;
 import team.bham.domain.FeedCard;
+import team.bham.domain.enumeration.CardType;
 import team.bham.repository.FeedCardRepository;
 import team.bham.repository.FeedRepository;
 
@@ -40,8 +41,29 @@ public class FeedService {
     /** Refreshes the user's feed with new cards, and updates the timestamp for last Music Profile update */
     public void updateUsersMusicProfile(AppUser appUser) {
         Feed feed = appUser.getFeed();
-
+        // checkStreamMilestones(appUser, feed);
         feed.setLastUpdated(Instant.now());
         feedRepository.save(feed);
+    }
+
+    public void checkStreamMilestones(AppUser appUser, Feed feed) {
+        // A new streams milestone card is generated when the user reaches a multiple of this number
+        final int milestoneFrequency = 5;
+        int streamCount = appUser.getStreams().size();
+        int milestoneAmount = (streamCount / milestoneFrequency) * milestoneFrequency;
+        boolean exists = false;
+
+        for (FeedCard card : feed.getCards()) {
+            Card cardData = card.getCard();
+            if (cardData.getMetric() == CardType.NO_OF_SONGS_LISTENED && cardData.getMetricValue() == milestoneAmount) {
+                // The milestone has already been reached. Don't generate a new card.
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            // cardService.createMilestone(appUser, CardType.NO_OF_SONGS_LISTENED, milestoneAmount);
+        }
     }
 }
