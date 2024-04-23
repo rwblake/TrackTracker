@@ -71,6 +71,37 @@ public class StreamRefresher {
         }
     }
 
+    /** Get initial past 50 streams for new AppUser */
+    public void firstStreamsForUser(AppUser appUser) {
+        try {
+            // Setup API object
+            SpotifyApi spotifyApi = spotifyService.getApi(appUser);
+
+            // Get streams
+            PlayHistory[] playHistory = spotifyApi.getCurrentUsersRecentlyPlayedTracks().limit(50).build().execute().getItems();
+
+            if (playHistory.length == 0) {
+                return;
+            }
+
+            // Create songs
+            List<Track> trackList = Arrays.stream(playHistory).map(PlayHistory::getTrack).collect(Collectors.toList());
+            List<Song> mySongs = this.songService.createSongs(trackList, spotifyApi);
+
+            if (playHistory.length != mySongs.size()) {
+                return;
+            }
+
+            // Create streams
+            for (int i = 0; i < mySongs.size(); i++) {
+                this.streamService.createStream(playHistory[i], mySongs.get(i), appUser);
+            }
+        } catch (IOException | SpotifyWebApiException | ParseException | IllegalStateException e) {
+            // If any of the requests fail, we will still execute the other ones
+            log.error("Failed to get streams for an appUser", e);
+        }
+    }
+
     /** Refreshes the streams for a given AppUser */
     public void refreshStreamsForUser(AppUser appUser) {
         try {
