@@ -4,18 +4,18 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.CardType;
-import team.bham.repository.AppUserRepository;
-import team.bham.repository.CardRepository;
-import team.bham.repository.FeedRepository;
-import team.bham.repository.PlaylistRepository;
+import team.bham.repository.*;
 
 /** This service handles the abstraction of FeedCards. It is used to:
  * <ul>
@@ -25,6 +25,7 @@ import team.bham.repository.PlaylistRepository;
  * @apiNote For more fine-tune access manipulating Cards, use CardService
  * */
 @Service
+@Transactional
 public class FeedCardService {
 
     final PlaylistRepository playlistRepository;
@@ -33,17 +34,20 @@ public class FeedCardService {
 
     private final Logger log = LoggerFactory.getLogger(FeedCardService.class);
     private final FeedRepository feedRepository;
+    private final SongRepository songRepository;
 
     public FeedCardService(
         PlaylistRepository playlistRepository,
         AppUserRepository appUserRepository,
         CardRepository cardRepository,
-        FeedRepository feedRepository
+        FeedRepository feedRepository,
+        SongRepository songRepository
     ) {
         this.playlistRepository = playlistRepository;
         this.appUserRepository = appUserRepository;
         this.cardRepository = cardRepository;
         this.feedRepository = feedRepository;
+        this.songRepository = songRepository;
     }
 
     public void addCardToFeed(Card card, Feed feed) {
@@ -63,21 +67,26 @@ public class FeedCardService {
         return feedCards
             .stream()
             .map(feedCard -> {
-                switch (inferType(feedCard)) {
-                    case "milestone":
-                        return generateFrontendMilestoneCard(feedCard);
-                    case "new-playlist":
-                        return generateFrontendPlaylistCard(feedCard);
-                    case "personal":
-                        return generateFrontendPersonalCard(feedCard);
-                    case "friend-request":
-                        return generateFrontendFriendRequestCard(feedCard);
-                    case "new-friend":
-                        return generateFrontendNewFriendCard(feedCard);
-                    case "friend-update":
-                        return generateFrontendFriendUpdateCard(feedCard);
-                    default:
-                        throw new InvalidInferredCardTypeException();
+                try {
+                    switch (inferType(feedCard)) {
+                        case "milestone":
+                            return generateFrontendMilestoneCard(feedCard);
+                        case "new-playlist":
+                            return generateFrontendPlaylistCard(feedCard);
+                        case "personal":
+                            return generateFrontendPersonalCard(feedCard);
+                        case "friend-request":
+                            return generateFrontendFriendRequestCard(feedCard);
+                        case "new-friend":
+                            return generateFrontendNewFriendCard(feedCard);
+                        case "friend-update":
+                            return generateFrontendFriendUpdateCard(feedCard);
+                        default:
+                            throw new InvalidInferredCardTypeException();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
                 }
             })
             .collect(Collectors.toList());
@@ -278,8 +287,22 @@ public class FeedCardService {
 
         // there is now no timeframe, and card is not a friend update (or request / new friend)
 
-        // if there is no timeframe -> a stat of all time
-        if (feedCard.getCard().getTimeFrame() == null) return "milestone";
+        // if there is no timeframe (and also a milestone card type) -> a stat of all time
+        if (
+            feedCard.getCard().getTimeFrame() == null &&
+            List
+                .of(
+                    new CardType[] {
+                        CardType.NO_OF_FRIENDS,
+                        CardType.NO_OF_GENRES_LISTENED,
+                        CardType.NO_OF_SONGS_LISTENED,
+                        CardType.LISTENING_DURATION,
+                    }
+                )
+                .contains(feedCard.getCard().getMetric())
+        ) {
+            return "milestone";
+        }
 
         // return personal for all else
         return "personal";
@@ -324,8 +347,14 @@ public class FeedCardService {
                 }
             case NO_OF_SONGS_LISTENED:
                 {
-                    icon = "numbers";
+                    icon = "music_note";
                     message = String.format("You have listened to a total of %d songs!", feedCard.getCard().getMetricValue());
+                    break;
+                }
+            case NO_OF_GENRES_LISTENED:
+                {
+                    icon = "genres";
+                    message = String.format("You have listened to a total of %d genres!", feedCard.getCard().getMetricValue());
                     break;
                 }
             case NO_OF_FRIENDS:
@@ -400,6 +429,29 @@ public class FeedCardService {
                     icon = "artist";
                     message =
                         String.format("Your top artist %s is (artistID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
+                    break;
+                }
+            case TOP_SONG:
+                {
+                    Optional<Song> song = songRepository.findById(feedCard.getCard().getMetricValue().longValue());
+                    if (song.isPresent()) {
+                        Hibernate.initialize(song.get().getArtists());
+                        if (!song.get().getArtists().isEmpty()) {
+                            message =
+                                String.format(
+                                    "Your top song %s is %s by %s!",
+                                    formattedDuration,
+                                    song.get().getName(),
+                                    song.get().getArtists().iterator().next().getName()
+                                );
+                        } else {
+                            message = String.format("Your top song %s is %s!", formattedDuration, song.get().getName());
+                        }
+                    } else {
+                        message =
+                            String.format("Your top song %s is (songID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
+                    }
+                    icon = "repeat";
                     break;
                 }
             default:
@@ -514,6 +566,10 @@ public class FeedCardService {
     }
 
     private String formatDuration(Duration duration) {
+        if (duration == null) {
+            return "of all time";
+        }
+
         if (duration.toMinutes() == 1) {
             return "this minute";
         }
