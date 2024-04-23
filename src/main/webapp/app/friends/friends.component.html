@@ -10,14 +10,14 @@
       <!-- Show friends -->
       <div *ngFor="let friend of friends">
         <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-          <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
+          <img [src]="friend.friendAppUser?.avatarURL" alt="" />
 
           <div class="details">
             <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
             <p>Friends from {{ since(friend.createdAt) }} ago</p>
           </div>
 
-          <button type="submit" class="button secondary" (click)="delete(friend)">
+          <button type="submit" class="button secondary" (click)="delete(friend)" aria-label="unfriend">
             <fa-icon icon="xmark"></fa-icon>
           </button>
         </div>
@@ -25,17 +25,17 @@
       <!-- Show new users -->
       <div *ngFor="let user of users">
         <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-          <img [src]="user?.avatarURL" />
+          <img [src]="user?.avatarURL" alt="" />
 
           <div class="details">
             <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
           </div>
 
-          <button type="submit" class="button secondary" (click)="block(user.id)">
+          <button type="submit" class="button secondary" (click)="block(user.id)" aria-label="block">
             <fa-icon icon="ban"></fa-icon>
           </button>
 
-          <button type="submit" class="button primary" (click)="sendFriendRequest(user.id)">
+          <button type="submit" class="button primary" (click)="sendFriendRequest(user.id)" aria-label="send friend request">
             <fa-icon icon="plus"></fa-icon>
           </button>
         </div>
@@ -44,14 +44,14 @@
       <div *ngFor="let user of blocked">
         <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
           <div class="d-flex gap-4 justify-content-center">
-            <img [src]="user?.avatarURL" />
+            <img [src]="user?.avatarURL" alt="" />
 
             <div class="details">
               <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
             </div>
           </div>
 
-          <button type="submit" class="button secondary" (click)="unblock(user.id)">
+          <button type="submit" class="button secondary" (click)="unblock(user.id)" aria-label="unblock">
             <fa-icon icon="ban"></fa-icon>
             <p>Unblock</p>
           </button>
@@ -68,13 +68,13 @@
     <div class="userList">
       <div class="userCard" *ngFor="let rec of recommendations">
         <div class="d-flex gap-4 justify-content-center">
-          <img [src]="rec.aboutAppUser?.avatarURL" />
+          <img [src]="rec.aboutAppUser?.avatarURL" alt="" />
           <div class="details">
             <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
             <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
           </div>
         </div>
-        <button type="submit" class="button primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)">
+        <button type="submit" class="button primary" (click)="sendFriendRequest(rec.aboutAppUser?.id)" aria-label="send friend request">
           <fa-icon icon="plus"></fa-icon>
         </button>
       </div>
@@ -87,10 +87,7 @@
     <div class="userList">
       <div class="userCard" *ngFor="let friendRequest of friendRequests">
         <div class="d-flex gap-4 justify-content-center">
-          <img
-            [src]="friendRequest.initiatingAppUser?.avatarURL"
-            [alt]="friendRequest.initiatingAppUser?.internalUser?.firstName + ' ' + friendRequest.initiatingAppUser?.internalUser?.lastName"
-          />
+          <img [src]="friendRequest.initiatingAppUser?.avatarURL" alt="" />
 
           <div class="details">
             <p class="name">{{ getDisplayName(friendRequest.initiatingAppUser?.internalUser) }}</p>
@@ -99,11 +96,11 @@
         </div>
 
         <div class="d-flex gap-4">
-          <button type="submit" class="button primary" (click)="accept(friendRequest.id)">
+          <button type="submit" class="button primary" (click)="accept(friendRequest.id)" aria-label="accept friend request">
             <span class="material-symbols-outlined">check</span>
             <!--          <fa-icon icon="check"></fa-icon>-->
           </button>
-          <button type="submit" class="button secondary" (click)="reject(friendRequest.id)">
+          <button type="submit" class="button secondary" (click)="reject(friendRequest.id)" aria-label="reject friend request">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
@@ -117,7 +114,7 @@
     <div class="userList">
       <div class="userCard" *ngFor="let friend of friends">
         <div class="d-flex gap-4 justify-content-center">
-          <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." />
+          <img [src]="friend.friendAppUser?.avatarURL" alt="Profile picture." alt="" />
 
           <div class="details">
             <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
@@ -136,7 +133,7 @@
           </div>
         </div>
 
-        <button type="submit" class="button secondary" (click)="delete(friend)">
+        <button type="submit" class="button secondary" (click)="delete(friend)" aria-label="unfriend">
           <fa-icon icon="xmark"></fa-icon>
         </button>
       </div>
