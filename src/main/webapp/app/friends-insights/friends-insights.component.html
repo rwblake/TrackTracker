@@ -1,17 +1,18 @@
 <div class="mx-4 mx-md-5 root">
-  <div class="row">
+  <div *ngIf="!account" class="col">
+    <h4>You must be logged in to view your friends insights!</h4>
+    <a class="row justify-content-center" routerLink="/login">Login</a>
+  </div>
+
+  <div *ngIf="account" class="row">
     <h1>Your Friend Insights</h1>
 
     <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
 
-    <div *ngIf="!account" class="col">
-      <h4>You must be logged in to view your friends insights!</h4>
-      <a class="row justify-content-center" routerLink="/login">Login</a>
-    </div>
     <div *ngIf="error">
       <h4>An unknown error has occurred!</h4>
     </div>
-    <div *ngIf="account && (!popularCategories || !leaderboards)">
+    <div *ngIf="!error && (!popularCategories || !leaderboards)">
       <h4>Calculating...</h4>
     </div>
 
