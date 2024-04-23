@@ -19,7 +19,12 @@
     <!--CAN ONLY BE SHOWN IF THE ACCOUNT_DATA IS INITIALISED-->
     <section class="profiles">
       <button (click)="gotoProfile()" class="profile-card">
-        <img [src]="account_data.avatarURL" alt="Your profile picture" height="80" width="80" />
+        <img
+          [src]="account_data.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          alt="Your profile picture"
+          height="80"
+          width="80"
+        />
 
         <div class="details">
           <p class="name">{{ getNames().join(' ') }}</p>
@@ -31,7 +36,12 @@
       <hr class="divider" />
 
       <button *ngFor="let friend of getPinnedFriends(); index as i; trackBy: trackByIndex" class="button-card friend-card">
-        <img [src]="friend.avatarURL" alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture" height="64" width="64" />
+        <img
+          [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
+          height="64"
+          width="64"
+        />
         <p class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>
       </button>
 
@@ -97,7 +107,12 @@
       <p>Select which friends are pinned to your home page</p>
       <label *ngFor="let friend of this.account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">
         <input type="checkbox" [defaultChecked]="friend.pinned" />
-        <img [src]="friend.avatarURL" alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture" height="64" width="64" />
+        <img
+          [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
+          height="64"
+          width="64"
+        />
         <p class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>
       </label>
     </div>
