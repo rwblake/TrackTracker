@@ -12,7 +12,10 @@
 
 .btn {
   border: none;
-  box-shadow: 0 0 0 0.25rem #0d6efd40;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.25rem #0d6efd40;
+  }
 }
 
 #detail {
