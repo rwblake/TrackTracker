@@ -658,4 +658,5 @@ export class InsightsComponent implements OnInit {
   // resizeChart(width: any): void {
   //   this.view = [width, 320]
   // }
+  protected readonly LegendPosition = LegendPosition;
 }

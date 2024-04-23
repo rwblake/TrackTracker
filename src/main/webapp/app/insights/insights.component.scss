@@ -7,23 +7,8 @@
     fill: #fff !important;
   }
 }
-* {
-  font-size: 62, 5%;
-  margin: 0;
-}
 
-.small-buffer {
-  margin-top: 30px;
-}
-
-.buffer {
-  margin-top: 120px;
-}
-
-.top-buffer {
-  margin-top: 150px;
-}
-
-.jhi-time-period-picker {
-  z-index: 0;
+.chart {
+  display: block;
+  padding-bottom: 25%;
 }

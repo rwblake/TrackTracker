@@ -1,162 +1,156 @@
-<div class="root insights">
-  <h1>Insights</h1>
+<div class="root insights mx-4 mx-md-5">
+  <div class="row col-12">
+    <h1>Insights</h1>
 
-  <div class="container-fluid px-5">
+    <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
+
     <div class="row">
-      <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
+      <div class="graphs-container mt-5">
+        <h4>{{ graphNameChange() }}</h4>
+        <hr />
 
-      <div class="w-100"></div>
+        <div class="row mt-5 gx-5 justify-content-between">
+          <div class="col-md-3 p-0">
+            <h5 class="text-center my-4">Top Genres</h5>
+            <div #genrePieChart class="chart">
+              <!--   Genre pie chart     -->
+              <ngx-charts-pie-chart
+                [view]="[genrePieChart.offsetWidth, genrePieChart.offsetWidth * 0.9]"
+                [results]="genrePie"
+                [legendPosition]="LegendPosition.Below"
+                [arcWidth]="3"
+                [explodeSlices]="true"
+                [legend]="true"
+                [legendTitle]="'Genre Listened To'"
+                [scheme]="chartScheme"
+              >
+              </ngx-charts-pie-chart>
+            </div>
+          </div>
 
-      <div class="w-100"></div>
+          <div class="col-md-3 p-0">
+            <h5 class="text-center my-4">Top Albums</h5>
+            <div #albumTrendChart class="chart">
+              <!--  Album listened to    -->
+              <ngx-charts-bar-vertical
+                [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 1.5]"
+                [results]="albumsBar"
+                [legendPosition]="LegendPosition.Below"
+                [showXAxisLabel]="true"
+                [showYAxisLabel]="true"
+                [rotateXAxisTicks]="true"
+                [roundDomains]="true"
+                [xAxis]="true"
+                [yAxis]="true"
+                [showGridLines]="false"
+                [xAxisLabel]="'Album'"
+                [yAxisLabel]="'Streams'"
+              >
+              </ngx-charts-bar-vertical>
+            </div>
+          </div>
 
-      <div class="row gx-5 buffer">
-        <h1>{{ graphNameChange() }}</h1>
-      </div>
-
-      <div class="row gx-5 buffer">
-        <h4 class="col-md-4">Top Genres</h4>
-        <h4 class="col-md-4">Top Albums</h4>
-        <h4 class="col-md-4">Top Artists</h4>
-      </div>
-
-      <div class="row gx-5 small-buffer">
-        <div class="col-md-4" #genrePieChart>
-          <!--   Genre pie chart     -->
-          <ngx-charts-pie-chart
-            [view]="[genrePieChart.offsetWidth, genrePieChart.offsetWidth * 0.9]"
-            [results]="genrePie"
-            [arcWidth]="3"
-            [explodeSlices]="true"
-            [legendPosition]="below"
-            [legend]="true"
-            [legendTitle]="'Genre Listened To'"
-            [scheme]="chartScheme"
-          >
-          </ngx-charts-pie-chart>
-        </div>
-        <div class="col-md-4" #albumTrendChart>
-          <!--  Album listened to    -->
-          <ngx-charts-bar-vertical
-            [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 0.9]"
-            [results]="albumsBar"
-            [showXAxisLabel]="true"
-            [showYAxisLabel]="true"
-            [rotateXAxisTicks]="true"
-            [roundDomains]="true"
-            [xAxis]="true"
-            [yAxis]="true"
-            [showGridLines]="false"
-            [xAxisLabel]="'Albums'"
-            [yAxisLabel]="'Frequency'"
-          >
-          </ngx-charts-bar-vertical>
-        </div>
-        <div class="col-md-4" #artistTrendChart>
-          <ngx-charts-pie-chart
-            [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
-            [results]="artistsLine"
-            [legendPosition]="below"
-            [legend]="true"
-            [legendTitle]="'Artists'"
-            [scheme]="chartScheme"
-            [doughnut]="true"
-          >
-          </ngx-charts-pie-chart>
-        </div>
-      </div>
-
-      <div class="w-100"></div>
-
-      <div class="row gx-5 buffer top-buffer">
-        <h1>{{ leaderNameChange() }}</h1>
-      </div>
-
-      <div class="row gy-5 buffer">
-        <div class="col-md-3">
-          <h4 class="py-3">Favourite Artists</h4>
-          <div>
-            <table class="table table-striped table-dark">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Artist</th>
-                  <th scope="col">Songs Listened to</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let artist of artistsLine | slice: 0:3; let i = index">
-                  <td>{{ artist.name }}</td>
-                  <td></td>
-                  <td>{{ artist.value }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-md-3 p-0">
+            <h5 class="text-center my-4">Top Artists</h5>
+            <div #artistTrendChart class="chart">
+              <ngx-charts-pie-chart
+                [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
+                [results]="artistsLine"
+                [legendPosition]="LegendPosition.Below"
+                [legend]="true"
+                [legendTitle]="'Artists'"
+                [scheme]="chartScheme"
+                [doughnut]="true"
+              >
+              </ngx-charts-pie-chart>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="col-md-3">
-          <h4 class="py-3">Favourite Genre</h4>
-          <div>
-            <table class="table table-striped table-dark">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Genre</th>
-                  <th scope="col">Songs Listened to</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let genre of genrePie | slice: 0:3; let i = index">
-                  <td>{{ genre.name }}</td>
-                  <td></td>
-                  <td>{{ genre.value }}</td>
-                </tr>
-              </tbody>
-            </table>
+      <div class="leaderboard-container mt-5">
+        <h4>{{ leaderNameChange() }}</h4>
+        <hr />
+
+        <div class="row gy-5">
+          <div class="col-md-3">
+            <h5 class="text-center my-4">Favourite Artists</h5>
+            <div>
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Streams</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let artist of artistsLine | slice: 0:3; let i = index">
+                    <td>{{ artist.name }}</td>
+                    <td>{{ artist.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        <div class="col-md-3">
-          <h4 class="py-3">Favourite Song</h4>
-          <div>
-            <table class="table table-striped table-dark">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Song</th>
-                  <th scope="col">Frequency</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let song of songChart | slice: 0:3; let i = index">
-                  <td>{{ song.name }}</td>
-                  <td></td>
-                  <td>{{ song.value }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-md-3">
+            <h5 class="text-center my-4">Favourite Genre</h5>
+            <div>
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Genre</th>
+                    <th scope="col">Streams</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let genre of genrePie | slice: 0:3; let i = index">
+                    <td>{{ genre.name }}</td>
+                    <td>{{ genre.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        <div class="col-md-3">
-          <h4 class="py-3">Favourite Time Period</h4>
-          <div>
-            <table class="table table-striped table-dark">
-              <thead>
-                <tr>
-                  <th scope="col"></th>
-                  <th scope="col">Decade</th>
-                  <th scope="col">Times listened</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let decade of decadeChart | slice: 0:3; let i = index">
-                  <td>{{ decade.name }}</td>
-                  <td></td>
-                  <td>{{ decade.value }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-md-3">
+            <h5 class="text-center my-4">Favourite Song</h5>
+            <div>
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Song</th>
+                    <th scope="col">Streams</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let song of songChart | slice: 0:3; let i = index">
+                    <td>{{ song.name }}</td>
+                    <td>{{ song.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <h5 class="text-center my-4">Favourite Time Period</h5>
+            <div>
+              <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Decade</th>
+                    <th scope="col">Streams</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let decade of decadeChart | slice: 0:3; let i = index">
+                    <td>{{ decade.name }}</td>
+                    <td>{{ decade.value }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
