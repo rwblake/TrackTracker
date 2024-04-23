@@ -52,6 +52,8 @@ public class FriendsResource {
         List<Long> badIds = new ArrayList<>();
 
         // Only return users that aren't
+        // -- the current user
+        badIds.add(currentUser.getId());
         // -- blocked
         badIds.addAll(currentUser.getBlockedUsers().stream().map(AppUser::getId).collect(Collectors.toList()));
         badIds.addAll(currentUser.getBlockedByUsers().stream().map(AppUser::getId).collect(Collectors.toList()));
