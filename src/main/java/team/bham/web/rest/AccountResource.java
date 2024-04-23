@@ -31,6 +31,7 @@ import team.bham.service.feed.FeedCardService;
 import team.bham.service.feed.FeedService;
 import team.bham.service.spotify.DeclinedSpotifyAccessException;
 import team.bham.service.spotify.SpotifyService;
+import team.bham.service.spotify.StreamRefresher;
 import team.bham.web.rest.errors.*;
 import team.bham.web.rest.errors.EmailAlreadyUsedException;
 import team.bham.web.rest.errors.InvalidPasswordException;
@@ -70,6 +71,8 @@ public class AccountResource {
     private final CardRepository cardRepository;
     private final FeedCardService feedCardService;
 
+    private final StreamRefresher streamRefresher;
+
     public AccountResource(
         UserRepository userRepository,
         UserService userService,
@@ -79,7 +82,8 @@ public class AccountResource {
         MailService mailService,
         SpotifyService spotifyService,
         CardRepository cardRepository,
-        FeedCardService feedCardService
+        FeedCardService feedCardService,
+        StreamRefresher streamRefresher
     ) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -90,6 +94,7 @@ public class AccountResource {
         this.spotifyService = spotifyService;
         this.cardRepository = cardRepository;
         this.feedCardService = feedCardService;
+        this.streamRefresher = streamRefresher;
     }
 
     /**
@@ -149,6 +154,9 @@ public class AccountResource {
         );
         // Send email to verify account
         mailService.sendActivationEmail(appUser.getInternalUser());
+
+        // Get most recent 50 streams for user
+        streamRefresher.firstStreamsForUser(appUser);
     }
 
     /**
