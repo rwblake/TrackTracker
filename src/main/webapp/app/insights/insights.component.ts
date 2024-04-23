@@ -19,6 +19,7 @@ import {
 import { IPlaylist } from '../entities/playlist/playlist.model';
 import { IStream } from '../entities/stream/stream.model';
 import { error } from '@angular/compiler-cli/src/transformers/util';
+import { Account } from '../core/auth/account.model';
 
 @Component({
   selector: 'jhi-insights',
@@ -26,6 +27,9 @@ import { error } from '@angular/compiler-cli/src/transformers/util';
   styleUrls: ['./insights.component.scss'],
 })
 export class InsightsComponent implements OnInit {
+  error = false;
+  account: Account | null = null;
+
   user: IAppUser | null = null;
 
   recentStreams: IStream[] = [];
@@ -103,13 +107,20 @@ export class InsightsComponent implements OnInit {
       error: error => console.error('Error fetching user bio:', error),
     });
 
+    this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
+
     // get the insights to populate the graphs
     this.insightsService.retrieveStreamInsights().subscribe({
       next: response => {
-        if (response === null) console.error('No response given');
-        else this.onStreamRetrievalSuccess(response);
+        if (response === null) {
+          this.error = true;
+          console.error('No response given');
+        } else this.onStreamRetrievalSuccess(response);
       },
-      error: e => console.error(e),
+      error: e => {
+        this.error = true;
+        console.error(e);
+      },
       // this.onStreamRetrievalFailure(e),
     });
   }

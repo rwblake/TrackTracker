@@ -1,10 +1,22 @@
 <div class="root insights mx-4 mx-md-5">
-  <div class="row col-12">
+  <div *ngIf="!account" class="col">
+    <h4>You must be logged in to view your insights!</h4>
+    <a class="row justify-content-center" routerLink="/login">Login</a>
+  </div>
+
+  <div *ngIf="account" class="row col-12">
     <h1>Insights</h1>
 
     <jhi-time-period-picker (timePeriodChangeEvent)="onTimePeriodChange($event)"></jhi-time-period-picker>
 
-    <div class="row">
+    <div *ngIf="error">
+      <h4>An unknown error has occurred!</h4>
+    </div>
+    <div *ngIf="!error && !response">
+      <h4>Calculating...</h4>
+    </div>
+
+    <div *ngIf="response" class="row">
       <div class="graphs-container mt-5">
         <h4>{{ graphNameChange() }}</h4>
         <hr />
@@ -12,7 +24,8 @@
         <div class="row mt-5 gx-5 justify-content-between">
           <div class="col-md-3 p-0">
             <h5 class="text-center my-4">Top Genres</h5>
-            <div #genrePieChart class="chart">
+            <p *ngIf="genrePie.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="genrePie.length > 0" #genrePieChart class="chart">
               <!--   Genre pie chart     -->
               <ngx-charts-pie-chart
                 [view]="[genrePieChart.offsetWidth, genrePieChart.offsetWidth * 0.9]"
@@ -30,7 +43,8 @@
 
           <div class="col-md-3 p-0">
             <h5 class="text-center my-4">Top Albums</h5>
-            <div #albumTrendChart class="chart">
+            <p *ngIf="albumsBar.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="albumsBar.length > 0" #albumTrendChart class="chart">
               <!--  Album listened to    -->
               <ngx-charts-bar-vertical
                 [view]="[albumTrendChart.offsetWidth, albumTrendChart.offsetWidth * 1.5]"
@@ -52,7 +66,8 @@
 
           <div class="col-md-3 p-0">
             <h5 class="text-center my-4">Top Artists</h5>
-            <div #artistTrendChart class="chart">
+            <p *ngIf="artistsLine.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="artistsLine.length > 0" #artistTrendChart class="chart">
               <ngx-charts-pie-chart
                 [view]="[artistTrendChart.offsetWidth, artistTrendChart.offsetWidth * 0.9]"
                 [results]="artistsLine"
@@ -75,7 +90,8 @@
         <div class="row gy-5">
           <div class="col-md-3">
             <h5 class="text-center my-4">Favourite Artists</h5>
-            <div>
+            <p *ngIf="artistsLine.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="artistsLine.length > 0">
               <table class="table table-striped table-dark">
                 <thead>
                   <tr>
@@ -95,7 +111,8 @@
 
           <div class="col-md-3">
             <h5 class="text-center my-4">Favourite Genre</h5>
-            <div>
+            <p *ngIf="genrePie.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="genrePie.length > 0">
               <table class="table table-striped table-dark">
                 <thead>
                   <tr>
@@ -115,7 +132,8 @@
 
           <div class="col-md-3">
             <h5 class="text-center my-4">Favourite Song</h5>
-            <div>
+            <p *ngIf="songChart.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="songChart.length > 0">
               <table class="table table-striped table-dark">
                 <thead>
                   <tr>
@@ -135,7 +153,8 @@
 
           <div class="col-md-3">
             <h5 class="text-center my-4">Favourite Time Period</h5>
-            <div>
+            <p *ngIf="decadeChart.length == 0" class="text-center">No Data :(</p>
+            <div *ngIf="decadeChart.length > 0">
               <table class="table table-striped table-dark">
                 <thead>
                   <tr>
