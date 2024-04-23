@@ -8,6 +8,8 @@ import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { takeUntil } from 'rxjs/operators';
+import { Account_Combined } from '../../account/account_combined.model';
 
 @Component({
   selector: 'jhi-navbar',
@@ -20,6 +22,7 @@ export class NavbarComponent implements OnInit {
   openAPIEnabled?: boolean;
   version = '';
   account: Account | null = null;
+  account_data: Account_Combined | null = null;
   entitiesNavbarItems: any[] = [];
   private modalService = inject(NgbModal);
 
@@ -42,7 +45,22 @@ export class NavbarComponent implements OnInit {
     });
 
     this.accountService.getAuthenticationState().subscribe(account => {
-      this.account = account;
+      if (account === null) {
+        // If user not logged in (or the account is not authenticated)
+        this.account = null;
+        this.account_data = null;
+      } else {
+        // If the account is authenticated
+        this.account = account;
+        this.accountService.fetchAccountCombined().subscribe({
+          next: appUser => {
+            this.account_data = appUser;
+          },
+          error: () => {
+            this.account_data = null;
+          },
+        });
+      }
     });
   }
 

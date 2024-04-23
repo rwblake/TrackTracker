@@ -384,34 +384,48 @@
           [routerLinkActiveOptions]="{ exact: true }"
         >
           <button class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu" aria-label="profile dropdown">
-            <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
+            <img *ngIf="account_data?.avatarURL !== null" [src]="account_data?.avatarURL" alt="" width="24" height="24" />
+            <fa-icon *ngIf="account_data?.avatarURL === null" icon="user"></fa-icon>
+            {{ account?.login }}
           </button>
           <ul class="dropdown-menu profile-menu" ngbDropdownMenu aria-labelledby="profile-menu" id="dropdown">
             <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"> Profile </a>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/profile', this.account?.login]"
+                ><fa-icon icon="user"></fa-icon> Profile
+              </a>
             </li>
             <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./friends']"> Friends </a>
-            </li>
-            <hr />
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./profile/edit-profile']"> Edit Profile </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/settings']"> Settings </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/password']"> Change Password </a>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./friends']"
+                ><fa-icon icon="user-group"></fa-icon> Friends
+              </a>
             </li>
             <hr />
             <li>
-              <button class="dropdown-item" id="helpBtn" (click)="openModal(helpModal)">Help</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['./profile/edit-profile']"
+                ><fa-icon icon="pen-to-square"></fa-icon> Edit Profile
+              </a>
             </li>
             <li>
-              <button class="dropdown-item" id="gdprBtn" (click)="openModal(gdprModal)">GDPR Policy</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/settings']"
+                ><fa-icon icon="gear"></fa-icon> Settings
+              </a>
             </li>
             <li>
-              <button class="dropdown-item" (click)="logout()">Logout</button>
+              <a class="dropdown-item" (click)="collapseNavbar()" [routerLink]="['/account/password']"
+                ><fa-icon icon="lock"></fa-icon> Change Password
+              </a>
+            </li>
+            <hr />
+            <li>
+              <button class="dropdown-item" id="helpBtn" (click)="openModal(helpModal)"><fa-icon icon="circle-info"></fa-icon> Help</button>
+            </li>
+            <li>
+              <button class="dropdown-item" id="gdprBtn" (click)="openModal(gdprModal)">
+                <fa-icon icon="shield-halved"></fa-icon> GDPR Policy
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item" (click)="logout()"><fa-icon icon="right-from-bracket"></fa-icon> Logout</button>
             </li>
           </ul>
         </li>

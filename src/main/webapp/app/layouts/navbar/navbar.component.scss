@@ -27,6 +27,11 @@ $foreground: rgb(200, 200, 200);
   //overflow-x: hidden;
   //overflow-y: visible;
 
+  img {
+    border-radius: 1000px;
+    border: solid 2px rgb(255, 255, 255, 0.1);
+  }
+
   .dropdown-item.active,
   .dropdown-item.active:focus,
   .dropdown-item.active:hover {
