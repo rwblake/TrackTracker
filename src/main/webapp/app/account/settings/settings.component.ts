@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 const initialAccount: Account = {} as Account;
 
@@ -12,6 +13,7 @@ const initialAccount: Account = {} as Account;
 })
 export class SettingsComponent implements OnInit {
   success = false;
+  modalRef: NgbModalRef | undefined;
 
   settingsForm = new FormGroup({
     firstName: new FormControl(initialAccount.firstName, {
@@ -34,7 +36,7 @@ export class SettingsComponent implements OnInit {
     login: new FormControl(initialAccount.login, { nonNullable: true }),
   });
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
@@ -53,5 +55,14 @@ export class SettingsComponent implements OnInit {
 
       this.accountService.authenticate(account);
     });
+  }
+
+  openModal(content: TemplateRef<any>) {
+    this.modalRef = this.modalService.open(content, { scrollable: true });
+  }
+
+  deleteAccount() {
+    this.accountService.delete();
+    this.modalRef?.close();
   }
 }

@@ -10,6 +10,8 @@ import { Account } from 'app/core/auth/account.model';
 import { User } from '../../entities/user/user.model';
 import { IAppUser } from '../../entities/app-user/app-user.model';
 import { Account_Combined } from '../../account/account_combined.model';
+import { Login } from '../../login/login.model';
+import { FormControl, ɵRawValue } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -26,6 +28,10 @@ export class AccountService {
 
   save(account: Account): Observable<{}> {
     return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
+  }
+
+  delete() {
+    return this.http.delete(this.applicationConfigService.getEndpointFor('api/current-user'));
   }
 
   authenticate(identity: Account | null): void {

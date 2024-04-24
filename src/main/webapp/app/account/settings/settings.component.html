@@ -91,6 +91,21 @@
       </div>
 
       <button type="submit" [disabled]="settingsForm.invalid" class="button primary" data-cy="submit">Save</button>
+      <button type="button" class="button destructive" (click)="openModal(gdprModal)">Delete Account</button>
     </form>
   </div>
 </div>
+
+<ng-template #gdprModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Account</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete your account?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="button destructive" (click)="deleteAccount()">Delete Account</button>
+    <button type="button" class="button secondary" (click)="modal.close('Close click')">Cancel</button>
+  </div>
+</ng-template>
