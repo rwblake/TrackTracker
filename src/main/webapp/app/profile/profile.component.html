@@ -1,95 +1,96 @@
 <div class="root profile-page">
   <!-- Display Data Errors -->
   <h4 *ngIf="accountError || userError || friendsError; else noError" class="col">An unknown error has occurred!</h4>
+
   <ng-template #noError>
     <!-- Not signed in error -->
     <div *ngIf="!account; else signedIn" class="col">
       <h4>You must be logged in to view your profile!</h4>
       <a class="row justify-content-center" routerLink="/login">Login</a>
     </div>
+  </ng-template>
 
-    <ng-template #signedIn>
-      <!-- Still loading account data... -->
-      <h4 *ngIf="!user || !friends; else infoLoaded" class="col">Loading Profile...</h4>
+  <!-- Still loading account data... -->
+  <ng-template #signedIn>
+    <h4 *ngIf="!user || !friends; else infoLoaded" class="col">Loading Profile...</h4>
+  </ng-template>
 
-      <!-- Account data loaded -->
-      <ng-template #infoLoaded>
-        <div class="col row p-5 g-5 justify-content-center align-items-start">
-          <!-- Profile Info -->
-          <div class="col-md-4 left-bar d-flex flex-column align-items-start">
-            <img
-              class="rounded-circle mb-3"
-              [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
-              [alt]="account ? account.firstName + ' ' + account.lastName : 'Users name'"
-            />
+  <!-- Account data loaded -->
+  <ng-template #infoLoaded>
+    <div class="col row p-5 g-5 justify-content-center align-items-start">
+      <!-- Profile Info -->
+      <div class="col-md-4 left-bar d-flex flex-column align-items-start">
+        <img
+          class="rounded-circle mb-3"
+          [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          [alt]="account ? account.firstName + ' ' + account.lastName : 'Users name'"
+        />
 
-            <h2 class="mb-4 text-start">
-              {{ account ? account.firstName + ' ' + account.lastName : "User's name" }}
-            </h2>
+        <h2 class="mb-4 text-start">
+          {{ account ? account.firstName + ' ' + account.lastName : "User's name" }}
+        </h2>
 
-            <div class="stats d-flex flex-column gap-2 mb-4">
-              <div class="d-flex align-items-center gap-1">
-                <span class="material-symbols-outlined fill">person_pin</span>
-                <p class="m-0">{{ account ? account.login : 'login' }}</p>
-              </div>
-              <div *ngIf="user" class="d-flex align-items-center gap-1">
-                <span class="material-symbols-outlined fill">headphones</span>
-                <a [href]="'https://open.spotify.com/user/' + user.spotifyID">Links to {{ user.spotifyUsername }}</a>
-              </div>
-              <div *ngIf="user" class="d-flex align-items-center gap-1">
-                <span class="material-symbols-outlined fill">group</span>
-                <a routerLink="/friends">{{ friends?.length }} friends</a>
-              </div>
-            </div>
-
-            <div class="d-flex gap-2 mb-4">
-              <a class="button primary" routerLink="/profile/edit-profile">Edit Profile</a>
-              <a class="button primary" routerLink="/account/settings">App Settings</a>
-            </div>
-
-            <div *ngIf="user" class="bio">
-              <h3 class="text-start">My Bio</h3>
-              <p *ngIf="user.bio !== ''">{{ user.bio }}</p>
-              <p *ngIf="user.bio === ''"></p>
-            </div>
+        <div class="stats d-flex flex-column gap-2 mb-4">
+          <div class="d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined fill">person_pin</span>
+            <p class="m-0">{{ account ? account.login : 'login' }}</p>
           </div>
-
-          <!-- Analysed Playlists -->
-          <div class="col-md-4">
-            <h3 class="mb-4 text-start">Analysed Playlists</h3>
-
-            <!-- Still loading playlist data -->
-            <h5 *ngIf="!playlistData; else playlistInfo">Loading Playlists...</h5>
-
-            <!-- Playlist data loaded -->
-            <ng-template #playlistInfo>
-              <ng-container *ngIf="playlistData!.length > 0; else genericCard">
-                <a
-                  *ngFor="let playlist of playlistData | slice: 0:4; let i = index"
-                  routerLink="/insights/playlist"
-                  [queryParams]="{ playlistID: playlist.spotifyID }"
-                  class="songCard button-card"
-                >
-                  <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
-                  <p>
-                    <b>{{ playlist.name }}</b>
-                  </p>
-                </a>
-              </ng-container>
-
-              <ng-template #genericCard>
-                <button class="button-card friend-card" routerLink="/insights/playlist">
-                  <div class="circle-button">
-                    <span class="material-symbols-outlined">playlist_add</span>
-                  </div>
-
-                  <p class="name">Analyse Playlist</p>
-                </button>
-              </ng-template>
-            </ng-template>
+          <div *ngIf="user" class="d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined fill">headphones</span>
+            <a [href]="'https://open.spotify.com/user/' + user.spotifyID">Links to {{ user.spotifyUsername }}</a>
+          </div>
+          <div *ngIf="user" class="d-flex align-items-center gap-1">
+            <span class="material-symbols-outlined fill">group</span>
+            <a routerLink="/friends">{{ friends?.length }} friends</a>
           </div>
         </div>
-      </ng-template>
-    </ng-template>
+
+        <div class="d-flex gap-2 mb-4">
+          <a class="button primary" routerLink="/profile/edit-profile">Edit Profile</a>
+          <a class="button primary" routerLink="/account/settings">App Settings</a>
+        </div>
+
+        <div *ngIf="user" class="bio">
+          <h3 class="text-start">My Bio</h3>
+          <p *ngIf="user.bio !== ''">{{ user.bio }}</p>
+          <p *ngIf="user.bio === ''"></p>
+        </div>
+      </div>
+
+      <!-- Analysed Playlists -->
+      <div class="col-md-4">
+        <h3 class="mb-4 text-start">Analysed Playlists</h3>
+
+        <!-- Still loading playlist data -->
+        <h5 *ngIf="!playlistData; else playlistInfo">Loading Playlists...</h5>
+
+        <!-- Playlist data loaded -->
+        <ng-template #playlistInfo>
+          <ng-container *ngIf="playlistData!.length > 0; else genericCard">
+            <a
+              *ngFor="let playlist of playlistData | slice: 0:4; let i = index"
+              routerLink="/insights/playlist"
+              [queryParams]="{ playlistID: playlist.spotifyID }"
+              class="songCard button-card"
+            >
+              <img [src]="playlist.imageURL" [alt]="'Playlist icon for' + playlist.name" />
+              <p>
+                <b>{{ playlist.name }}</b>
+              </p>
+            </a>
+          </ng-container>
+
+          <ng-template #genericCard>
+            <button class="button-card friend-card" routerLink="/insights/playlist">
+              <div class="circle-button">
+                <span class="material-symbols-outlined">playlist_add</span>
+              </div>
+
+              <p class="name">Analyse Playlist</p>
+            </button>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
   </ng-template>
 </div>
