@@ -151,8 +151,8 @@
                 <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
                 <p *ngIf="friend.mostRecentSong">
                   <a class="song-name" [href]="'https://open.spotify.com/track/' + friend.mostRecentSong.spotifyID" target="_blank">
-                    {{ friend.mostRecentSong.name
-                    }}{{ getArtistNames(friend.mostRecentSong) ? ' • ' + getArtistNames(friend.mostRecentSong) : '' }}
+                    {{ friend.mostRecentSong.name }}
+                    <span *ngIf="getArtistNames(friend.mostRecentSong) as artistNames"> • {{ artistNames }}</span>
                   </a>
                   <br />
                   <a
@@ -160,7 +160,7 @@
                     [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID"
                     target="_blank"
                   >
-                    {{ friend.mostRecentSong?.album?.name }}</a
+                    {{ friend.mostRecentSong.album?.name }}</a
                   >
                 </p>
               </div>

@@ -40,7 +40,6 @@ public class Stream implements Serializable {
             "sumsUpPlaylistStats",
             "anomalousPlaylistStats",
             "playlists",
-            "artists",
         },
         allowSetters = true
     )
