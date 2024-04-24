@@ -200,21 +200,13 @@ public class UserResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/users/{login}")
-    //@PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to delete User: {}", login);
-        Optional<User> user = userService.getUserWithAuthorities();
-        if (user.isPresent()) {
-            User presentUser = user.get();
-            if (Objects.equals(presentUser.getLogin(), login) || presentUser.getAuthorities().contains(AuthoritiesConstants.ADMIN)) {
-                // User is the same as the one logged in or is admin
-                userService.deleteUser(login);
-                return ResponseEntity
-                    .noContent()
-                    .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
-                    .build();
-            }
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        userService.deleteUser(login);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createAlert(applicationName, "A user is deleted with identifier " + login, login))
+            .build();
     }
 }
