@@ -12,6 +12,8 @@ import dayjs from 'dayjs/esm';
 import { IUser } from '../entities/user/user.model';
 import { IFriendRecommendation } from '../entities/friend-recommendation/friend-recommendation.model';
 import { ISong } from '../entities/song/song.model';
+import { AccountService } from '../core/auth/account.service';
+import { Account } from '../core/auth/account.model';
 dayjs.extend(relativeTime);
 
 @Component({
@@ -24,10 +26,12 @@ export class FriendsComponent implements OnInit {
 
   pulledData: boolean = false;
   showErrorMessage: boolean = false;
+  error: boolean = false;
 
   search: string = '';
 
   createFriendRequestResponse: IFriendship | undefined;
+  account: Account | null = null;
   friendRequests?: IFriendRequest[];
   friends?: IFriend[];
   users?: IAppUser[];
@@ -35,12 +39,23 @@ export class FriendsComponent implements OnInit {
   recommendations?: IFriendRecommendation[];
   blocked?: IAppUser[];
 
-  constructor(private titleService: Title, private friendsService: FriendsService) {
+  constructor(private titleService: Title, private accountService: AccountService, private friendsService: FriendsService) {
     this.dialog = false;
   }
 
   ngOnInit() {
     this.titleService.setTitle(APP_NAME + ' - Friends');
+
+    // Retrieve account information
+    this.accountService.getAuthenticationState().subscribe({
+      next: account => (this.account = account),
+      error: error => {
+        this.error = true;
+        console.error('Error fetching account:', error);
+      },
+    });
+
+    // Fetch data
     this.reload();
   }
 
