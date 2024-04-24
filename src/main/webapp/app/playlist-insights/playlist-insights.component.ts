@@ -9,6 +9,8 @@ import { TimePeriod } from '../time-period-picker/time-period-picker.component';
 import { IPlaylist } from '../entities/playlist/playlist.model';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
+import { AccountService } from '../core/auth/account.service';
+import { Account } from '../core/auth/account.model';
 
 @Component({
   selector: 'jhi-playlist-insights',
@@ -33,6 +35,7 @@ export class PlaylistInsightsComponent implements OnInit {
   };
 
   // User playlists
+  account: Account | null = null;
   recentPlaylists: IPlaylist[] = [];
   hasPlaylists: boolean = false;
 
@@ -67,6 +70,7 @@ export class PlaylistInsightsComponent implements OnInit {
 
   constructor(
     private titleService: Title,
+    private accountService: AccountService,
     private playlistInsightsService: PlaylistInsightsService,
     private activatedRoute: ActivatedRoute,
     private router: Router
@@ -81,6 +85,9 @@ export class PlaylistInsightsComponent implements OnInit {
     this.titleService.setTitle(APP_NAME + ' - Playlist Analyser');
 
     this.handleParameters(this.activatedRoute.snapshot.queryParams);
+
+    // Retrieve account information
+    this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
 
     // Pull recently viewed playlists for quick access
     this.playlistInsightsService.retrieveUserPlaylists().subscribe({

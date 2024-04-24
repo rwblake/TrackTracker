@@ -247,8 +247,10 @@
     <!-- Instant links to recently viewed playlists, shown below all page content -->
     <div class="container-fluid mt-4">
       <div class="row">
-        <div class="col-md-12">
-          <h3 *ngIf="hasPlaylists" class="mb-4">Recently Viewed Playlists</h3>
+        <h5 class="col text-center" *ngIf="account && !hasPlaylists">Loading Recently Viewed Playlists...</h5>
+
+        <div *ngIf="hasPlaylists" class="col-md-12">
+          <h3 class="mb-4">Recently Viewed Playlists</h3>
           <div class="recentPlaylistList">
             <a
               *ngFor="let playlist of recentPlaylists | slice: 0:5; let i = index"
