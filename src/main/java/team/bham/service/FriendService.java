@@ -187,6 +187,7 @@ public class FriendService {
             streams = this.streamRepository.findStreamByAppUserOrderByPlayedAtDesc(them);
             if (!streams.isEmpty()) {
                 mostRecentSong = streams.get(0).getSong();
+                mostRecentSong.getArtists(); // Force artists to be obtained, rather than lazily ignoring them
             }
             myFriends.add(new Friend(myFriendship.getCreatedAt(), initiatedByCurrentUser, them, mostRecentSong, myFriendship.getId()));
         }
