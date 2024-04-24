@@ -125,12 +125,10 @@
 
           <div class="details">
             <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
-            <p>
-              <a class="song-name" [href]="'https://open.spotify.com/track/' + friend?.mostRecentSong?.spotifyID" target="_blank">
-                {{ friend?.mostRecentSong?.name }} •
-                <span *ngFor="let artist of friend?.mostRecentSong?.artists; let isLast = last"
-                  >{{ artist?.name }}{{ isLast ? '' : ', ' }}</span
-                >
+            <p *ngIf="friend.mostRecentSong">
+              <a class="song-name" [href]="'https://open.spotify.com/track/' + friend.mostRecentSong.spotifyID" target="_blank">
+                {{ friend.mostRecentSong.name
+                }}{{ getArtistNames(friend.mostRecentSong) ? ' • ' + getArtistNames(friend.mostRecentSong) : '' }}
               </a>
               <br />
               <a class="album-name" [href]="'https://open.spotify.com/album/' + friend?.mostRecentSong?.album?.spotifyID" target="_blank">

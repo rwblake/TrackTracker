@@ -11,6 +11,7 @@ import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import dayjs from 'dayjs/esm';
 import { IUser } from '../entities/user/user.model';
 import { IFriendRecommendation } from '../entities/friend-recommendation/friend-recommendation.model';
+import { ISong } from '../entities/song/song.model';
 dayjs.extend(relativeTime);
 
 @Component({
@@ -67,6 +68,13 @@ export class FriendsComponent implements OnInit {
     }
   }
 
+  getArtistNames(song: ISong): string | undefined {
+    return song.artists
+      ?.filter(artist => !!artist.name)
+      ?.map(artist => artist.name!)
+      ?.join(', ');
+  }
+
   toPercent(n: number | null | undefined): number {
     // @ts-ignore
     return n * 100;
@@ -80,7 +88,10 @@ export class FriendsComponent implements OnInit {
 
   loadFriends(): void {
     this.friendsService.getFriends().subscribe({
-      next: v => (this.friends = v),
+      next: v => {
+        this.friends = v;
+        console.log(this.friends);
+      },
     });
   }
 
