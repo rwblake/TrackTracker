@@ -331,6 +331,29 @@ jhi-password-strength-bar {
   }
 }
 
+.button.destructive {
+  background-color: hsl(349, 100%, 46%);
+  border: solid 1px rgb(255, 255, 255, 0.15);
+
+  &:not(:disabled) {
+    &:hover {
+      background-color: hsl(350, 99%, 42%);
+      border-top: solid 1px rgb(255, 255, 255, 0.4);
+    }
+
+    &:active {
+      background-color: hsl(346, 95%, 30%);
+      border-top: solid 1px rgb(255, 255, 255, 0.15);
+    }
+  }
+
+  &:disabled {
+    color: rgb(255, 255, 255, 0.5);
+    background-color: hsl(281, 61%, 80%, 0.1);
+    border: solid 1px hsl(281, 61%, 80%, 0.3);
+  }
+}
+
 .button.secondary {
   background-color: rgb(255, 255, 255, 0.2);
   border: solid 1px rgb(255, 255, 255, 0.2);
