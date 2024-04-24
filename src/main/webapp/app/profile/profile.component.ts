@@ -10,6 +10,7 @@ import { Account } from 'app/core/auth/account.model';
 import { PlaylistInsightsService } from '../playlist-insights/playlist-insights.service';
 import { HttpClient } from '@angular/common/http';
 import { IFriend } from '../friends/friend.model';
+import { IPlaylist } from '../entities/playlist/playlist.model';
 
 @Component({
   selector: 'jhi-profile',
@@ -17,15 +18,21 @@ import { IFriend } from '../friends/friend.model';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  playlistData: any[] = [];
-  friends?: IFriend[];
+  accountError = false;
+  userError = false;
+  friendsError = false;
+  playlistError = false;
+
+  account: Account | null = null;
   user: IAppUser | null = null;
+  friends?: IFriend[];
+  playlistData?: IPlaylist[];
+
   appUser: any;
   modal = document.getElementById('myModal');
   btn = document.getElementById('helpBtn');
   span = document.getElementsByClassName('close')[0];
   private readonly destroy$ = new Subject<void>();
-  account: Account | null = null;
 
   constructor(
     private titleService: Title,
@@ -37,30 +44,53 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.titleService.setTitle(APP_NAME + ' - My Profile');
+
+    // Retrieve account information
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(account => (this.account = account));
+      .subscribe({
+        next: account => (this.account = account),
+        error: error => {
+          this.accountError = true;
+          console.error('Error fetching account:', error);
+        },
+      });
+
+    // Retrieve AppUser information
     this.accountService.fetchUser().subscribe({
-      next: (data: IAppUser) => {
-        this.user = data;
-      },
+      next: (data: IAppUser) => (this.user = data),
       error: error => {
+        this.userError = true;
         console.error('Error fetching user bio:', error);
       },
     });
+
+    // Retrieve playlist insights information
     const playlists$ = this.playlistInsightsService.retrieveUserPlaylists();
-    playlists$.subscribe(playlists => {
-      if (Array.isArray(playlists)) {
-        playlists.forEach(playlist => {
-          console.log(playlist);
-          this.playlistData.push(playlist);
-        });
-      } else {
-        console.error('Data is not an array of playlists');
-      }
+    playlists$.subscribe({
+      next: playlists => {
+        if (Array.isArray(playlists)) {
+          this.playlistData = playlists;
+        } else {
+          this.playlistError = true;
+          console.error('Data is not an array of playlists');
+        }
+      },
+      error: error => {
+        this.playlistError = true;
+        console.error('Error fetching playlists:', error);
+      },
     });
-    this.http.get<IFriend[]>('/api/friends').subscribe({ next: v => (this.friends = v) });
+
+    // Retrieve friends information
+    this.http.get<IFriend[]>('/api/friends').subscribe({
+      next: v => (this.friends = v),
+      error: error => {
+        this.friendsError = true;
+        console.error('Error fetching friends:', error);
+      },
+    });
   }
 
   async goToPlaylist(id: number) {
