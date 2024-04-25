@@ -361,6 +361,26 @@ public class FeedCardService {
 
         String formattedDuration = formatDuration(feedCard.getCard().getTimeFrame());
 
+        /**
+         * Only card metrics generated currently are {@code TOP_SONG}
+         *
+         * However, possible to be called on any of:
+         *  {@code
+         *  LISTENING_DURATION,
+         *  TOP_GENRE,
+         *  TOP_ARTIST,
+         *  TOP_SONG,
+         *  NO_OF_FRIENDS,
+         *  NO_OF_SONGS_LISTENED,
+         *  NO_OF_GENRES_LISTENED,
+
+         *  PLAYLIST_HAPPIEST_SONG,
+         *  PLAYLIST_MOST_ENERGETIC_SONG,
+         *  PLAYLIST_SUMS_UP,
+         *  GENRE,
+         *  PINNED_FRIEND,
+         *  }
+         */
         switch (feedCard.getCard().getMetric()) {
             case LISTENING_DURATION:
                 {
@@ -373,19 +393,12 @@ public class FeedCardService {
                         );
                     break;
                 }
-            case NO_OF_SONGS_LISTENED:
-                {
-                    icon = "numbers";
-                    message =
-                        String.format(
-                            "%s you have listened to %d songs!",
-                            capitalise(formattedDuration),
-                            feedCard.getCard().getMetricValue()
-                        );
-                    break;
-                }
+            //            case TOP_GENRE: {
+            //                // TODO
+            //            }
             case TOP_ARTIST:
                 {
+                    // TODO
                     icon = "artist";
                     message =
                         String.format("Your top artist %s is (artistID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
@@ -414,6 +427,31 @@ public class FeedCardService {
                     icon = "repeat";
                     break;
                 }
+            //            case NO_OF_FRIENDS: {
+            //                // TODO
+            //            }
+            case NO_OF_SONGS_LISTENED:
+                {
+                    icon = "numbers";
+                    message =
+                        String.format(
+                            "%s you have listened to %d songs!",
+                            capitalise(formattedDuration),
+                            feedCard.getCard().getMetricValue()
+                        );
+                    break;
+                }
+            //            case NO_OF_GENRES_LISTENED: {
+            //                // TODO
+            //            }
+
+            //            // Unused but *technically* possible types to be called
+            //            case PLAYLIST_HAPPIEST_SONG:
+            //            case PLAYLIST_MOST_ENERGETIC_SONG:
+            //            case PLAYLIST_SUMS_UP:
+            //            case GENRE:
+            //            case PINNED_FRIEND:
+
             default:
                 {
                     icon = "question_mark";
