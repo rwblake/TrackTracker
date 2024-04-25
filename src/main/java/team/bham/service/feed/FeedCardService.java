@@ -67,22 +67,33 @@ public class FeedCardService {
         return feedCards
             .stream()
             .map(feedCard -> {
+                // Decide which method to handle the FeedCard
                 try {
-                    switch (inferType(feedCard)) {
-                        case "milestone":
-                            return generateFrontendMilestoneCard(feedCard);
-                        case "new-playlist":
-                            return generateFrontendPlaylistCard(feedCard);
-                        case "personal":
-                            return generateFrontendPersonalCard(feedCard);
-                        case "friend-request":
+                    // If the card belongs to another user -> ge
+                    if (feedCard.getFeed().getAppUser().getId().longValue() != feedCard.getCard().getAppUser().getId().longValue()) {
+                        return generateFrontendFriendUpdateCard(feedCard);
+                    }
+
+                    switch (feedCard.getCard().getMetric()) {
+                        case FRIEND_REQUEST:
                             return generateFrontendFriendRequestCard(feedCard);
-                        case "new-friend":
+                        case NEW_FRIEND:
                             return generateFrontendNewFriendCard(feedCard);
-                        case "friend-update":
-                            return generateFrontendFriendUpdateCard(feedCard);
+                        case NEW_PLAYLIST:
+                            return generateFrontendPlaylistCard(feedCard);
+                        case NO_OF_FRIENDS:
+                        case NO_OF_GENRES_LISTENED:
+                        case NO_OF_SONGS_LISTENED:
+                        case LISTENING_DURATION:
+                            {
+                                // if there is no timeframe (and also a milestone card type) -> a stat of all time
+                                if (feedCard.getCard().getTimeFrame() == null) {
+                                    return generateFrontendMilestoneCard(feedCard);
+                                }
+                            }
                         default:
-                            throw new InvalidInferredCardTypeException();
+                            // there is now no timeframe, and card is not a friend update (or request / new friend)
+                            return generateFrontendPersonalCard(feedCard);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -269,51 +280,7 @@ public class FeedCardService {
         cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(appUser.getId(), CardType.PINNED_FRIEND, friendID.intValue());
     }
 
-    /** Infers the type of the card given the metrics received from the database
-     * @return {@code "friend-update"} if the card belongs to another user<br />
-     *         {@code "friend-request"} for new friend requests<br />
-     *         {@code "new-friend"} for new friends<br />
-     *         {@code "new-playlist"} for newly analysed playlists<br />
-     *         {@code "milestone"} if the card has no timeframe & is one of {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}<br />
-     *         {@code "personal"} for all other cards<br />
-     * */
-    private String inferType(FeedCard feedCard) {
-        // if the card belongs to another user
-        if (
-            feedCard.getFeed().getAppUser().getId().longValue() != feedCard.getCard().getAppUser().getId().longValue()
-        ) return "friend-update";
-
-        switch (feedCard.getCard().getMetric()) {
-            case FRIEND_REQUEST:
-                return "friend-request";
-            case NEW_FRIEND:
-                return "new-friend";
-            case NEW_PLAYLIST:
-                return "new-playlist";
-        }
-
-        // there is now no timeframe, and card is not a friend update (or request / new friend)
-
-        // if there is no timeframe (and also a milestone card type) -> a stat of all time
-        if (
-            feedCard.getCard().getTimeFrame() == null &&
-            List
-                .of(
-                    new CardType[] {
-                        CardType.NO_OF_FRIENDS,
-                        CardType.NO_OF_GENRES_LISTENED,
-                        CardType.NO_OF_SONGS_LISTENED,
-                        CardType.LISTENING_DURATION,
-                    }
-                )
-                .contains(feedCard.getCard().getMetric())
-        ) {
-            return "milestone";
-        }
-
-        // return personal for all else
-        return "personal";
-    }
+    // Front-End card generation methods
 
     private FeedCardResponse generateFrontendPlaylistCard(FeedCard feedCard) {
         final String type = "new-playlist";
@@ -550,6 +517,8 @@ public class FeedCardService {
 
         return new FeedCardResponse(feedCard, type, message, icon, href);
     }
+
+    // Utility Methods
 
     private String capitalise(String str) {
         if (str == null || str.isEmpty()) {
