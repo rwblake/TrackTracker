@@ -59,10 +59,9 @@ public class FeedService {
 
     /** Generate random personal insight cards for a given appUser, and insert into their feed */
     private void generatePersonalCards(AppUser appUser, Feed feed) {
+        // Generate TOP_SONG card...
         // Check if a TOP_SONG card already exists in the feed and its creation time
-        if (isCardOfTypePresentAndRecent(appUser, CardType.TOP_SONG, null)) {
-            return; // Skip generation
-        }
+        if (isCardOfTypePresentAndRecent(appUser, CardType.TOP_SONG)) return; // Skip generation
 
         List<Stream> streams = new ArrayList<>(appUser.getStreams());
         StreamInsightsResponse insights = insightsService.getInsights(streams);
@@ -95,6 +94,32 @@ public class FeedService {
 
         // Automatically add to current user's feed
         feedCardService.addCardToFeed(card, feed);
+    }
+
+    /**
+     * Checks if a card of the specified type already exists in the user's feed and if it was created within the last few hours.
+     *
+     * @param appUser The user for whom the feed is being checked.
+     * @param cardType The type of card to check for.
+     * @return {@code true} if a card of the specified type is present and recent, {@code false} otherwise.
+     */
+    private boolean isCardOfTypePresentAndRecent(AppUser appUser, CardType cardType) {
+        // Get the user's feed
+        Feed feed = appUser.getFeed();
+        // Get all the cards in the feed
+        List<Card> cards = feed.getCards().stream().map(FeedCard::getCard).collect(Collectors.toList());
+
+        // Loop through the existing cards in the feed
+        for (Card existingCard : cards) {
+            // Check if the card type matches and if it was created within the last few hours
+            if (
+                existingCard.getMetric() == cardType && existingCard.getAppUser() == appUser && isRecent(existingCard.getTimeGenerated(), 3)
+            ) {
+                return true; // Card of this type is already present and recent
+            }
+        }
+
+        return false;
     }
 
     /**
