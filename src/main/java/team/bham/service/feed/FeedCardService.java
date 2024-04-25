@@ -316,6 +316,13 @@ public class FeedCardService {
          * -> See #createMilestone and #inferType methods
          */
         switch (feedCard.getCard().getMetric()) {
+            case NO_OF_FRIENDS:
+                {
+                    icon = "diversity_1";
+                    message = String.format("You now have %d friends!", feedCard.getCard().getMetricValue());
+                    href = URI.create("friends");
+                    break;
+                }
             case LISTENING_DURATION:
                 {
                     icon = "schedule";
@@ -333,13 +340,6 @@ public class FeedCardService {
                 {
                     icon = "genres";
                     message = String.format("You have listened to a total of %d genres!", feedCard.getCard().getMetricValue());
-                    break;
-                }
-            case NO_OF_FRIENDS:
-                {
-                    icon = "diversity_1";
-                    message = String.format("You now have %d friends!", feedCard.getCard().getMetricValue());
-                    href = URI.create("friends");
                     break;
                 }
             default:
@@ -393,9 +393,13 @@ public class FeedCardService {
                         );
                     break;
                 }
-            //            case TOP_GENRE: {
-            //                // TODO
-            //            }
+            case TOP_GENRE:
+                {
+                    // TODO
+                    icon = "genres";
+                    message = String.format("Your top genre %s is (genreID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
+                    break;
+                }
             case TOP_ARTIST:
                 {
                     // TODO
@@ -406,30 +410,21 @@ public class FeedCardService {
                 }
             case TOP_SONG:
                 {
-                    Optional<Song> song = songRepository.findById(feedCard.getCard().getMetricValue().longValue());
-                    if (song.isPresent()) {
-                        Hibernate.initialize(song.get().getArtists());
-                        if (!song.get().getArtists().isEmpty()) {
-                            message =
-                                String.format(
-                                    "Your top song %s is %s by %s!",
-                                    formattedDuration,
-                                    song.get().getName(),
-                                    song.get().getArtists().iterator().next().getName()
-                                );
-                        } else {
-                            message = String.format("Your top song %s is %s!", formattedDuration, song.get().getName());
-                        }
-                    } else {
-                        message =
-                            String.format("Your top song %s is (songID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
-                    }
                     icon = "repeat";
+                    message =
+                        String.format(
+                            "Your top song %s is %s!",
+                            formattedDuration,
+                            getSongDisplayName(feedCard.getCard().getMetricValue().longValue())
+                        );
                     break;
                 }
-            //            case NO_OF_FRIENDS: {
-            //                // TODO
-            //            }
+            case NO_OF_FRIENDS:
+                {
+                    icon = "user-group";
+                    message = String.format("You've made %s friends!", feedCard.getCard().getMetricValue());
+                    break;
+                }
             case NO_OF_SONGS_LISTENED:
                 {
                     icon = "numbers";
@@ -441,17 +436,23 @@ public class FeedCardService {
                         );
                     break;
                 }
-            //            case NO_OF_GENRES_LISTENED: {
-            //                // TODO
-            //            }
-
-            //            // Unused but *technically* possible types to be called
-            //            case PLAYLIST_HAPPIEST_SONG:
-            //            case PLAYLIST_MOST_ENERGETIC_SONG:
-            //            case PLAYLIST_SUMS_UP:
-            //            case GENRE:
-            //            case PINNED_FRIEND:
-
+            case NO_OF_GENRES_LISTENED:
+                {
+                    icon = "numbers";
+                    message =
+                        String.format(
+                            "%s you have listened to %d genres!",
+                            capitalise(formattedDuration),
+                            feedCard.getCard().getMetricValue()
+                        );
+                    break;
+                }
+            // Unused but *technically* possible types to be called
+            case PLAYLIST_HAPPIEST_SONG:
+            case PLAYLIST_MOST_ENERGETIC_SONG:
+            case PLAYLIST_SUMS_UP:
+            case GENRE:
+            case PINNED_FRIEND:
             default:
                 {
                     icon = "question_mark";
@@ -472,7 +473,18 @@ public class FeedCardService {
         String formattedDuration = formatDuration(feedCard.getCard().getTimeFrame());
         User owner = feedCard.getCard().getAppUser().getInternalUser();
 
+        /**
+         * Following shouldn't be added as friends cards:
+         * {@code
+         *  FRIEND_REQUEST
+         *  NEW_FRIEND
+         *  NEW_PLAYLIST
+         *  NO_OF_FRIENDS
+         *  PINNED_FRIEND
+         * }
+         */
         switch (feedCard.getCard().getMetric()) {
+            // All Criteria
             case LISTENING_DURATION:
                 {
                     icon = "schedule";
@@ -482,6 +494,42 @@ public class FeedCardService {
                             capitalise(formattedDuration),
                             owner.getFirstName(),
                             feedCard.getCard().getMetricValue()
+                        );
+                    break;
+                }
+            case TOP_GENRE:
+                {
+                    icon = "music";
+                    message =
+                        String.format(
+                            "%s's top genre %s is (genreID: %d).",
+                            owner.getFirstName(),
+                            formattedDuration,
+                            feedCard.getCard().getMetricValue()
+                        );
+                    break;
+                }
+            case TOP_ARTIST:
+                {
+                    icon = "repeat";
+                    message =
+                        String.format(
+                            "%s's top artist %s is (artistID: %d).",
+                            owner.getFirstName(),
+                            formattedDuration,
+                            feedCard.getCard().getMetricValue()
+                        );
+                    break;
+                }
+            case TOP_SONG:
+                {
+                    icon = "repeat";
+                    message =
+                        String.format(
+                            "%s's top song %s is %s!",
+                            owner.getFirstName(),
+                            formattedDuration,
+                            getSongDisplayName(feedCard.getCard().getMetricValue().longValue())
                         );
                     break;
                 }
@@ -497,18 +545,23 @@ public class FeedCardService {
                         );
                     break;
                 }
-            case TOP_ARTIST:
+            case NO_OF_GENRES_LISTENED:
                 {
-                    icon = "artist";
+                    icon = "genres";
                     message =
                         String.format(
-                            "%s's top artist %s is (artistID: %d).",
+                            "%s %s has listened to a total of %d genres!",
+                            capitalise(formattedDuration),
                             owner.getFirstName(),
-                            formattedDuration,
                             feedCard.getCard().getMetricValue()
                         );
                     break;
                 }
+            // Unused but *technically* possible types to be called
+            case PLAYLIST_HAPPIEST_SONG:
+            case PLAYLIST_MOST_ENERGETIC_SONG:
+            case PLAYLIST_SUMS_UP:
+            case GENRE:
             default:
                 {
                     icon = "question_mark";
@@ -588,5 +641,22 @@ public class FeedCardService {
 
         long weeks = duration.toDays() / 7;
         return "in the last " + weeks + " week" + (weeks > 1 ? "s" : "");
+    }
+
+    private String getSongDisplayName(long songId) {
+        Optional<Song> songById = songRepository.findById(songId);
+
+        if (songById.isEmpty()) {
+            return String.format("(songID: %d)", songId);
+        }
+
+        Song song = songById.get();
+        Hibernate.initialize(song.getArtists());
+
+        if (song.getArtists().isEmpty()) {
+            String.format("%s", song.getName());
+        }
+
+        return String.format("%s by %s", song.getName(), song.getArtists().iterator().next().getName());
     }
 }
