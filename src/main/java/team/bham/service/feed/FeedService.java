@@ -233,6 +233,8 @@ public class FeedService {
 
         Instant yesterday = Instant.now().minus(Duration.ofDays(1));
 
+        // Pick some potential friends cards
+        List<Card> friendCards = new ArrayList<>();
         for (AppUser friend : friends) {
             // Access cards which pertain to this user
             List<Card> cards = new ArrayList<>(friend.getCards());
@@ -254,11 +256,21 @@ public class FeedService {
                 );
             });
 
-            // Add a max of 2 random cards from this friend to the current user's feed
+            if (cards.isEmpty()) continue;
+
+            // Pick a max of 2 random cards from this friend to the pool of possible friend cards
             Collections.shuffle(cards);
             for (int i = 0; i < cards.size() && i < 2; i++) {
-                feedCardService.addCardToFeed(cards.get(i), feed);
+                friendCards.add(cards.get(i));
             }
+        }
+
+        if (friendCards.isEmpty()) return;
+
+        // Pick a max of 4 random cards from the pool to add to the user's feed
+        Collections.shuffle(friendCards);
+        for (int i = 0; i < friendCards.size() && i < 4; i++) {
+            feedCardService.addCardToFeed(friendCards.get(i), feed);
         }
     }
 
