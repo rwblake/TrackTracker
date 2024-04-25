@@ -6,6 +6,8 @@ import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import team.bham.domain.*;
 import team.bham.domain.enumeration.CardType;
@@ -13,6 +15,7 @@ import team.bham.repository.FeedCardRepository;
 import team.bham.repository.FeedRepository;
 import team.bham.service.FriendService;
 import team.bham.service.InsightsService;
+import team.bham.service.spotify.Counter;
 import team.bham.service.spotify.Entry;
 import team.bham.service.spotify.StreamInsightsResponse;
 
@@ -24,6 +27,8 @@ public class FeedService {
     private final FeedCardService feedCardService;
     private final FriendService friendService;
     private final InsightsService insightsService;
+
+    private final Random random = new Random();
 
     public FeedService(
         FeedCardRepository feedCardRepository,
@@ -59,18 +64,16 @@ public class FeedService {
 
     /** Generate random personal insight cards for a given appUser, and insert into their feed */
     private void generatePersonalCards(AppUser appUser, Feed feed) {
-        Random random = new Random();
-
         // Create set of all possible choices
         List<CardType> cardChoices = new ArrayList<>(
             Arrays.asList(
-                //            CardType.LISTENING_DURATION,
-                //            CardType.TOP_GENRE,
-                //            CardType.TOP_ARTIST,
+                CardType.LISTENING_DURATION,
+                CardType.TOP_GENRE,
+                CardType.TOP_ARTIST,
                 CardType.TOP_SONG
-                //            CardType.NO_OF_FRIENDS,
-                //            CardType.NO_OF_SONGS_LISTENED,
-                //            CardType.NO_OF_GENRES_LISTENED
+                //            CardType.NO_OF_FRIENDS, // card metric not possible as no timestamp available for when friendship was accepted
+                //            CardType.NO_OF_SONGS_LISTENED // very similar to milestone
+                //            CardType.NO_OF_GENRES_LISTENED // very similar to milestone
             )
         );
 
@@ -88,17 +91,58 @@ public class FeedService {
         switch (cardTypeChoice) {
             case LISTENING_DURATION:
                 {
-                    // TODO
+                    Set<Stream> streams = appUser.getStreams();
+
+                    // Pick a random period (all time [null], 7 days, or 30 days)
+                    Duration selectedPeriod = pickRandomCardPeriod();
+
+                    // Filter streams if a time period has been picked
+                    if (selectedPeriod != null) {
+                        // Calculate the Instant to filter the streams by
+                        Instant cutoffInstant = Instant.now().minus(selectedPeriod);
+
+                        streams =
+                            streams.stream().filter(stream -> stream.getPlayedAt().isAfter(cutoffInstant)).collect(Collectors.toSet());
+                    }
+
+                    int streamedMinutes = streams.stream().mapToInt(stream -> stream.getSong().getDuration().toMinutesPart()).sum();
+
+                    generatedCard =
+                        feedCardService.createInsightCard(appUser, CardType.LISTENING_DURATION, streamedMinutes, selectedPeriod);
                     break;
                 }
             case TOP_GENRE:
                 {
-                    // TODO
+                    List<Stream> streams = new ArrayList<>(appUser.getStreams());
+                    StreamInsightsResponse insights = insightsService.getInsights(streams);
+
+                    Pair<Genre, Duration> insight = pickHighestFromRandomDuration(insights.getGenreCounter());
+                    if (insight == null) return; // counter was probably empty for the selected duration
+
+                    generatedCard =
+                        feedCardService.createInsightCard(
+                            appUser,
+                            CardType.TOP_GENRE,
+                            insight.getKey().getId().intValue(),
+                            insight.getValue()
+                        );
                     break;
                 }
             case TOP_ARTIST:
                 {
-                    // TODO
+                    List<Stream> streams = new ArrayList<>(appUser.getStreams());
+                    StreamInsightsResponse insights = insightsService.getInsights(streams);
+
+                    Pair<Artist, Duration> insight = pickHighestFromRandomDuration(insights.getArtistCounter());
+                    if (insight == null) return; // counter was probably empty for the selected duration
+
+                    generatedCard =
+                        feedCardService.createInsightCard(
+                            appUser,
+                            CardType.TOP_ARTIST,
+                            insight.getKey().getId().intValue(),
+                            insight.getValue()
+                        );
                     break;
                 }
             case TOP_SONG:
@@ -106,43 +150,25 @@ public class FeedService {
                     List<Stream> streams = new ArrayList<>(appUser.getStreams());
                     StreamInsightsResponse insights = insightsService.getInsights(streams);
 
-                    // Pick a random number (to decide what to generate)
-                    int choice = random.nextInt(3);
+                    Pair<Song, Duration> insight = pickHighestFromRandomDuration(insights.getSongCounter());
+                    if (insight == null) return; // counter was probably empty for the selected duration
 
-                    List<Entry<Song>> songs;
-                    Duration duration;
-
-                    switch (choice) {
-                        case 0:
-                            songs = insights.getSongCounter().getOfAllTime();
-                            duration = null;
-                            break;
-                        case 1:
-                            songs = insights.getSongCounter().getByMonth();
-                            duration = Duration.ofDays(30);
-                            break;
-                        default:
-                            songs = insights.getSongCounter().getByWeek();
-                            duration = Duration.ofDays(7);
-                    }
-
-                    if (songs.isEmpty()) return;
-
-                    Song topSong = songs.get(songs.size() - 1).getMetric();
-                    generatedCard = feedCardService.createInsightCard(appUser, CardType.TOP_SONG, topSong.getId().intValue(), duration);
-
+                    generatedCard =
+                        feedCardService.createInsightCard(
+                            appUser,
+                            CardType.TOP_SONG,
+                            insight.getKey().getId().intValue(), // milestone value: songId as int
+                            insight.getValue()
+                        );
                     break;
                 }
             //            case NO_OF_FRIENDS: {
-            //
             //                break;
             //            }
             //            case NO_OF_SONGS_LISTENED: {
-            //
             //                break;
             //            }
             //            case NO_OF_GENRES_LISTENED: {
-            //
             //                break;
             //            }
 
@@ -383,5 +409,43 @@ public class FeedService {
         for (Integer value : valuesToAdd) {
             feedCardService.createMilestone(appUser, CardType.NO_OF_GENRES_LISTENED, value);
         }
+    }
+
+    // Utility methods
+
+    /**
+     * @return null, 7 Days, or 30 Days (equal probability)
+     */
+    private Duration pickRandomCardPeriod() {
+        List<Duration> possiblePeriods = new ArrayList<>(Arrays.asList(null, Duration.ofDays(7), Duration.ofDays(30)));
+        int randIndex = random.nextInt(possiblePeriods.size());
+        return possiblePeriods.get(randIndex);
+    }
+
+    private <T> Pair<T, Duration> pickHighestFromRandomDuration(Counter<T> counter) {
+        // Pick a random number (to decide what to generate)
+        int choice = random.nextInt(3);
+
+        List<Entry<T>> collection;
+        Duration duration;
+
+        switch (choice) {
+            case 0:
+                collection = counter.getOfAllTime();
+                duration = null;
+                break;
+            case 1:
+                collection = counter.getByMonth();
+                duration = Duration.ofDays(30);
+                break;
+            default:
+                collection = counter.getByWeek();
+                duration = Duration.ofDays(7);
+        }
+
+        if (collection.isEmpty()) return null;
+
+        T highest = collection.get(collection.size() - 1).getMetric();
+        return new ImmutablePair<>(highest, duration);
     }
 }

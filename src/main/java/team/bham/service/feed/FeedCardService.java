@@ -35,19 +35,25 @@ public class FeedCardService {
     private final Logger log = LoggerFactory.getLogger(FeedCardService.class);
     private final FeedRepository feedRepository;
     private final SongRepository songRepository;
+    private final ArtistRepository artistRepository;
+    private final GenreRepository genreRepository;
 
     public FeedCardService(
         PlaylistRepository playlistRepository,
         AppUserRepository appUserRepository,
         CardRepository cardRepository,
         FeedRepository feedRepository,
-        SongRepository songRepository
+        SongRepository songRepository,
+        ArtistRepository artistRepository,
+        GenreRepository genreRepository
     ) {
         this.playlistRepository = playlistRepository;
         this.appUserRepository = appUserRepository;
         this.cardRepository = cardRepository;
         this.feedRepository = feedRepository;
         this.songRepository = songRepository;
+        this.artistRepository = artistRepository;
+        this.genreRepository = genreRepository;
     }
 
     public void addCardToFeed(Card card, Feed feed) {
@@ -387,25 +393,32 @@ public class FeedCardService {
                     icon = "schedule";
                     message =
                         String.format(
-                            "%s you have spent %d minutes listening to Spotify!",
+                            "%s you have spent %s listening to Spotify!",
                             capitalise(formattedDuration),
-                            feedCard.getCard().getMetricValue()
+                            formatListeningMinutes(feedCard.getCard().getMetricValue())
                         );
                     break;
                 }
             case TOP_GENRE:
                 {
-                    // TODO
                     icon = "genres";
-                    message = String.format("Your top genre %s is (genreID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
+                    message =
+                        String.format(
+                            "Your top genre %s is %s!",
+                            formattedDuration,
+                            getGenreDisplayName(feedCard.getCard().getMetricValue())
+                        );
                     break;
                 }
             case TOP_ARTIST:
                 {
-                    // TODO
                     icon = "artist";
                     message =
-                        String.format("Your top artist %s is (artistID: %d)!", formattedDuration, feedCard.getCard().getMetricValue());
+                        String.format(
+                            "Your top artist %s is %s!",
+                            formattedDuration,
+                            getArtistDisplayName(feedCard.getCard().getMetricValue())
+                        );
                     break;
                 }
             case TOP_SONG:
@@ -422,7 +435,7 @@ public class FeedCardService {
             case NO_OF_FRIENDS:
                 {
                     icon = "user-group";
-                    message = String.format("You've made %s friends!", feedCard.getCard().getMetricValue());
+                    message = String.format("%s you've made %s friends!", feedCard.getCard().getMetricValue());
                     break;
                 }
             case NO_OF_SONGS_LISTENED:
@@ -490,34 +503,34 @@ public class FeedCardService {
                     icon = "schedule";
                     message =
                         String.format(
-                            "%s %s has spent %d minutes listening to Spotify.",
+                            "%s %s has spent %s listening to Spotify!",
                             capitalise(formattedDuration),
                             owner.getFirstName(),
-                            feedCard.getCard().getMetricValue()
+                            formatListeningMinutes(feedCard.getCard().getMetricValue())
                         );
                     break;
                 }
             case TOP_GENRE:
                 {
-                    icon = "music";
+                    icon = "genres";
                     message =
                         String.format(
-                            "%s's top genre %s is (genreID: %d).",
+                            "%s's top genre %s is %s!",
                             owner.getFirstName(),
                             formattedDuration,
-                            feedCard.getCard().getMetricValue()
+                            getGenreDisplayName(feedCard.getCard().getMetricValue())
                         );
                     break;
                 }
             case TOP_ARTIST:
                 {
-                    icon = "repeat";
+                    icon = "artist";
                     message =
                         String.format(
-                            "%s's top artist %s is (artistID: %d).",
+                            "%s's top artist %s is %s!",
                             owner.getFirstName(),
                             formattedDuration,
-                            feedCard.getCard().getMetricValue()
+                            getArtistDisplayName(feedCard.getCard().getMetricValue())
                         );
                     break;
                 }
@@ -639,8 +652,30 @@ public class FeedCardService {
             return "this week";
         }
 
+        if (duration.toDays() == 30 || duration.toDays() == 31) {
+            return "this month";
+        }
+
         long weeks = duration.toDays() / 7;
         return "in the last " + weeks + " week" + (weeks > 1 ? "s" : "");
+    }
+
+    private String formatListeningMinutes(int minutes) {
+        if (minutes < 60) {
+            return String.format("%d minutes", minutes);
+        }
+
+        int hours = Math.floorDiv(minutes, 60);
+        minutes -= hours * 60;
+
+        if (hours < 24) {
+            return String.format("%d hours and %d minutes", hours, minutes);
+        }
+
+        int days = Math.floorDiv(hours, 24);
+        hours -= days * 24;
+
+        return String.format("%d days and %d hours", days, hours);
     }
 
     private String getSongDisplayName(long songId) {
@@ -658,5 +693,25 @@ public class FeedCardService {
         }
 
         return String.format("%s by %s", song.getName(), song.getArtists().iterator().next().getName());
+    }
+
+    private String getArtistDisplayName(long artistId) {
+        Optional<Artist> artistById = artistRepository.findById(artistId);
+
+        if (artistById.isEmpty()) {
+            return String.format("(artistId: %d)", artistId);
+        }
+
+        return artistById.get().getName();
+    }
+
+    private String getGenreDisplayName(long genreId) {
+        Optional<Genre> genreById = genreRepository.findById(genreId);
+
+        if (genreById.isEmpty()) {
+            return String.format("(genreId: %d)", genreId);
+        }
+
+        return genreById.get().getName();
     }
 }
