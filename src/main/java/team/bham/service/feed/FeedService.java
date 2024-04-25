@@ -59,41 +59,99 @@ public class FeedService {
 
     /** Generate random personal insight cards for a given appUser, and insert into their feed */
     private void generatePersonalCards(AppUser appUser, Feed feed) {
-        // Generate TOP_SONG card...
-        // Check if a TOP_SONG card already exists in the feed and its creation time
-        if (isCardOfTypePresentAndRecent(appUser, CardType.TOP_SONG)) return; // Skip generation
-
-        List<Stream> streams = new ArrayList<>(appUser.getStreams());
-        StreamInsightsResponse insights = insightsService.getInsights(streams);
-
-        // Pick a random number (to decide what to generate)
         Random random = new Random();
-        int choice = random.nextInt(3);
 
-        List<Entry<Song>> songs;
-        Duration duration;
+        // Create set of all possible choices
+        List<CardType> cardChoices = new ArrayList<>(
+            Arrays.asList(
+                //            CardType.LISTENING_DURATION,
+                //            CardType.TOP_GENRE,
+                //            CardType.TOP_ARTIST,
+                CardType.TOP_SONG
+                //            CardType.NO_OF_FRIENDS,
+                //            CardType.NO_OF_SONGS_LISTENED,
+                //            CardType.NO_OF_GENRES_LISTENED
+            )
+        );
 
-        switch (choice) {
-            case 0:
-                songs = insights.getSongCounter().getOfAllTime();
-                duration = null;
-                break;
-            case 1:
-                songs = insights.getSongCounter().getByMonth();
-                duration = Duration.ofDays(30);
-                break;
-            default:
-                songs = insights.getSongCounter().getByWeek();
-                duration = Duration.ofDays(7);
+        // Remove card types that have been generated recently
+        cardChoices.removeIf(cardType -> isCardOfTypePresentAndRecent(appUser, cardType));
+
+        if (cardChoices.isEmpty()) return; // No card choices left
+
+        // Randomly pick a type of card to generate
+        int randIndex = random.nextInt(cardChoices.size());
+        CardType cardTypeChoice = cardChoices.get(randIndex);
+
+        // Generate card
+        Card generatedCard = null;
+        switch (cardTypeChoice) {
+            case LISTENING_DURATION:
+                {
+                    // TODO
+                    break;
+                }
+            case TOP_GENRE:
+                {
+                    // TODO
+                    break;
+                }
+            case TOP_ARTIST:
+                {
+                    // TODO
+                    break;
+                }
+            case TOP_SONG:
+                {
+                    List<Stream> streams = new ArrayList<>(appUser.getStreams());
+                    StreamInsightsResponse insights = insightsService.getInsights(streams);
+
+                    // Pick a random number (to decide what to generate)
+                    int choice = random.nextInt(3);
+
+                    List<Entry<Song>> songs;
+                    Duration duration;
+
+                    switch (choice) {
+                        case 0:
+                            songs = insights.getSongCounter().getOfAllTime();
+                            duration = null;
+                            break;
+                        case 1:
+                            songs = insights.getSongCounter().getByMonth();
+                            duration = Duration.ofDays(30);
+                            break;
+                        default:
+                            songs = insights.getSongCounter().getByWeek();
+                            duration = Duration.ofDays(7);
+                    }
+
+                    if (songs.isEmpty()) return;
+
+                    Song topSong = songs.get(songs.size() - 1).getMetric();
+                    generatedCard = feedCardService.createInsightCard(appUser, CardType.TOP_SONG, topSong.getId().intValue(), duration);
+
+                    break;
+                }
+            //            case NO_OF_FRIENDS: {
+            //
+            //                break;
+            //            }
+            //            case NO_OF_SONGS_LISTENED: {
+            //
+            //                break;
+            //            }
+            //            case NO_OF_GENRES_LISTENED: {
+            //
+            //                break;
+            //            }
+
         }
 
-        if (songs.isEmpty()) return;
-
-        Song topSong = songs.get(0).getMetric();
-        Card card = feedCardService.createInsightCard(appUser, CardType.TOP_SONG, topSong.getId().intValue(), duration);
-
-        // Automatically add to current user's feed
-        feedCardService.addCardToFeed(card, feed);
+        if (generatedCard != null) {
+            // Automatically add to current user's feed
+            feedCardService.addCardToFeed(generatedCard, feed);
+        }
     }
 
     /**
