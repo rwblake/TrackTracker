@@ -344,6 +344,10 @@ public class FeedCardService {
         String message;
         URI href = URI.create("insights");
 
+        /**
+         * Metric should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}
+         * -> See #createMilestone and #inferType methods
+         */
         switch (feedCard.getCard().getMetric()) {
             case LISTENING_DURATION:
                 {
@@ -369,24 +373,6 @@ public class FeedCardService {
                     icon = "diversity_1";
                     message = String.format("You now have %d friends!", feedCard.getCard().getMetricValue());
                     href = URI.create("friends");
-                    break;
-                }
-            case TOP_ARTIST:
-                {
-                    icon = "artist";
-                    message = String.format("Your top artist of all time is (artistID: %d)!", feedCard.getCard().getMetricValue());
-                    break;
-                }
-            case TOP_GENRE:
-                {
-                    icon = "music";
-                    message = String.format("Your top genre of all time is (genreID: %d)!", feedCard.getCard().getMetricValue());
-                    break;
-                }
-            case TOP_SONG:
-                {
-                    icon = "song";
-                    message = String.format("Your top song of all time is (songID: %d)!", feedCard.getCard().getMetricValue());
                     break;
                 }
             default:
