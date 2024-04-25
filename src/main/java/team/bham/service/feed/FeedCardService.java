@@ -192,7 +192,7 @@ public class FeedCardService {
     /**Create a milestone card for a given user (a milestone measures "of all time" achievements).
      * <br>The milestone automatically gets added to the user's feed.
      * @param appUser the user to whom this card belongs.
-     * @param metric what the milestone is measuring.
+     * @param metric what the milestone is measuring. Should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}
      * @param value the value of the milestone.
      *
      * @return The card once it has been saved in the database*/
@@ -269,7 +269,14 @@ public class FeedCardService {
         cardRepository.deleteAllByAppUserIdAndMetricAndMetricValue(appUser.getId(), CardType.PINNED_FRIEND, friendID.intValue());
     }
 
-    /** Infers the type of the card given the metrics received from the database */
+    /** Infers the type of the card given the metrics received from the database
+     * @return {@code "friend-update"} if the card belongs to another user<br />
+     *         {@code "friend-request"} for new friend requests<br />
+     *         {@code "new-friend"} for new friends<br />
+     *         {@code "new-playlist"} for newly analysed playlists<br />
+     *         {@code "milestone"} if the card has no timeframe & is one of {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}<br />
+     *         {@code "personal"} for all other cards<br />
+     * */
     private String inferType(FeedCard feedCard) {
         // if the card belongs to another user
         if (
