@@ -333,7 +333,10 @@ public class FeedService {
         int maxCards = Math.max(1, (int) Math.floor(maxCardsExact)); // == max(1, floor( log_1.5(N) ))
         int minCards = Math.max(1, (int) Math.floor(0.5 * maxCardsExact)); // == max(1, floor( 0.5 * log_1.5(N) ))
 
-        int cardAmount = random.nextInt(minCards, maxCards + 1);
+        int cardAmount = minCards;
+        if (maxCards > minCards) {
+            cardAmount += random.nextInt((maxCards - minCards) + 1);
+        }
 
         Collections.shuffle(friendCards);
         for (int i = 0; i < friendCards.size() && i < cardAmount; i++) {
