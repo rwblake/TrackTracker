@@ -326,9 +326,17 @@ public class FeedService {
 
         if (friendCards.isEmpty()) return;
 
-        // Pick a max of 4 random cards from the pool to add to the user's feed
+        // Card quantity generation algorithm: https://www.desmos.com/calculator/e67u5nhwid
+        // Pick between 0.5*log_1.5(N) and log_1.5(N) cards
+        int noOfFriends = friends.size(); // == N
+        double maxCardsExact = Math.log(noOfFriends) / Math.log(1.5); // == log_1.5(N)
+        int maxCards = Math.max(1, (int) Math.floor(maxCardsExact)); // == max(1, floor( log_1.5(N) ))
+        int minCards = Math.max(1, (int) Math.floor(0.5 * maxCardsExact)); // == max(1, floor( 0.5 * log_1.5(N) ))
+
+        int cardAmount = random.nextInt(minCards, maxCards + 1);
+
         Collections.shuffle(friendCards);
-        for (int i = 0; i < friendCards.size() && i < 4; i++) {
+        for (int i = 0; i < friendCards.size() && i < cardAmount; i++) {
             feedCardService.addCardToFeed(friendCards.get(i), feed);
         }
     }
