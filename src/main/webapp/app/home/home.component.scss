@@ -61,15 +61,8 @@ p {
     align-items: center;
   }
 
-  .scroll-wrapper {
-    margin: 0 -100px;
-    width: 100%;
-    justify-content: center;
-  }
-
   // PROFILES SECTION
   .profiles {
-    overflow-x: scroll;
     gap: 32px;
     justify-content: flex-start;
 
@@ -96,50 +89,18 @@ p {
       }
     }
 
-    .friend-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      padding: 16px;
-      border-radius: 8px;
-      gap: 16px;
-      background: transparent;
-
-      &:hover {
-        background: rgb(255, 255, 255, 0.1);
-      }
-
-      &:active {
-        background: rgb(255, 255, 255, 0.05);
-      }
-
-      .name {
-        white-space: nowrap;
-      }
-    }
+    //.profile-card, .friend-card, .edit-card {
+    //  display: flex;
+    //  align-items: center;
+    //  border-radius: 8px;
+    //  padding: 16px;
+    //  gap: 16px;
+    //  justify-content: space-evenly;
+    //}
 
     .profile-card {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 24px 32px;
-      border-radius: 8px;
+      padding: 24px;
       gap: 32px;
-      background: rgb(255, 255, 255, 0.2);
-      transition: background-color 50ms ease-out;
-
-      p {
-        color: white;
-      }
-
-      &:hover {
-        background: rgb(255, 255, 255, 0.3);
-      }
-
-      &:active {
-        background: rgb(255, 255, 255, 0.25);
-      }
 
       .details {
         flex-direction: column;
@@ -156,6 +117,19 @@ p {
           color: rgb(255, 255, 255, 0.75);
           white-space: nowrap;
         }
+      }
+    }
+
+    .friend-card,
+    .edit-card {
+      background: transparent;
+
+      &:hover {
+        background: rgb(255, 255, 255, 0.1);
+      }
+
+      &:active {
+        background: rgb(255, 255, 255, 0.05);
       }
     }
   }
@@ -204,8 +178,17 @@ p {
 .divider {
   margin-top: auto;
   margin-bottom: auto;
-  height: 55px;
+  height: 50%;
   min-width: 2px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 100px;
+}
+
+.divider-horizontal {
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 2px;
+  width: 50%;
   background-color: rgb(255, 255, 255);
   border-radius: 100px;
 }
