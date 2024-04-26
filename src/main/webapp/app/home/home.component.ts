@@ -138,9 +138,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   savePinnedFriends() {
     if (!this.modalRef || !this.account_data) return;
 
-    console.log('Need to save the pinned and unpinned friends here');
-    const unpinned = this.modalPinned.filter(f => f.pinned).map(f => f.friendID);
-    const pinned = this.modalPinned.filter(f => !f.pinned).map(f => f.friendID);
+    const unpinned = this.modalPinned.filter(f => !f.pinned).map(f => f.friendID);
+    const pinned = this.modalPinned.filter(f => f.pinned).map(f => f.friendID);
 
     forkJoin([this.pin(pinned), this.unpin(unpinned)]).subscribe({
       next: () => {
