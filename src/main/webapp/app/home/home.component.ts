@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { EMPTY, Subject, switchMap } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, forkJoin, Subject, throwError } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { APP_NAME } from '../app.constants';
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   account_data: Account_Combined | null = null;
   loading = true;
   modalRef: NgbModalRef | undefined;
+  modalPinned: Friendship[] = [];
 
   private readonly destroy$ = new Subject<void>();
 
@@ -37,7 +38,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private router: Router,
     private friendsService: FriendsService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private cdRef: ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -60,6 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             .subscribe({
               next: appUser => {
                 this.account_data = appUser;
+                console.log(appUser);
                 this.loading = false;
               },
               error: () => {
@@ -94,12 +98,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     return card.id;
   }
 
-  hasMaxPinned() {
-    if (this.account_data === null) return false;
-
-    return this.account_data && this.getPinnedFriends().length >= 5;
-  }
-
   getLastUpdateMessage() {
     if (this.account_data === null) return '';
     dayjs.extend(relativeTime);
@@ -116,12 +114,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  pin(appUserId: number) {
-    this.friendsService.pin(appUserId);
+  pin(pinnedIds: number[]) {
+    return this.friendsService.pin(pinnedIds);
   }
 
-  unpin(appUserId: number) {
-    this.friendsService.unpin(appUserId);
+  unpin(unpinnedIds: number[]) {
+    return this.friendsService.unpin(unpinnedIds);
   }
 
   getPinnedFriends(): Friendship[] {
@@ -132,13 +130,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   openModal(content: TemplateRef<any>) {
+    if (!this.account_data) return;
+    this.modalPinned = [...this.account_data.friends]; // update the pinned state
     this.modalRef = this.modalService.open(content, { scrollable: true });
   }
 
   savePinnedFriends() {
-    if (!this.modalRef) return;
-    this.modalRef.close('Save click');
-    console.log('need to save the pinned and unpinned friends here');
+    if (!this.modalRef || !this.account_data) return;
+
+    console.log('Need to save the pinned and unpinned friends here');
+    const unpinned = this.modalPinned.filter(f => f.pinned).map(f => f.friendID);
+    const pinned = this.modalPinned.filter(f => !f.pinned).map(f => f.friendID);
+
+    forkJoin([this.pin(pinned), this.unpin(unpinned)]).subscribe({
+      next: () => {
+        // Both pinning and unpinning completed successfully
+        console.log('Pinning and unpinning completed successfully');
+        // Call ngOnInit after both operations are completed
+        this.ngOnInit();
+        this.modalRef!.close('Save click');
+      },
+      error: err => {
+        // Handle errors for both pinning and unpinning
+        console.error('Error:', err);
+        this.modalRef!.close('Save click');
+      },
+    });
   }
 
   protected readonly APP_NAME = APP_NAME;

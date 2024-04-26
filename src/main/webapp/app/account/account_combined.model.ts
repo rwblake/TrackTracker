@@ -51,6 +51,7 @@ export interface InternalUser {
 export interface Friendship {
   createdAt: dayjs.Dayjs;
   friendID: number;
+  spotifyID: string;
   firstName: string;
   lastName: string;
   avatarURL: string;

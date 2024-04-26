@@ -228,12 +228,13 @@ public class AccountResource {
         Set<FeedCard> feedCards = feedService.getCards(appUser.get().getFeed());
 
         // Get pinned friends from cards
-        List<AppUser> pinnedFriends =
+        List<Integer> pinnedFriends =
             this.cardRepository.getCardsByAppUserAndMetric(appUser.get(), CardType.PINNED_FRIEND)
                 .stream()
-                .map(Card::getAppUser)
+                .map(Card::getMetricValue)
                 .collect(Collectors.toList());
 
+        System.out.println("Pinned friends for appuser" + user.get().getFirstName() + ": " + pinnedFriends);
         List<FeedCardResponse> frontendFeedCards = this.feedCardService.generateFrontendCards(feedCards);
 
         return new AccountCombinedResponse(appUser.get(), friends, frontendFeedCards, pinnedFriends);

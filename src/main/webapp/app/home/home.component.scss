@@ -235,27 +235,37 @@ hr {
   }
 }
 
-//.button-card {
-//  cursor: pointer;
-//  border-radius: 8px;
-//  background: rgb(255, 255, 255, 0.2);
-//  border: solid 1px rgb(255, 255, 255, 0.5);
-//  transition: background-color 50ms ease-out;
-//
-//  &:not(:disabled):hover {
-//    background: rgb(255, 255, 255, 0.3);
-//
-//    p:not(.hint) {
-//      text-decoration: underline;
-//    }
-//  }
-//
-//  &:not(:disabled):active {
-//    background: rgb(255, 255, 255, 0.25);
-//
-//    p:not(.hint) {
-//      text-decoration: none;
-//    }
-//  }
-//
-//}
+#pin-modal {
+  .friend-card {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    background: transparent;
+
+    &:has(input[type='checkbox']:not(:checked)) {
+      border-color: transparent;
+    }
+  }
+
+  .friend-card:has(input[type='checkbox']:checked) {
+    background: rgb(255, 255, 255, 0.2);
+    transition: background-color 200ms ease;
+  }
+
+  .friend-card img {
+    border-radius: 5000px;
+    margin-right: 12px;
+  }
+
+  .friend-card .name {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .friend-card input[type='checkbox'] {
+    margin-right: 12px;
+  }
+}

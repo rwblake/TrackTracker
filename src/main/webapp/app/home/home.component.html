@@ -17,7 +17,7 @@
 
   <div class="scroll-wrapper">
     <!--CAN ONLY BE SHOWN IF THE ACCOUNT_DATA IS INITIALISED-->
-    <section class="profiles">
+    <section class="profiles" [ngModel]="account_data.friends">
       <button (click)="gotoProfile()" class="profile-card">
         <img
           [src]="account_data.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
@@ -35,7 +35,11 @@
 
       <hr class="divider" />
 
-      <button *ngFor="let friend of getPinnedFriends(); index as i; trackBy: trackByIndex" class="button-card friend-card">
+      <a
+        *ngFor="let friend of getPinnedFriends(); index as i; trackBy: trackByIndex"
+        class="button-card friend-card"
+        [href]="'http://open.spotify.com/user/' + friend.spotifyID"
+      >
         <img
           [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
@@ -43,7 +47,7 @@
           width="64"
         />
         <p class="name">{{ friend.firstName + ' ' + friend.lastName }}</p>
-      </button>
+      </a>
 
       <button class="button-card friend-card" (click)="openModal(pinFriendsModal)">
         <div class="circle-button">
@@ -105,13 +109,16 @@
     <h4 class="modal-title">Pin friends</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
-  <div class="modal-body" *ngIf="this.account_data" [ngSwitch]="this.account_data.friends.length != 0">
+
+  <div class="modal-body" [ngSwitch]="this.modalPinned.length != 0" id="pin-modal">
     <div *ngSwitchCase="true" class="d-flex flex-column">
       <p>Select which friends are pinned to your home page</p>
-      <label *ngFor="let friend of this.account_data.friends; index as i; trackBy: trackByIndex" class="friend-card">
-        <input type="checkbox" [defaultChecked]="friend.pinned" />
+
+      <label *ngFor="let friend of this.modalPinned; index as i; trackBy: trackByIndex" class="button-card friend-card">
+        <input type="checkbox" [checked]="friend.pinned" />
         <img
           [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          class="profile-picture"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
           height="64"
           width="64"
@@ -127,6 +134,7 @@
       </p>
     </div>
   </div>
+
   <div class="modal-footer">
     <button type="button" class="button secondary" (click)="modal.close('Cancel click')">Cancel</button>
     <button type="button" class="button primary" (click)="savePinnedFriends()">Save</button>

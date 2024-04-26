@@ -145,22 +145,30 @@ public class FriendService {
         feedCardService.deleteNewFriendCards(friend, currentUser.getId());
 
         // Delete any pinned friends
-        unpinFriend(friendAppUserId);
-        unpinFriend(currentUser.getId());
+        unpinFriend(new Long[] { friendAppUserId });
+        unpinFriend(new Long[] { currentUser.getId() });
     }
 
-    public void pinFriend(Long pinAppUserId) {
+    /** Add a pin card for a given friend_id to the user's cards */
+    public void pinFriend(Long[] pinAppUserIds) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = appUserService.getCurrentAppUser();
-        // Create the card to pin the friend
-        feedCardService.createPinnedFriendCard(currentUser, pinAppUserId);
+
+        for (Long pinAppUserId : pinAppUserIds) {
+            // Create the card to pin the friend
+            feedCardService.createPinnedFriendCard(currentUser, pinAppUserId);
+        }
     }
 
-    public void unpinFriend(Long pinAppUserId) {
+    /** Remove a pin card for a given friend_id from the user's cards */
+    public void unpinFriend(Long[] unpinAppUserIds) throws NoAppUserException {
         // Find the current user and check they have an associated AppUser entity
         AppUser currentUser = appUserService.getCurrentAppUser();
-        // Delete the card which pins the friend
-        feedCardService.deletePinnedFriendCard(currentUser, pinAppUserId);
+
+        for (Long unpinAppUserId : unpinAppUserIds) {
+            // Delete the card which pins the friend
+            feedCardService.deletePinnedFriendCard(currentUser, unpinAppUserId);
+        }
     }
 
     public List<Friend> getFriends(AppUser me) {

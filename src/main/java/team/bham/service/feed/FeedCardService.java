@@ -3,10 +3,7 @@ package team.bham.service.feed;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.hibernate.Hibernate;
@@ -68,10 +65,11 @@ public class FeedCardService {
         feedRepository.save(feed);
     }
 
-    /** Converts backend cards into a format that the frontend can readily display */
+    /** Sorts the backend cards and converts each of them into a format that the frontend can readily display */
     public List<FeedCardResponse> generateFrontendCards(Set<FeedCard> feedCards) {
         return feedCards
             .stream()
+            .sorted(Comparator.comparing(a -> a.getCard().getTimeGenerated()))
             .map(feedCard -> {
                 // Decide which method to handle the FeedCard
                 try {
@@ -263,6 +261,18 @@ public class FeedCardService {
      *
      * @return The card once it has been saved in the database*/
     public Card createPinnedFriendCard(AppUser appUser, Long friendID) {
+        Optional<Card> existingCard = cardRepository.findOneByAppUserAndMetricAndMetricValue(
+            appUser,
+            CardType.PINNED_FRIEND,
+            friendID.intValue()
+        );
+
+        // If a card already exists, return it
+        if (existingCard.isPresent()) {
+            log.debug("PinnedFriend card already exists for AppUser {} and friendID {}", appUser.getId(), friendID);
+            return existingCard.get();
+        }
+
         log.debug("Making a new PinnedFriend card");
 
         // create a new card

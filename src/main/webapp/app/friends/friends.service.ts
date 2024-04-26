@@ -59,13 +59,13 @@ export class FriendsService {
   }
 
   // pins a friend (given their id) for the current user
-  pin(id: number) {
-    this.http.post(this.resourceUrl + '/pin', id);
+  pin(ids: number[]) {
+    return this.http.post(this.resourceUrl + '/pin', ids);
   }
 
   // unpins a friend (given their id) for the current user
-  unpin(id: number) {
-    this.http.post(this.resourceUrl + '/unpin', id);
+  unpin(ids: number[]) {
+    return this.http.post(this.resourceUrl + '/unpin', ids);
   }
 
   delete(friend: IFriend): Observable<HttpResponse<{}>> {

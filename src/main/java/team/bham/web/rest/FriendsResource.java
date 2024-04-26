@@ -204,13 +204,15 @@ public class FriendsResource {
     }
 
     @PostMapping("/friends/pin")
-    public void pinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
+    public void pinFriend(@Valid @RequestBody Long[] pinAppUserId) throws NoAppUserException {
+        System.out.println("pinAppUserId: " + Arrays.toString(pinAppUserId));
         friendService.pinFriend(pinAppUserId);
     }
 
     @PostMapping("/friends/unpin")
-    public void unpinFriend(@Valid @RequestBody Long pinAppUserId) throws NoAppUserException {
-        friendService.unpinFriend(pinAppUserId);
+    public void unpinFriend(@Valid @RequestBody Long[] unpinAppUserId) throws NoAppUserException {
+        System.out.println("unpinAppUserId: " + Arrays.toString(unpinAppUserId));
+        friendService.unpinFriend(unpinAppUserId);
     }
 
     @PostMapping("/friends/delete")

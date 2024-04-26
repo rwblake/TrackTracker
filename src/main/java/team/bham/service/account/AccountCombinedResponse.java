@@ -25,7 +25,7 @@ public class AccountCombinedResponse implements Serializable {
         AppUser appUser,
         Set<team.bham.domain.Friendship> friends,
         List<FeedCardResponse> feedCards,
-        List<AppUser> pinnedFriends
+        List<Integer> pinnedFriendIds
     ) {
         id = appUser.getId();
         spotifyID = appUser.getSpotifyID();
@@ -42,7 +42,7 @@ public class AccountCombinedResponse implements Serializable {
                 .stream()
                 .map(friend -> {
                     FriendshipResponse fr = new FriendshipResponse(friend, appUser.getId());
-                    boolean isPinned = pinnedFriends.stream().anyMatch(appUser1 -> appUser1.getId() == fr.getFriendID());
+                    boolean isPinned = pinnedFriendIds.stream().anyMatch(id -> id == fr.getFriendID());
                     fr.setPinned(isPinned);
                     return fr;
                 })
@@ -223,6 +223,7 @@ class FriendshipResponse implements Serializable {
     private String lastName;
     private String avatarURL;
     private boolean pinned;
+    private String spotifyID;
 
     public FriendshipResponse(team.bham.domain.Friendship friendship, Long myId) {
         createdAt = friendship.getCreatedAt();
@@ -236,6 +237,7 @@ class FriendshipResponse implements Serializable {
         firstName = otherPerson.getInternalUser().getFirstName();
         lastName = otherPerson.getInternalUser().getLastName();
         avatarURL = otherPerson.getAvatarURL();
+        spotifyID = otherPerson.getSpotifyID();
     }
 
     public Instant getCreatedAt() {
@@ -284,5 +286,13 @@ class FriendshipResponse implements Serializable {
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
+    }
+
+    public String getSpotifyID() {
+        return spotifyID;
+    }
+
+    public void setSpotifyID(String spotifyID) {
+        this.spotifyID = spotifyID;
     }
 }
