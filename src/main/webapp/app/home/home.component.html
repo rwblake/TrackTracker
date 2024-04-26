@@ -1,5 +1,5 @@
 <!--LOADING UI--->
-<div [@fadeIn]="loading" *ngIf="loading && account != null" class="root app-loading">
+<div [@fadeIn]="loadingData" *ngIf="loadingData" class="root app-loading">
   <h2>Loading</h2>
   <div class="load">
     <span class="dot"></span>
@@ -8,8 +8,33 @@
   </div>
 </div>
 
+<!-- Data not being loaded (not logged in or not spotify-authenticated) -->
+<div [@fadeIn]="account != null" *ngIf="!loadingData && !account_data" class="root">
+  <div class="greeting">
+    <h1>Welcome to {{ APP_NAME }}</h1>
+    <p class="lead">Your music tastes, <em>connected</em></p>
+  </div>
+
+  <div class="messages">
+    <div class="alert alert-success" *ngIf="account != null">
+      <span id="home-logged-message">You are logged in as user "{{ account.login }}".</span>
+    </div>
+
+    <div class="alert alert-warning" *ngIf="account == null">
+      <span>You can access </span><a class="alert-link" routerLink="/insights/playlist">Playlist Analyser</a>
+      <span>
+        without an account, but if <br />
+        you'd like access to all features you'll need to
+      </span>
+      <a class="alert-link" routerLink="/account/register">register</a>
+      <span> or </span>
+      <a class="alert-link" routerLink="/login">log in.</a>
+    </div>
+  </div>
+</div>
+
 <!--AppUser-logged-in--->
-<div [@fadeIn]="loading" *ngIf="!loading && account_data !== null" class="root py-5 px-5">
+<div [@fadeIn]="loadingData" *ngIf="!loadingData && account_data" class="root py-5 px-5">
   <header class="greeting">
     <h1>Welcome back, {{ getNames()[0] }}!</h1>
     <p class="lead">{{ getLastUpdateMessage() }}</p>
@@ -86,31 +111,6 @@
   </section>
 </div>
 
-<!--AppUser-logged-out-->
-<div [@fadeIn]="account != null" *ngIf="account_data == null" class="root">
-  <div class="greeting">
-    <h1>Welcome to {{ APP_NAME }}</h1>
-    <p class="lead">Your music tastes, <em>connected</em></p>
-  </div>
-
-  <div class="messages">
-    <div class="alert alert-success" *ngIf="account != null">
-      <span id="home-logged-message">You are logged in as user "{{ account.login }}".</span>
-    </div>
-
-    <div class="alert alert-warning" *ngIf="account == null">
-      <span>You can access </span><a class="alert-link" routerLink="/insights/playlist">Playlist Analyser</a>
-      <span>
-        without an account, but if <br />
-        you'd like access to all features you'll need to
-      </span>
-      <a class="alert-link" routerLink="/account/register">register</a>
-      <span> or </span>
-      <a class="alert-link" routerLink="/login">log in.</a>
-    </div>
-  </div>
-</div>
-
 <ng-template #pinFriendsModal let-modal>
   <div class="modal-header">
     <h4 class="modal-title">Pin friends</h4>
@@ -122,7 +122,7 @@
       <p>Select which friends are pinned to your home page</p>
 
       <label *ngFor="let friend of this.modalPinned; index as i; trackBy: trackByIndex" class="button-card friend-card">
-        <input type="checkbox" [checked]="friend.pinned" />
+        <input type="checkbox" [checked]="friend.pinned" (change)="friend.pinned = !friend.pinned" />
         <img
           [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
           class="profile-picture"

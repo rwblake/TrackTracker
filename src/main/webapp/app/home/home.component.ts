@@ -28,7 +28,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   account_data: Account_Combined | null = null;
-  loading = true;
+  loadingData = true;
   modalRef: NgbModalRef | undefined;
   modalPinned: Friendship[] = [];
 
@@ -44,34 +44,37 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loading = true; // enable the loading ui
+    this.loadingData = true; // enable the loading ui
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => {
+        this.account = account;
         if (account === null) {
           // If user not logged in (or the account is not authenticated)
-          this.account = null;
           this.account_data = null;
-          this.loading = false;
+          this.loadingData = false;
         } else {
           // If the account is authenticated
-          this.account = account;
-          this.accountService
-            .fetchAccountCombined()
-            .pipe(takeUntil(this.destroy$))
-            .subscribe({
-              next: appUser => {
-                this.account_data = appUser;
-                console.log(appUser);
-                this.loading = false;
-              },
-              error: () => {
-                this.account_data = null;
-                this.loading = false;
-              },
-            });
+          this.fetchAccountCombined();
         }
+      });
+  }
+
+  fetchAccountCombined() {
+    this.accountService
+      .fetchAccountCombined()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: appUser => {
+          this.account_data = appUser;
+          console.log(appUser);
+          this.loadingData = false;
+        },
+        error: () => {
+          this.account_data = null;
+          this.loadingData = false;
+        },
       });
   }
 
@@ -146,7 +149,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         // Both pinning and unpinning completed successfully
         console.log('Pinning and unpinning completed successfully');
         // Call ngOnInit after both operations are completed
-        this.ngOnInit();
+        this.fetchAccountCombined();
         this.modalRef!.close('Save click');
       },
       error: err => {
