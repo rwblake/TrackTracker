@@ -2,7 +2,6 @@ package team.bham.service.feed;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -64,8 +63,20 @@ public class FeedService {
 
     /** Generate random personal insight cards for a given appUser, and insert into their feed */
     private void generatePersonalCards(AppUser appUser, Feed feed) {
-        // Create set of all possible choices
-        List<CardType> cardChoices = new ArrayList<>(
+        /**
+         * Generation Algorithm:
+         *  - Each time this method is called, tries to generate a new card based on criteria:
+         *      - card TYPE must be unique in the past 3 hours (regardless of PERIOD)
+         *      - card TYPE, PERIOD combination must be unique in the past 12 hours
+         *      - card METRIC VALUE must be different from last time card of same TYPE, PERIOD was generated
+         *
+         * Guarantees TYPE uniqueness in the past 3 hours
+         * Guarantees TYPE, PERIOD uniqueness in the past 12 hours
+         * Guarantees metric value different for card of given TYPE, PERIOD
+         */
+
+        // Create list of all possible card TYPE choices
+        List<CardType> allCardTypeChoices = new ArrayList<>(
             Arrays.asList(
                 CardType.LISTENING_DURATION,
                 CardType.TOP_GENRE,
@@ -76,39 +87,51 @@ public class FeedService {
                 //            CardType.NO_OF_GENRES_LISTENED // very similar to milestone
             )
         );
+        // Create list of all possible card PERIOD choices
+        List<CardPeriod> allCardPeriodChoices = Arrays.stream(CardPeriod.values()).collect(Collectors.toList());
 
-        // Remove card types that have been generated recently
-        cardChoices.removeIf(cardType -> isCardOfTypePresentAndRecent(appUser, cardType));
+        // Get all <CardType, CardPeriod> combinations
+        List<Pair<CardType, CardPeriod>> allCardTypeAndPeriodChoices = allCardTypeChoices
+            .stream()
+            .flatMap(cardType -> allCardPeriodChoices.stream().map(period -> new ImmutablePair<>(cardType, period)))
+            .collect(Collectors.toCollection(ArrayList::new));
 
-        if (cardChoices.isEmpty()) return; // No card choices left
+        // Prune card choices that have occurred recently based on below criteria
+        allCardTypeAndPeriodChoices.removeIf(cardTypeAndPeriod -> {
+            return ( // Prevent generation of any card of the same TYPE in past 3 hours
+                isCardOfTypePresentAndRecent(appUser, cardTypeAndPeriod.getLeft(), 3) ||
+                // Prevent generation of any card of the same TYPE and PERIOD in the past 12 hours
+                isCardOfTypePresentAndRecent(appUser, cardTypeAndPeriod.getLeft(), cardTypeAndPeriod.getRight().getDuration(), 12)
+            );
+        });
 
-        // Randomly pick a type of card to generate
-        int randIndex = random.nextInt(cardChoices.size());
-        CardType cardTypeChoice = cardChoices.get(randIndex);
+        if (allCardTypeAndPeriodChoices.isEmpty()) return; // No card choices left
 
-        // Generate card
-        Card generatedCard = null;
+        // Randomly pick a TYPE, PERIOD combination based on remaining options
+        int randIndex = random.nextInt(allCardTypeAndPeriodChoices.size());
+        Pair<CardType, CardPeriod> cardTypeAndPeriodChoice = allCardTypeAndPeriodChoices.get(randIndex);
+
+        // Calculate card metric based on cardTypeChoice and selectedPeriod
+        CardType cardTypeChoice = cardTypeAndPeriodChoice.getLeft();
+        CardPeriod cardPeriodChoice = cardTypeAndPeriodChoice.getRight();
+        Integer metricValue = null;
+
         switch (cardTypeChoice) {
             case LISTENING_DURATION:
                 {
                     Set<Stream> streams = appUser.getStreams();
 
-                    // Pick a random period (all time [null], 7 days, or 30 days)
-                    Duration selectedPeriod = pickRandomCardPeriod();
-
-                    // Filter streams if a time period has been picked
-                    if (selectedPeriod != null) {
+                    // Filter streams by generated time period
+                    Duration selectedPeriodDuration = cardPeriodChoice.getDuration();
+                    if (selectedPeriodDuration != null) {
                         // Calculate the Instant to filter the streams by
-                        Instant cutoffInstant = Instant.now().minus(selectedPeriod);
+                        Instant cutoffInstant = Instant.now().minus(selectedPeriodDuration);
 
                         streams =
                             streams.stream().filter(stream -> stream.getPlayedAt().isAfter(cutoffInstant)).collect(Collectors.toSet());
                     }
 
-                    int streamedMinutes = streams.stream().mapToInt(stream -> stream.getSong().getDuration().toMinutesPart()).sum();
-
-                    generatedCard =
-                        feedCardService.createInsightCard(appUser, CardType.LISTENING_DURATION, streamedMinutes, selectedPeriod);
+                    metricValue = streams.stream().mapToInt(stream -> stream.getSong().getDuration().toMinutesPart()).sum();
                     break;
                 }
             case TOP_GENRE:
@@ -116,16 +139,10 @@ public class FeedService {
                     List<Stream> streams = new ArrayList<>(appUser.getStreams());
                     StreamInsightsResponse insights = insightsService.getInsights(streams);
 
-                    Pair<Genre, Duration> insight = pickHighestFromRandomDuration(insights.getGenreCounter());
+                    Genre insight = pickHighestFromCounterByPeriod(insights.getGenreCounter(), cardPeriodChoice);
                     if (insight == null) return; // counter was probably empty for the selected duration
 
-                    generatedCard =
-                        feedCardService.createInsightCard(
-                            appUser,
-                            CardType.TOP_GENRE,
-                            insight.getKey().getId().intValue(),
-                            insight.getValue()
-                        );
+                    metricValue = insight.getId().intValue();
                     break;
                 }
             case TOP_ARTIST:
@@ -133,16 +150,10 @@ public class FeedService {
                     List<Stream> streams = new ArrayList<>(appUser.getStreams());
                     StreamInsightsResponse insights = insightsService.getInsights(streams);
 
-                    Pair<Artist, Duration> insight = pickHighestFromRandomDuration(insights.getArtistCounter());
+                    Artist insight = pickHighestFromCounterByPeriod(insights.getArtistCounter(), cardPeriodChoice);
                     if (insight == null) return; // counter was probably empty for the selected duration
 
-                    generatedCard =
-                        feedCardService.createInsightCard(
-                            appUser,
-                            CardType.TOP_ARTIST,
-                            insight.getKey().getId().intValue(),
-                            insight.getValue()
-                        );
+                    metricValue = insight.getId().intValue();
                     break;
                 }
             case TOP_SONG:
@@ -150,16 +161,10 @@ public class FeedService {
                     List<Stream> streams = new ArrayList<>(appUser.getStreams());
                     StreamInsightsResponse insights = insightsService.getInsights(streams);
 
-                    Pair<Song, Duration> insight = pickHighestFromRandomDuration(insights.getSongCounter());
+                    Song insight = pickHighestFromCounterByPeriod(insights.getSongCounter(), cardPeriodChoice);
                     if (insight == null) return; // counter was probably empty for the selected duration
 
-                    generatedCard =
-                        feedCardService.createInsightCard(
-                            appUser,
-                            CardType.TOP_SONG,
-                            insight.getKey().getId().intValue(), // milestone value: songId as int
-                            insight.getValue()
-                        );
+                    metricValue = insight.getId().intValue();
                     break;
                 }
             //            case NO_OF_FRIENDS: {
@@ -174,8 +179,18 @@ public class FeedService {
 
         }
 
-        if (generatedCard != null) {
+        // Calculation of metric was successful
+        if (metricValue != null) {
+            // Don't create card if metric value hasn't changed since last card of this TYPE and PERIOD
+            Optional<Card> latestCardOfTypeAndPeriod = getLatestCardOfTypeAndPeriod(
+                appUser,
+                cardTypeChoice,
+                cardPeriodChoice.getDuration()
+            );
+            if (latestCardOfTypeAndPeriod.isPresent() && latestCardOfTypeAndPeriod.get().getMetricValue().equals(metricValue)) return;
+
             // Automatically add to current user's feed
+            Card generatedCard = feedCardService.createInsightCard(appUser, cardTypeChoice, metricValue, cardPeriodChoice.getDuration());
             feedCardService.addCardToFeed(generatedCard, feed);
         }
     }
@@ -185,9 +200,10 @@ public class FeedService {
      *
      * @param appUser The user for whom the feed is being checked.
      * @param cardType The type of card to check for.
+     * @param threshold The threshold in hours to consider a card as recent.
      * @return {@code true} if a card of the specified type is present and recent, {@code false} otherwise.
      */
-    private boolean isCardOfTypePresentAndRecent(AppUser appUser, CardType cardType) {
+    private boolean isCardOfTypePresentAndRecent(AppUser appUser, CardType cardType, int threshold) {
         // Get the user's feed
         Feed feed = appUser.getFeed();
         // Get all the cards in the feed
@@ -197,7 +213,9 @@ public class FeedService {
         for (Card existingCard : cards) {
             // Check if the card type matches and if it was created within the last few hours
             if (
-                existingCard.getMetric() == cardType && existingCard.getAppUser() == appUser && isRecent(existingCard.getTimeGenerated(), 3)
+                existingCard.getMetric() == cardType &&
+                existingCard.getAppUser() == appUser &&
+                isRecent(existingCard.getTimeGenerated(), threshold)
             ) {
                 return true; // Card of this type is already present and recent
             }
@@ -212,9 +230,10 @@ public class FeedService {
      * @param appUser The user for whom the feed is being checked.
      * @param cardType The type of card to check for.
      * @param timeFrame The timeFrame of the card
+     * @param threshold The threshold in hours to consider a card as recent.
      * @return {@code true} if a card of the specified type is present and recent, {@code false} otherwise.
      */
-    private boolean isCardOfTypePresentAndRecent(AppUser appUser, CardType cardType, Duration timeFrame) {
+    private boolean isCardOfTypePresentAndRecent(AppUser appUser, CardType cardType, Duration timeFrame, int threshold) {
         // Get the user's feed
         Feed feed = appUser.getFeed();
         // Get all the cards in the feed
@@ -226,14 +245,28 @@ public class FeedService {
             if (
                 existingCard.getMetric() == cardType &&
                 existingCard.getAppUser() == appUser &&
-                (existingCard.getTimeFrame() == timeFrame) && // check time frame if given
-                isRecent(existingCard.getTimeGenerated(), 3)
+                existingCard.getTimeFrame() == timeFrame && // check time frame if given
+                isRecent(existingCard.getTimeGenerated(), threshold)
             ) {
                 return true; // Card of this type is already present and recent
             }
         }
 
         return false;
+    }
+
+    private Optional<Card> getLatestCardOfTypeAndPeriod(AppUser appUser, CardType cardType, Duration timeFrame) {
+        // Get the user's feed
+        Feed feed = appUser.getFeed();
+
+        return feed // Get all the cards in the feed
+            .getCards()
+            .stream()
+            .map(FeedCard::getCard)
+            // filter by matching user, card type and card period
+            .filter(card -> card.getMetric() == cardType && card.getAppUser() == appUser && card.getTimeFrame() == timeFrame)
+            // find max timeGenerated (latest card)
+            .max(Comparator.comparing(Card::getTimeGenerated));
     }
 
     /**
@@ -413,39 +446,42 @@ public class FeedService {
 
     // Utility methods
 
-    /**
-     * @return null, 7 Days, or 30 Days (equal probability)
-     */
-    private Duration pickRandomCardPeriod() {
-        List<Duration> possiblePeriods = new ArrayList<>(Arrays.asList(null, Duration.ofDays(7), Duration.ofDays(30)));
-        int randIndex = random.nextInt(possiblePeriods.size());
-        return possiblePeriods.get(randIndex);
+    enum CardPeriod {
+        WEEK,
+        MONTH,
+        ALL_TIME;
+
+        public Duration getDuration() {
+            switch (this) {
+                case WEEK:
+                    return Duration.ofDays(7);
+                case MONTH:
+                    return Duration.ofDays(30);
+                case ALL_TIME:
+                default:
+                    return null;
+            }
+        }
     }
 
-    private <T> Pair<T, Duration> pickHighestFromRandomDuration(Counter<T> counter) {
-        // Pick a random number (to decide what to generate)
-        int choice = random.nextInt(3);
-
+    private <T> T pickHighestFromCounterByPeriod(Counter<T> counter, CardPeriod period) {
         List<Entry<T>> collection;
-        Duration duration;
 
-        switch (choice) {
-            case 0:
-                collection = counter.getOfAllTime();
-                duration = null;
-                break;
-            case 1:
+        switch (period) {
+            case MONTH:
                 collection = counter.getByMonth();
-                duration = Duration.ofDays(30);
                 break;
-            default:
+            case WEEK:
                 collection = counter.getByWeek();
-                duration = Duration.ofDays(7);
+                break;
+            case ALL_TIME:
+            default:
+                collection = counter.getOfAllTime();
+                break;
         }
 
         if (collection.isEmpty()) return null;
 
-        T highest = collection.get(collection.size() - 1).getMetric();
-        return new ImmutablePair<>(highest, duration);
+        return collection.get(collection.size() - 1).getMetric();
     }
 }
