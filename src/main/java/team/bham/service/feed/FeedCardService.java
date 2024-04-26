@@ -88,7 +88,6 @@ public class FeedCardService {
                         case NO_OF_FRIENDS:
                         case NO_OF_GENRES_LISTENED:
                         case NO_OF_SONGS_LISTENED:
-                        case LISTENING_DURATION:
                             {
                                 // if there is no timeframe (and also a milestone card type) -> a stat of all time
                                 if (feedCard.getCard().getTimeFrame() == null) {
@@ -207,7 +206,7 @@ public class FeedCardService {
     /**Create a milestone card for a given user (a milestone measures "of all time" achievements).
      * <br>The milestone automatically gets added to the user's feed.
      * @param appUser the user to whom this card belongs.
-     * @param metric what the milestone is measuring. Should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}
+     * @param metric what the milestone is measuring. Should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED}
      * @param value the value of the milestone.
      *
      * @return The card once it has been saved in the database*/
@@ -328,8 +327,8 @@ public class FeedCardService {
         URI href = URI.create("insights");
 
         /**
-         * Metric should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED, CardType.LISTENING_DURATION}
-         * -> See #createMilestone and #inferType methods
+         * Metric should only be one of: {@code CardType.NO_OF_FRIENDS, CardType.NO_OF_GENRES_LISTENED, CardType.NO_OF_SONGS_LISTENED}
+         * -> See #generateFrontendCards method
          */
         switch (feedCard.getCard().getMetric()) {
             case NO_OF_FRIENDS:
@@ -337,13 +336,6 @@ public class FeedCardService {
                     icon = "diversity_1";
                     message = String.format("You now have %d friends!", feedCard.getCard().getMetricValue());
                     href = URI.create("friends");
-                    break;
-                }
-            case LISTENING_DURATION:
-                {
-                    icon = "schedule";
-                    message =
-                        String.format("You have spent a total of %d minutes listening to Spotify!", feedCard.getCard().getMetricValue());
                     break;
                 }
             case NO_OF_SONGS_LISTENED:
