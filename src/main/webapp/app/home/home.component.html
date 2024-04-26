@@ -9,7 +9,7 @@
 </div>
 
 <!--AppUser-logged-in--->
-<div [@fadeIn]="loading" *ngIf="!loading && account_data !== null" class="root">
+<div [@fadeIn]="loading" *ngIf="!loading && account_data !== null" class="root py-5 px-5">
   <header class="greeting">
     <h1>Welcome back, {{ getNames()[0] }}!</h1>
     <p class="lead">{{ getLastUpdateMessage() }}</p>
@@ -40,7 +40,7 @@
 
     <a
       *ngFor="let friend of getPinnedFriends(); index as i; trackBy: trackByIndex"
-      class="col-12 col-md-auto button-card friend-card rounded-3 p-3 row flex-column gap-4 align-items-center"
+      class="col-12 col-md-auto button-card friend-card rounded-3 p-3 row flex-column gap-4 align-items-center text-center"
       [href]="'http://open.spotify.com/user/' + friend.spotifyID"
     >
       <div class="col-auto">
@@ -55,7 +55,7 @@
     </a>
 
     <button
-      class="col-auto button-card edit-card rounded-3 p-3 row flex-column gap-4 align-items-center justify-content-center align-self-center"
+      class="col-auto button-card edit-card rounded-3 p-3 row flex-column gap-4 align-items-center text-center justify-content-center align-self-center"
       (click)="openModal(pinFriendsModal)"
     >
       <div class="circle-button">

@@ -165,8 +165,9 @@ p {
     .card-list {
       display: grid;
       gap: 32px;
-      grid-template-columns: repeat(auto-fill, minmax(238px, 238px));
+      grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
       justify-content: start;
+      align-items: center;
 
       @media (max-width: 650px) {
         justify-content: center;
@@ -188,7 +189,7 @@ p {
   margin-left: auto;
   margin-right: auto;
   min-height: 2px;
-  width: 50%;
+  width: 75%;
   background-color: rgb(255, 255, 255);
   border-radius: 100px;
 }
