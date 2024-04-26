@@ -33,7 +33,7 @@
         </div>
       </button>
 
-      <hr class="divider" />
+      <span class="divider"></span>
 
       <a
         *ngFor="let friend of getPinnedFriends(); index as i; trackBy: trackByIndex"
@@ -55,7 +55,7 @@
           <fa-icon *ngIf="getPinnedFriends().length == 0" icon="add" [fixedWidth]="true"></fa-icon>
         </div>
 
-        <p class="name" *ngIf="getPinnedFriends().length != 0">Edit</p>
+        <p class="name" *ngIf="getPinnedFriends().length != 0">Edit pins</p>
         <p class="name" *ngIf="getPinnedFriends().length == 0">Pin friends</p>
       </button>
     </section>

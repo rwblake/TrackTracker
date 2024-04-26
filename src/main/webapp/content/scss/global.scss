@@ -377,8 +377,13 @@ jhi-password-strength-bar {
   background: rgb(255, 255, 255, 0.2);
   border: solid 1px rgb(255, 255, 255, 0.5);
   transition: background-color 50ms ease-out;
+  text-decoration: none;
 
-  p {
+  p,
+  h1,
+  h2,
+  h3,
+  h4 {
     color: white;
   }
 

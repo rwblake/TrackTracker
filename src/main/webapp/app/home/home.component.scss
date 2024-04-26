@@ -62,6 +62,7 @@ p {
   }
 
   .scroll-wrapper {
+    margin: 0 -100px;
     width: 100%;
     justify-content: center;
   }
@@ -128,6 +129,10 @@ p {
       background: rgb(255, 255, 255, 0.2);
       transition: background-color 50ms ease-out;
 
+      p {
+        color: white;
+      }
+
       &:hover {
         background: rgb(255, 255, 255, 0.3);
       }
@@ -187,15 +192,20 @@ p {
       display: grid;
       gap: 32px;
       grid-template-columns: repeat(auto-fill, minmax(238px, 238px));
+      justify-content: start;
+
+      @media (max-width: 650px) {
+        justify-content: center;
+      }
     }
   }
 }
 
-hr {
+.divider {
   margin-top: auto;
   margin-bottom: auto;
   height: 55px;
-  width: 2px;
+  min-width: 2px;
   background-color: rgb(255, 255, 255);
   border-radius: 100px;
 }
