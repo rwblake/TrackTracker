@@ -62,6 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   fetchAccountCombined() {
+    this.loadingData = true;
     this.accountService
       .fetchAccountCombined()
       .pipe(takeUntil(this.destroy$))

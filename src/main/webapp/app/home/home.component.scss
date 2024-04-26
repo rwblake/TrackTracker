@@ -75,20 +75,6 @@ p {
       border: solid 2px rgb(255, 255, 255, 0.1);
     }
 
-    button {
-      cursor: pointer;
-      transition: background-color 50ms ease-out;
-      border: solid 1px rgb(255, 255, 255, 0.5);
-
-      &:hover p:not(.hint) {
-        text-decoration: underline;
-      }
-
-      &:active p:not(.hint) {
-        text-decoration: none;
-      }
-    }
-
     //.profile-card, .friend-card, .edit-card {
     //  display: flex;
     //  align-items: center;
@@ -124,12 +110,14 @@ p {
     .edit-card {
       background: transparent;
 
-      &:hover {
-        background: rgb(255, 255, 255, 0.1);
-      }
+      &:not(:disabled) {
+        &:hover {
+          background: rgb(255, 255, 255, 0.1);
+        }
 
-      &:active {
-        background: rgb(255, 255, 255, 0.05);
+        &:active {
+          background: rgb(255, 255, 255, 0.05);
+        }
       }
     }
   }

@@ -387,19 +387,25 @@ jhi-password-strength-bar {
     color: white;
   }
 
-  &:not(:disabled):hover {
-    background: rgb(255, 255, 255, 0.3);
-
-    p:not(.hint) {
-      text-decoration: underline;
-    }
+  &:disabled {
+    opacity: 0.8;
   }
 
-  &:not(:disabled):active {
-    background: rgb(255, 255, 255, 0.25);
+  &:not(:disabled) {
+    &:hover {
+      background: rgb(255, 255, 255, 0.3);
 
-    p:not(.hint) {
-      text-decoration: none;
+      p:not(.hint) {
+        text-decoration: underline;
+      }
+    }
+
+    &:active {
+      background: rgb(255, 255, 255, 0.25);
+
+      p:not(.hint) {
+        text-decoration: none;
+      }
     }
   }
 }
