@@ -249,7 +249,7 @@ public class FeedService {
             if (
                 existingCard.getMetric() == cardType &&
                 existingCard.getAppUser() == appUser &&
-                existingCard.getTimeFrame() == timeFrame && // check time frame if given
+                Objects.equals(existingCard.getTimeFrame(), timeFrame) &&
                 isRecent(existingCard.getTimeGenerated(), threshold)
             ) {
                 return true; // Card of this type is already present and recent
@@ -268,7 +268,9 @@ public class FeedService {
             .stream()
             .map(FeedCard::getCard)
             // filter by matching user, card type and card period
-            .filter(card -> card.getMetric() == cardType && card.getAppUser() == appUser && card.getTimeFrame() == timeFrame)
+            .filter(card -> {
+                return card.getMetric() == cardType && card.getAppUser() == appUser && Objects.equals(card.getTimeFrame(), timeFrame);
+            })
             // find max timeGenerated (latest card)
             .max(Comparator.comparing(Card::getTimeGenerated));
     }
