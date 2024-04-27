@@ -1,5 +1,6 @@
-<!--LOADING UI--->
+<!-- Display if still loading account_data -->
 <div [@fadeIn]="loadingData" *ngIf="loadingData && !account_data" class="root app-loading">
+  <!--LOADING UI--->
   <h2>Loading</h2>
   <div class="load">
     <span class="dot"></span>
@@ -8,8 +9,8 @@
   </div>
 </div>
 
-<!-- Data not being loaded (not logged in or not spotify-authenticated) -->
-<div [@fadeIn]="account != null" *ngIf="!loadingData && !account_data" class="root">
+<!-- Data no longer being loaded (not logged in or not spotify-authenticated) -->
+<div [@fadeIn]="loadingData" *ngIf="!loadingData && !account_data" class="root">
   <div class="greeting">
     <h1>Welcome to {{ APP_NAME }}</h1>
     <p class="lead">Your music tastes, <em>connected</em></p>
@@ -33,7 +34,7 @@
   </div>
 </div>
 
-<!--AppUser-logged-in--->
+<!-- combined data available --->
 <div [@fadeIn]="loadingData" *ngIf="account_data" class="root py-5 px-5">
   <header class="greeting">
     <h1>Welcome back, {{ getNames()[0] }}!</h1>

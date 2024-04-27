@@ -45,20 +45,25 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadingData = true; // enable the loading ui
+
+    // get the result of attempting to auto log in
+    this.accountService.identity().subscribe(account => this.onAccountUpdate(account));
+
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(account => {
-        this.account = account;
-        if (account === null) {
-          // If user not logged in (or the account is not authenticated)
-          this.account_data = null;
-          this.loadingData = false;
-        } else {
-          // If the account is authenticated
-          this.fetchAccountCombined();
-        }
-      });
+      .subscribe(account => this.onAccountUpdate(account));
+  }
+
+  onAccountUpdate(account: Account | null) {
+    this.account = account;
+    if (this.account) this.fetchAccountCombined(); // attempt to fetch combined data
+    else {
+      // If user not logged in (or the account is not authenticated)
+      // don't fetch data
+      this.account_data = null;
+      this.loadingData = false;
+    }
   }
 
   fetchAccountCombined() {
@@ -69,7 +74,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: appUser => {
           this.account_data = appUser;
-          console.log(appUser);
           this.loadingData = false;
         },
         error: () => {
