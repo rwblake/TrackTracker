@@ -121,13 +121,25 @@
               </div>
             </div>
 
-            <div class="d-flex gap-4">
-              <button type="submit" class="button primary" (click)="accept(friendRequest.id)" aria-label="accept friend request">
-                <span class="material-symbols-outlined">check</span>
+            <div class="d-flex gap-2 flex-column">
+              <button
+                type="submit"
+                class="button primary d-flex gap-2"
+                (click)="accept(friendRequest.id)"
+                aria-label="accept friend request"
+              >
+                <fa-icon icon="check"></fa-icon>
+                <span>Accept</span>
                 <!--          <fa-icon icon="check"></fa-icon>-->
               </button>
-              <button type="submit" class="button secondary" (click)="reject(friendRequest.id)" aria-label="reject friend request">
-                <span class="material-symbols-outlined">close</span>
+              <button
+                type="submit"
+                class="button secondary d-flex gap-2"
+                (click)="reject(friendRequest.id)"
+                aria-label="reject friend request"
+              >
+                <fa-icon icon="xmark"></fa-icon>
+                <span>Reject</span>
               </button>
             </div>
           </div>
@@ -163,8 +175,9 @@
               </div>
             </div>
 
-            <button type="submit" class="button secondary" (click)="delete(friend)" aria-label="unfriend">
+            <button type="submit" class="button secondary d-flex gap-2" (click)="delete(friend)" aria-label="unfriend">
               <fa-icon icon="xmark"></fa-icon>
+              <span>Unfriend</span>
             </button>
           </div>
         </div>
