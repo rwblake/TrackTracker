@@ -30,7 +30,7 @@
           <!-- Show friends -->
           <div *ngFor="let friend of friends">
             <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-              <img class="profile" [src]="friend.friendAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="" />
+              <img class="profile" [src]="friend.friendAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
@@ -45,7 +45,7 @@
           <!-- Show new users -->
           <div *ngFor="let user of users">
             <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-              <img class="profile" [src]="user?.avatarURL || '/content/images/default-avatar.png'" alt="" />
+              <img class="profile" [src]="user?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
@@ -64,7 +64,7 @@
           <div *ngFor="let user of blocked">
             <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
               <div class="d-flex gap-4 justify-content-center">
-                <img class="profile" [src]="user?.avatarURL || '/content/images/default-avatar.png'" alt="" />
+                <img class="profile" [src]="user?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
 
                 <div class="details">
                   <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
@@ -88,7 +88,7 @@
         <div class="userList">
           <div class="userCard" *ngFor="let rec of recommendations">
             <div class="d-flex gap-4 justify-content-center">
-              <img class="profile" [src]="rec.aboutAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="" />
+              <img class="profile" [src]="rec.aboutAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
               <div class="details">
                 <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
                 <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
@@ -109,7 +109,11 @@
         <div class="userList">
           <div class="userCard" *ngFor="let friendRequest of friendRequests">
             <div class="d-flex gap-4 justify-content-center">
-              <img class="profile" [src]="friendRequest.initiatingAppUser?.avatarURL || '/content/images/default-avatar.png'" />
+              <img
+                class="profile"
+                [src]="friendRequest.initiatingAppUser?.avatarURL || '/content/images/default-avatar.png'"
+                alt="Profile picture"
+              />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(friendRequest.initiatingAppUser?.internalUser) }}</p>
@@ -138,7 +142,7 @@
         <div class="userList">
           <div class="userCard" *ngFor="let friend of friends">
             <div class="d-flex gap-4 justify-content-center">
-              <img class="profile" [src]="friend.friendAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="" />
+              <img class="profile" [src]="friend.friendAppUser?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>

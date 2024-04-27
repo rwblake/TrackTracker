@@ -20,11 +20,7 @@
     <div class="col row p-5 g-5 justify-content-center align-items-start">
       <!-- Profile Info -->
       <div class="col-md-4 left-bar d-flex flex-column align-items-start">
-        <img
-          class="profile mb-3"
-          [src]="user?.avatarURL || '/content/images/default-avatar.png'"
-          [alt]="account ? account.firstName + ' ' + account.lastName : 'Users name'"
-        />
+        <img class="profile mb-3" [src]="user?.avatarURL || '/content/images/default-avatar.png'" alt="Profile picture" />
 
         <h2 class="mb-4 text-start">
           {{ account ? account.firstName + ' ' + account.lastName : "User's name" }}

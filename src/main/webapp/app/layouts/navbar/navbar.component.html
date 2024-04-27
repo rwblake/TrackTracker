@@ -384,7 +384,13 @@
           [routerLinkActiveOptions]="{ exact: true }"
         >
           <button class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu" aria-label="profile dropdown">
-            <img class="profile" [src]="account_data?.avatarURL || '/content/images/default-avatar.png'" alt="" width="24" height="24" />
+            <img
+              class="profile"
+              [src]="account_data?.avatarURL || '/content/images/default-avatar.png'"
+              alt="Profile picture"
+              width="24"
+              height="24"
+            />
             {{ account?.login }}
           </button>
           <ul class="dropdown-menu profile-menu" ngbDropdownMenu aria-labelledby="profile-menu" id="dropdown">

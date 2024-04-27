@@ -3,8 +3,8 @@
 
   <!-- Card that displays user avatar (render .profile -styled img) -->
   <div *ngIf="['new-friend', 'friend-request'].includes(card.inferredType); else defaultImages" class="image">
-    <img class="profile w-50 d-none d-md-flex" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile Image" />
-    <img class="profile w-75 d-flex d-md-none" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile Image" />
+    <img class="profile w-50 d-none d-md-flex" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile picture" />
+    <img class="profile w-75 d-flex d-md-none" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile picture" />
   </div>
 
   <!-- Card that renders other images (render img/icon) -->
