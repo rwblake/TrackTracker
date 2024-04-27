@@ -32,12 +32,25 @@ public class FeedCardResponse implements Serializable {
 
     private URI href;
 
+    private String imageUrl;
+
     public FeedCardResponse(
         team.bham.domain.FeedCard feedCard,
         String inferredType,
         String generatedMessage,
         String inferredIcon,
         URI href
+    ) {
+        this(feedCard, inferredType, generatedMessage, inferredIcon, href, null);
+    }
+
+    public FeedCardResponse(
+        team.bham.domain.FeedCard feedCard,
+        String inferredType,
+        String generatedMessage,
+        String inferredIcon,
+        URI href,
+        String imageUrl
     ) {
         id = feedCard.getId();
         liked = feedCard.getLiked();
@@ -47,6 +60,7 @@ public class FeedCardResponse implements Serializable {
         this.generatedMessage = generatedMessage;
         this.inferredIcon = inferredIcon;
         this.href = href;
+        this.imageUrl = imageUrl;
 
         belongsTo =
             new BelongsTo(
@@ -118,6 +132,14 @@ public class FeedCardResponse implements Serializable {
 
     public void setHref(URI href) {
         this.href = href;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
 

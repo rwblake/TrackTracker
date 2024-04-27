@@ -302,6 +302,7 @@ public class FeedCardService {
         final String icon = "queue_music";
         String message = String.format("You analysed a new playlist: (ID %s)", feedCard.getCard().getMetricValue());
         URI href = null;
+        String imageUrl = null;
 
         // Get playlist from card's metric value
         System.out.println("Getting playlist from database");
@@ -313,11 +314,12 @@ public class FeedCardService {
             Playlist playlist = optionalPlaylist.get();
             message = String.format("You analysed a new playlist: %s", playlist.getName());
             href = URI.create("insights/playlist?playlistID=" + playlist.getSpotifyID());
+            imageUrl = playlist.getImageURL();
         } else {
             System.out.println("playlist not present");
         }
 
-        return new FeedCardResponse(feedCard, type, message, icon, href);
+        return new FeedCardResponse(feedCard, type, message, icon, href, imageUrl);
     }
 
     private FeedCardResponse generateFrontendMilestoneCard(FeedCard feedCard) {
@@ -366,6 +368,7 @@ public class FeedCardService {
         String icon;
         String message;
         URI href = URI.create("insights");
+        String imageUrl = null;
 
         String formattedDuration = formatDuration(feedCard.getCard().getTimeFrame());
 
@@ -421,6 +424,7 @@ public class FeedCardService {
                             formattedDuration,
                             getArtistDisplayName(feedCard.getCard().getMetricValue())
                         );
+                    imageUrl = getArtistImageUrl(feedCard.getCard().getMetricValue());
                     break;
                 }
             case TOP_SONG:
@@ -432,6 +436,7 @@ public class FeedCardService {
                             formattedDuration,
                             getSongDisplayName(feedCard.getCard().getMetricValue().longValue())
                         );
+                    imageUrl = getSongImageUrl(feedCard.getCard().getMetricValue());
                     break;
                 }
             case NO_OF_FRIENDS:
@@ -476,7 +481,7 @@ public class FeedCardService {
                 }
         }
 
-        return new FeedCardResponse(feedCard, type, message, icon, href);
+        return new FeedCardResponse(feedCard, type, message, icon, href, imageUrl);
     }
 
     private FeedCardResponse generateFrontendFriendUpdateCard(FeedCard feedCard) {
@@ -484,6 +489,7 @@ public class FeedCardService {
         String icon;
         String message;
         URI href = URI.create("insights/friends");
+        String imageUrl = null;
 
         String formattedDuration = formatDuration(feedCard.getCard().getTimeFrame());
         User owner = feedCard.getCard().getAppUser().getInternalUser();
@@ -534,6 +540,7 @@ public class FeedCardService {
                             formattedDuration,
                             getArtistDisplayName(feedCard.getCard().getMetricValue())
                         );
+                    imageUrl = getArtistImageUrl(feedCard.getCard().getMetricValue());
                     break;
                 }
             case TOP_SONG:
@@ -546,6 +553,7 @@ public class FeedCardService {
                             formattedDuration,
                             getSongDisplayName(feedCard.getCard().getMetricValue().longValue())
                         );
+                    imageUrl = getSongImageUrl(feedCard.getCard().getMetricValue());
                     break;
                 }
             case NO_OF_SONGS_LISTENED:
@@ -585,7 +593,7 @@ public class FeedCardService {
                 }
         }
 
-        return new FeedCardResponse(feedCard, type, message, icon, href);
+        return new FeedCardResponse(feedCard, type, message, icon, href, imageUrl);
     }
 
     private FeedCardResponse generateFrontendNewFriendCard(FeedCard feedCard) {
@@ -593,6 +601,7 @@ public class FeedCardService {
         String icon = "person_add";
         String message = String.format("You are now friends with: (AppUserID %s)", feedCard.getCard().getMetricValue());
         URI href = URI.create("friends");
+        String imageUrl = null;
 
         // Get AppUser from card's metric value
         Optional<AppUser> optionalAppUser = appUserRepository.findOneById(feedCard.getCard().getMetricValue().longValue());
@@ -601,9 +610,10 @@ public class FeedCardService {
             AppUser appUser = optionalAppUser.get();
             User internalUser = appUser.getInternalUser();
             message = String.format("You are now friends with %s %s.", internalUser.getFirstName(), internalUser.getLastName());
+            imageUrl = appUser.getAvatarURL();
         }
 
-        return new FeedCardResponse(feedCard, type, message, icon, href);
+        return new FeedCardResponse(feedCard, type, message, icon, href, imageUrl);
     }
 
     private FeedCardResponse generateFrontendFriendRequestCard(FeedCard feedCard) {
@@ -611,6 +621,7 @@ public class FeedCardService {
         String icon = "waving_hand";
         String message = String.format("Friend request from: (AppUserID %s)", feedCard.getCard().getMetricValue());
         URI href = URI.create("friends");
+        String imageUrl = null;
 
         // Get AppUser from card's metric value
         Optional<AppUser> optionalAppUser = appUserRepository.findOneById(feedCard.getCard().getMetricValue().longValue());
@@ -618,10 +629,11 @@ public class FeedCardService {
         if (optionalAppUser.isPresent()) {
             AppUser appUser = optionalAppUser.get();
             User internalUser = appUser.getInternalUser();
-            message = String.format("%s %s has requested to follow you.", internalUser.getFirstName(), internalUser.getLastName());
+            message = String.format("%s %s has sent you a friend request!", internalUser.getFirstName(), internalUser.getLastName());
+            imageUrl = appUser.getAvatarURL();
         }
 
-        return new FeedCardResponse(feedCard, type, message, icon, href);
+        return new FeedCardResponse(feedCard, type, message, icon, href, imageUrl);
     }
 
     // Utility Methods
@@ -697,6 +709,12 @@ public class FeedCardService {
         return String.format("%s by %s", song.getName(), song.getArtists().iterator().next().getName());
     }
 
+    private String getSongImageUrl(long songId) {
+        Optional<Song> songById = songRepository.findById(songId);
+
+        return songById.map(Song::getImageURL).orElse(null);
+    }
+
     private String getArtistDisplayName(long artistId) {
         Optional<Artist> artistById = artistRepository.findById(artistId);
 
@@ -705,6 +723,12 @@ public class FeedCardService {
         }
 
         return artistById.get().getName();
+    }
+
+    private String getArtistImageUrl(long artistId) {
+        Optional<Artist> artistById = artistRepository.findById(artistId);
+
+        return artistById.map(Artist::getImageURL).orElse(null);
     }
 
     private String getGenreDisplayName(long genreId) {

@@ -384,8 +384,13 @@
           [routerLinkActiveOptions]="{ exact: true }"
         >
           <button class="nav-link dropdown-toggle" ngbDropdownToggle data-cy="profileMenu" aria-label="profile dropdown">
-            <img *ngIf="account_data?.avatarURL !== null" [src]="account_data?.avatarURL" alt="" width="24" height="24" />
-            <fa-icon *ngIf="account_data?.avatarURL === null" icon="user"></fa-icon>
+            <img
+              class="profile"
+              [src]="account_data?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+              alt=""
+              width="24"
+              height="24"
+            />
             {{ account?.login }}
           </button>
           <ul class="dropdown-menu profile-menu" ngbDropdownMenu aria-labelledby="profile-menu" id="dropdown">

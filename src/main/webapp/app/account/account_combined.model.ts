@@ -34,6 +34,7 @@ export interface FeedCard {
   generatedMessage: string;
   inferredIcon: string;
   href: URL;
+  imageUrl?: string;
 
   // timeFrame?: string | null;
   // metricValue?: number | null;

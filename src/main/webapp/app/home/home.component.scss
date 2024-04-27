@@ -70,11 +70,6 @@ p {
       font-size: 1.3rem;
     }
 
-    img {
-      border-radius: 1000px;
-      border: solid 2px rgb(255, 255, 255, 0.1);
-    }
-
     //.profile-card, .friend-card, .edit-card {
     //  display: flex;
     //  align-items: center;
@@ -155,7 +150,6 @@ p {
       gap: 32px;
       grid-template-columns: repeat(auto-fit, minmax(238px, 1fr));
       justify-content: start;
-      align-items: center;
 
       @media (max-width: 650px) {
         justify-content: center;

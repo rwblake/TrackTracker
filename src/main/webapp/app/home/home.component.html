@@ -45,6 +45,7 @@
     <button (click)="gotoProfile()" class="col-12 col-md-auto button-card rounded-3 p-3 row row gap-4 align-items-center">
       <div class="col-auto">
         <img
+          class="profile"
           [src]="account_data.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
           alt="Your profile picture"
           height="80"
@@ -71,6 +72,7 @@
     >
       <div class="col-auto">
         <img
+          class="profile"
           [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
           height="64"
@@ -127,7 +129,7 @@
         <input type="checkbox" [checked]="friend.pinned" (change)="friend.pinned = !friend.pinned" />
         <img
           [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
-          class="profile-picture"
+          class="profile profile-picture"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
           height="64"
           width="64"

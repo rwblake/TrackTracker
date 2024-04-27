@@ -30,7 +30,11 @@
           <!-- Show friends -->
           <div *ngFor="let friend of friends">
             <div class="userCard" *ngIf="getDisplayName(friend.friendAppUser?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-              <img [src]="friend.friendAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
+              <img
+                class="profile"
+                [src]="friend.friendAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+                alt=""
+              />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(friend.friendAppUser?.internalUser) }}</p>
@@ -45,7 +49,7 @@
           <!-- Show new users -->
           <div *ngFor="let user of users">
             <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
-              <img [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
+              <img class="profile" [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
 
               <div class="details">
                 <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
@@ -64,7 +68,7 @@
           <div *ngFor="let user of blocked">
             <div class="userCard" *ngIf="search != '' && getDisplayName(user?.internalUser).toLowerCase().startsWith(search.toLowerCase())">
               <div class="d-flex gap-4 justify-content-center">
-                <img [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
+                <img class="profile" [src]="user?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
 
                 <div class="details">
                   <p class="name">{{ getDisplayName(user?.internalUser) }}</p>
@@ -88,7 +92,11 @@
         <div class="userList">
           <div class="userCard" *ngFor="let rec of recommendations">
             <div class="d-flex gap-4 justify-content-center">
-              <img [src]="rec.aboutAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'" alt="" />
+              <img
+                class="profile"
+                [src]="rec.aboutAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+                alt=""
+              />
               <div class="details">
                 <p class="name">{{ getDisplayName(rec.aboutAppUser?.internalUser) }}</p>
                 <p class="other">{{ toPercent(rec.similarity).toFixed(0) }}% similar</p>
@@ -110,8 +118,8 @@
           <div class="userCard" *ngFor="let friendRequest of friendRequests">
             <div class="d-flex gap-4 justify-content-center">
               <img
+                class="profile"
                 [src]="friendRequest.initiatingAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
-                alt=""
               />
 
               <div class="details">
@@ -142,8 +150,8 @@
           <div class="userCard" *ngFor="let friend of friends">
             <div class="d-flex gap-4 justify-content-center">
               <img
+                class="profile"
                 [src]="friend.friendAppUser?.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
-                alt="Profile picture."
                 alt=""
               />
 
