@@ -79,10 +79,16 @@ p {
     filter: brightness(0.8);
   }
 
-  .type {
-    align-self: stretch;
-    text-align: left;
-    opacity: 70%;
+  .title {
+    .profile {
+      width: 2em;
+    }
+
+    .type {
+      align-self: center;
+      text-align: left;
+      opacity: 70%;
+    }
   }
 
   .image {

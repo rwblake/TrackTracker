@@ -3,6 +3,7 @@ package team.bham.service.feed;
 import java.io.Serializable;
 import java.net.URI;
 import java.time.Instant;
+import team.bham.domain.AppUser;
 
 public class FeedCardResponse implements Serializable {
 
@@ -62,12 +63,7 @@ public class FeedCardResponse implements Serializable {
         this.href = href;
         this.imageUrl = imageUrl;
 
-        belongsTo =
-            new BelongsTo(
-                feedCard.getCard().getAppUser().getId(),
-                feedCard.getCard().getAppUser().getInternalUser().getFirstName(),
-                feedCard.getCard().getAppUser().getInternalUser().getLastName()
-            );
+        belongsTo = new BelongsTo(feedCard.getCard().getAppUser());
     }
 
     public Long getId() {
@@ -148,11 +144,13 @@ class BelongsTo implements Serializable {
     private Long id;
     private String firstName;
     private String lastName;
+    private String avatarUrl;
 
-    BelongsTo(Long id, String firstName, String lastName) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    BelongsTo(AppUser appUser) {
+        this.id = appUser.getId();
+        this.firstName = appUser.getInternalUser().getFirstName();
+        this.lastName = appUser.getInternalUser().getLastName();
+        this.avatarUrl = appUser.getAvatarURL();
     }
 
     public Long getId() {
@@ -177,5 +175,13 @@ class BelongsTo implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

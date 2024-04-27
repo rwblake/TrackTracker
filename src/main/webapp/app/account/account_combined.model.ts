@@ -28,6 +28,7 @@ export interface FeedCard {
     id: number;
     firstName: string;
     lastName: string;
+    avatarUrl?: string;
   };
 
   inferredType: 'friend-request' | 'new-friend' | 'milestone' | 'personal' | 'friend-update' | 'new-playlist';

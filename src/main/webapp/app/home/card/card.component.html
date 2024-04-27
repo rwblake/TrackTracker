@@ -1,5 +1,13 @@
 <button [class]="'feed-card gap-4 p-3 rounded-3 ' + card.inferredType" (click)="openCard()">
-  <p class="type">{{ formatInferredCardType() }}</p>
+  <div class="title d-flex gap-1 align-self-start">
+    <img
+      *ngIf="card.inferredType == 'friend-update'"
+      [src]="card.belongsTo.avatarUrl || '/content/images/default-avatar.png'"
+      class="profile"
+      alt="Profile picture"
+    />
+    <span class="type">{{ formatInferredCardType() }}</span>
+  </div>
 
   <!-- Card that displays user avatar (render .profile -styled img) -->
   <div *ngIf="['new-friend', 'friend-request'].includes(card.inferredType); else defaultImages" class="image">
