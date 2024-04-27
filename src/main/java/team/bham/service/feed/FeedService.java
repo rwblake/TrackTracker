@@ -131,7 +131,11 @@ public class FeedService {
                             streams.stream().filter(stream -> stream.getPlayedAt().isAfter(cutoffInstant)).collect(Collectors.toSet());
                     }
 
-                    metricValue = streams.stream().mapToInt(stream -> stream.getSong().getDuration().toMinutesPart()).sum();
+                    int minutesListened = streams.stream().mapToInt(stream -> stream.getSong().getDuration().toMinutesPart()).sum();
+
+                    if (minutesListened < 5) return; // don't create card if user hasn't listened much
+
+                    metricValue = minutesListened;
                     break;
                 }
             case TOP_GENRE:
