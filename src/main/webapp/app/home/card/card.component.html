@@ -1,20 +1,21 @@
 <button [class]="'feed-card gap-4 p-3 rounded-3 ' + card.inferredType" (click)="openCard()">
   <p class="type">{{ formatInferredCardType() }}</p>
-  <div *ngIf="card.imageUrl" class="image">
-    <img
-      class="rounded-3 w-50 d-none d-md-flex"
-      [class]="['new-friend', 'friend-request'].includes(card.inferredType) ? 'profile' : ''"
-      [src]="card.imageUrl"
-      [alt]="card.generatedMessage"
-    />
-    <img
-      class="rounded-3 w-75 d-flex d-md-none"
-      [class]="['new-friend', 'friend-request'].includes(card.inferredType) ? 'profile' : ''"
-      [src]="card.imageUrl"
-      [alt]="card.generatedMessage"
-    />
+
+  <!-- Card that displays user avatar (render .profile -styled img) -->
+  <div *ngIf="['new-friend', 'friend-request'].includes(card.inferredType); else defaultImages" class="image">
+    <img class="profile w-50 d-none d-md-flex" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile Image" />
+    <img class="profile w-75 d-flex d-md-none" [src]="card.imageUrl || '/content/images/default-avatar.png'" alt="Profile Image" />
   </div>
-  <span *ngIf="!card.imageUrl" class="icon material-symbols-outlined">{{ card.inferredIcon }}</span>
+
+  <!-- Card that renders other images (render img/icon) -->
+  <ng-template #defaultImages>
+    <div *ngIf="card.imageUrl" class="image">
+      <img class="rounded-3 w-50 d-none d-md-flex" [src]="card.imageUrl" [alt]="card.generatedMessage" />
+      <img class="rounded-3 w-75 d-flex d-md-none" [src]="card.imageUrl" [alt]="card.generatedMessage" />
+    </div>
+    <span *ngIf="!card.imageUrl" class="icon material-symbols-outlined">{{ card.inferredIcon }}</span>
+  </ng-template>
+
   <p class="message">{{ card.generatedMessage }}</p>
   <p class="time">{{ getTimeStamp() }}</p>
 </button>

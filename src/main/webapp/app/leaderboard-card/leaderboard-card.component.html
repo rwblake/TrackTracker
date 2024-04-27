@@ -8,11 +8,7 @@
       <tr *ngFor="let entry of data.entries; index as i" class="rounded-1">
         <th class="text-nowrap pe-3">#{{ i + 1 }}</th>
         <td class="me-auto row align-items-center">
-          <img
-            class="profile p-0 mg-fluid"
-            [src]="entry.imageUrl || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
-            alt=""
-          />
+          <img class="profile p-0 mg-fluid" [src]="entry.imageUrl || '/content/images/default-avatar.png'" alt="" />
           <span class="col text-break">{{ entry.name }}</span>
         </td>
         <td class="text-nowrap">{{ entry.value }}</td>

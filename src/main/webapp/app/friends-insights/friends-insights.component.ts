@@ -99,7 +99,7 @@ export class FriendsInsightsComponent implements OnInit {
       entries: (this.leaderboards?.streamedSecondsLeaderboard ?? []).map(leaderboardEntry => {
         return {
           name: leaderboardEntry.value.username,
-          imageUrl: leaderboardEntry.value.avatarUrl || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg',
+          imageUrl: leaderboardEntry.value.avatarUrl || '/content/images/default-avatar.png',
           value: `${(leaderboardEntry.frequency / (60 * 60)).toFixed(1)} Hours`,
         };
       }),
@@ -112,7 +112,7 @@ export class FriendsInsightsComponent implements OnInit {
       entries: (this.leaderboards?.streamedArtistsLeaderboard ?? []).map(leaderboardEntry => {
         return {
           name: leaderboardEntry.value.username,
-          imageUrl: leaderboardEntry.value.avatarUrl || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg',
+          imageUrl: leaderboardEntry.value.avatarUrl || '/content/images/default-avatar.png',
           value: `${leaderboardEntry.frequency} Artists`,
         };
       }),

@@ -46,7 +46,7 @@
       <div class="col-auto">
         <img
           class="profile"
-          [src]="account_data.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          [src]="account_data.avatarURL || '/content/images/default-avatar.png'"
           alt="Your profile picture"
           height="80"
           width="80"
@@ -73,7 +73,7 @@
       <div class="col-auto">
         <img
           class="profile"
-          [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          [src]="friend.avatarURL || '/content/images/default-avatar.png'"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
           height="64"
           width="64"
@@ -128,7 +128,7 @@
       <label *ngFor="let friend of this.modalPinned; index as i; trackBy: trackByIndex" class="button-card friend-card">
         <input type="checkbox" [checked]="friend.pinned" (change)="friend.pinned = !friend.pinned" />
         <img
-          [src]="friend.avatarURL || 'https://cse.iutoic-dhaka.edu/uploads/img/1601007481_1328.jpg'"
+          [src]="friend.avatarURL || '/content/images/default-avatar.png'"
           class="profile profile-picture"
           alt="{{ friend.firstName + ' ' + friend.lastName }}'s profile picture"
           height="64"
