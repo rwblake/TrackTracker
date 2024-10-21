@@ -1,26 +1,102 @@
-# Team Project
+# TrackTracker
+## Track your Spotify listening habits with your friends!
+TrackTracker is a Spotify listening analysis platform which provides statistics and insights for the songs
+that you and your friends have listened to. Its core functionality is split into 6 sections: the feed, personal
+insights, friend stats, playlist analyser, profile page, and friend manager.
 
-This application was generated using JHipster 7.9.4, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.4](https://www.jhipster.tech/documentation-archive/v7.9.4).
-
-### This repository belongs to Team 53
+### This system was created by University of Birmingham students as part of the Team Project module
+It recieved a module mark of 92%.
 
 Its members (in alphabetical order of surname):
 
 - Reuben B (rxb208@student.bham.ac.uk)
-
 - Robert B (rxb256@student.bham.ac.uk)
-
 - Joseph H (jfh245@student.bham.ac.uk)
-
 - Shoaib H (sxh1499@student.bham.ac.uk)
-
 - Matthew H (mxh1131@student.bham.ac.uk)
-
 - Frederick R (fxr233@student.bham.ac.uk)
-
 - Christopher W (cxw298@student.bham.ac.uk)
 
-### Contents of README.md
+## Home Feed
+![](/example_images/home_feed.jpg)
+The Home Feed is the first page to greet a user any time they open the app after logging on. It gives them
+one place to see all the recent updates of their friends, whilst also acting as a clean launchpad to access
+the different features of the app.
+A shortcut for your profile is shown at the top alongside your pinned friends. This page’s main feature,
+however, is the Feed: a collection of insights and updates personalised to each user. Imagine 
+
+Instagram’s feed but solely fuelled by you and your friend’s listening activity on Spotify: the longer you
+use the app, and listen to Spotify, the more the feed grows. You can like cards to access them later on,
+and use the filters provided on the side to focus your feed on different types of card, such as friend
+requests and playlists.
+
+## My Insights
+![](/example_images/my_insights.jpg)
+My Insights can be accessed from the main navigation bar found at the top of the page, as long as a user
+is logged in with a valid Spotify account.
+After all of the user’s accumulated data has been fetched, they’re presented with a number of interactive
+charts and tables containing statistics.
+• The Top Genres, Top Albums, and Top Artists charts displays their most frequently listened to
+genres, albums and artists respectively
+• 4 leaderboards rank their ‘top 3’ in various different categories such as favourite artist or genre.
+These leaderboards act as a summary of what the user likes the most.
+The page, by default, shows statistics from within the past week. This can be changed using the time
+period picker at the top of the page. This allows them to choose between Week, Month, Year and All Time
+– when a user clicks one of these time periods, the charts and tables update appropriately.
+
+## Playlist Analyser
+![](/example_image/playlist_analyser.jpg)
+The Playlist Analyser allows a user to view insights about a given playlist. It’s usable without an account,
+although being logged in enables TrackTracker to access a user’s private playlists.
+The user enters or pastes a link to a Spotify playlist. The user is asked to wait as processing takes place.
+Then, upon success, a number of graphs and charts are shown. These are, from top-to-bottom, left-toright:
+• Averages of various audio properties of the playlist’s songs
+• Notable songs from the playlist derived from statistical analysis on its songs’ audio features.
+These are clickable buttons which link to the referenced songs on Spotify
+• Pie charts showcasing the most frequently occurring artists and genres in the playlist. The top 3
+are displayed in a table below the chart - hovering over or tabbing through the chart reveals the
+others.
+• A bar chart which maps the playlist’s songs against their time of release. By default, this is
+displayed by decade, but this can be toggled to individual years.
+A logged-in user can also quickly re-access the stats for recently viewed playlists at the bottom of the
+page.
+
+## Friend Activity
+Friends Activity can be accessed from the main navigation bar found at the top of the page, as long as a
+user is logged in with a valid Spotify account. When it’s opened, there’s a short delay while relevant data
+is retrieved and aggregated, indicated by the Calculating… heading. Once the data has been retrieved,
+the page displays two main sections for the insights.
+• The first of these sections is Popular with your friends, where the top tracks, artists and albums
+amongst your friends are displayed in a responsive carousel-style card stack.
+• The second is Your Friends Leaderboards, where you can see where you rank amongst your
+friends in several categories: Most Hours Streamed, and Most Artists Listened To.
+As with My Insights, the page, by default, shows statistics from within the past week, but this can be
+changed using the time period picker in the top right.
+
+## Profile
+![](/example_images/profile.jpg)
+Each user has a profile, based on the information they supplied upon registration, and their Spotify
+Account. The page links to their associated Spotify Account.
+Clicking Edit Profile allows the user to add a bio to the page, alter privacy settings, and change their
+profile picture. By default, the profile picture is lifted from the user’s Spotify account. Clicking App
+Settings allows the user to alter the account’s associated name email address. The playlist cards, when
+clicked, take you to the Playlist Analyser page for the chosen playlist.
+When the profile icon is clicked, a list of different options is displayed in a dropdown menu
+
+## Friend Manager
+The Friends page allows a user to manage connections with their friends. It’s only available if you have
+signed into an account.
+On loading, the user is presented with a list of their current friends, alongside their profile pictures and
+the song and album that they have most recently listened to. Clicking on the song or album title sends the
+user to the relevant Spotify page so that they can play the song too. The app provides friend
+recommendations based on the genres of songs that users have listened to so that you can see how
+similar your music taste is to others.Easily send friend requests with the plus button. Active friend
+requests are displayed with the option to accept or reject them. The search bar allows you to search for
+new users, send them friend requests, or block users by name.
+
+# Creation
+
+This application was generated using JHipster 7.9.4, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.9.4](https://www.jhipster.tech/documentation-archive/v7.9.4).
 
 - [Setting up the project for the first time](#installing-the-development-environment)
 - [Creating a new project to reflect this one](#creating-a-new-project)
