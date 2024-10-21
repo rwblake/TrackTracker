@@ -5,8 +5,6 @@ that you and your friends have listened to. Its core functionality is split into
 insights, friend stats, playlist analyser, profile page, and friend manager.
 
 ### This system was created by University of Birmingham students as part of the Team Project module
-It recieved a module mark of 92%.
-
 Its members (in alphabetical order of surname):
 
 - Reuben B (rxb208@student.bham.ac.uk)
